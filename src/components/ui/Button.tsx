@@ -10,6 +10,8 @@ interface ButtonProps {
   to?: string;
   /** External/anchor URL. Renders an <a>. */
   href?: string;
+  /** For `href`: "_blank" opens a new tab (with rel="noopener noreferrer"). */
+  target?: '_blank';
   type?: 'button' | 'submit';
   disabled?: boolean;
   className?: string;
@@ -23,6 +25,7 @@ export function Button({
   icon,
   to,
   href,
+  target,
   type = 'button',
   disabled,
   className = '',
@@ -55,7 +58,7 @@ export function Button({
   }
   if (href) {
     return (
-      <a href={href} className={cls} onClick={onClick}>
+      <a href={href} className={cls} onClick={onClick} target={target} rel={target ? 'noopener noreferrer' : undefined}>
         {content}
       </a>
     );

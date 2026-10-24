@@ -477,3 +477,47 @@ button.admin-row:hover,
   text-transform: none;
   letter-spacing: 0;
 }
+
+/* Gallery field */
+.admin-gallery {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: start;
+}
+.admin-gallery__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--space-3);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.admin-gallery__item {
+  position: relative;
+  display: grid;
+  gap: 4px;
+}
+.admin-gallery__item img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top center;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: #0b1a36;
+}
+.admin-gallery__cover {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(14, 33, 66, 0.85);
+  font-size: 0.7rem;
+}
+.admin-gallery__tools {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+}

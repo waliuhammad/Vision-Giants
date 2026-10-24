@@ -120,17 +120,17 @@ export default function HomePage() {
           <SectionHeading
             id="work-title"
             eyebrow="Our work"
-            title="Featured project concepts"
-            lead="Demonstration projects that show how we approach product design and engineering across different industries."
+            title="Featured projects"
+            lead="A selection of websites we’ve designed and built for clients in e-commerce, services, B2B and non-profit."
             aside={
               <Button to="/portfolio/" variant="outline" icon={<ArrowRight size={16} />}>
                 View portfolio
               </Button>
             }
           />
-          <div className="grid grid--3">
-            {projects.slice(0, 3).map((p, i) => (
-              <Reveal key={p.id} delay={i * 90}>
+          <div className="grid grid--2">
+            {projects.slice(0, 4).map((p, i) => (
+              <Reveal key={p.id} delay={(i % 2) * 90}>
                 <ProjectCard project={p} />
               </Reveal>
             ))}

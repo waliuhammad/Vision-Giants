@@ -1,5 +1,5 @@
 import { useId, type ReactNode } from 'react';
-import type { PreviewKind } from '../../data/portfolio';
+import { projectCover, type PreviewKind, type Project } from '../../data/portfolio';
 
 /**
  * Illustrative UI mockups for portfolio cards, drawn as SVG so they stay crisp and tiny.
@@ -248,8 +248,9 @@ function Learning({ g }: G) {
   );
 }
 
-/** A project's uploaded screenshot, or its illustration when it has none. */
-export function ProjectMedia({ project }: { project: { title: string; preview: PreviewKind; imageUrl?: string } }) {
-  if (project.imageUrl) return <img src={project.imageUrl} alt="" loading="lazy" decoding="async" />;
+/** A project's cover screenshot, or its illustration when it has none. */
+export function ProjectMedia({ project }: { project: Pick<Project, 'title' | 'preview' | 'images' | 'imageUrl'> }) {
+  const cover = projectCover(project);
+  if (cover) return <img src={cover} alt={`${project.title} website`} loading="lazy" decoding="async" />;
   return <ProjectPreview kind={project.preview} />;
 }

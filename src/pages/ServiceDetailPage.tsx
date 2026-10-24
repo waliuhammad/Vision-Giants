@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import type { CSSProperties } from 'react';
 import { useParams } from 'react-router';
 import { ArrowRight, ArrowLeft, Check } from 'lucide-react';
-import { getServiceById, services } from '../data/services';
+import { getServiceById, getServiceIcon, services } from '../data/services';
 import { PageHero } from '../components/ui/PageHero';
 import { Button } from '../components/ui/Button';
 import { SectionHeading } from '../components/ui/SectionHeading';
@@ -28,7 +28,7 @@ export function ServiceDetailPage() {
 
   if (!service) return <NotFoundPage />;
 
-  const Icon = service.icon;
+  const Icon = getServiceIcon(service.icon);
   const related = services.filter((s) => s.id !== service.id).slice(0, 3);
   const hasPlatforms = !!service.platforms && service.platforms.length > 0;
 

@@ -6,7 +6,7 @@ import { defaultContent, type ContentCollection } from '../content/schema';
  * Editor definitions for content managed in the dashboard. Field keys must match the content
  * types in src/data and the converters in src/content/schema.ts.
  */
-export type FieldKind = 'text' | 'textarea' | 'lines' | 'tags' | 'select' | 'checkbox' | 'image';
+export type FieldKind = 'text' | 'textarea' | 'lines' | 'tags' | 'select' | 'checkbox' | 'image' | 'gallery';
 
 export interface FieldDef {
   key: string;
@@ -47,11 +47,13 @@ export const projectsConfig: ContentConfig = {
       required: true,
       options: Object.entries(categoryLabels).map(([value, label]) => ({ value, label })),
     },
+    { key: 'industry', label: 'Industry / type', kind: 'text', help: 'e.g. E-commerce · Sports equipment (UAE)' },
     { key: 'summary', label: 'Summary', kind: 'textarea', required: true, help: 'One or two sentences, shown on the card.' },
     { key: 'details', label: 'Details', kind: 'textarea', help: 'Shown when the project is opened.' },
     { key: 'features', label: 'Key features', kind: 'lines', help: 'One per line.' },
     { key: 'tech', label: 'Technologies', kind: 'tags', help: 'Comma-separated, e.g. React, Node.js, Firebase' },
-    { key: 'imageUrl', label: 'Screenshot', kind: 'image', help: 'Optional. 16:10 images look best. Replaces the illustration.' },
+    { key: 'url', label: 'Live website URL', kind: 'text', help: 'Shown as “Visit website”. Include https://' },
+    { key: 'images', label: 'Screenshots', kind: 'gallery', help: 'The first image is the card cover. Desktop shots at 16:10 look best; mobile shots are shown whole.' },
     {
       key: 'preview',
       label: 'Illustration (when there is no screenshot)',
