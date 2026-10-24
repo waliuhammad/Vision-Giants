@@ -1,11 +1,12 @@
 import { Link } from 'react-router';
 import { Mail, Phone, MapPin, Info } from 'lucide-react';
 import { company } from '../../data/company';
-import { mainNav } from '../../data/navigation';
-import { services } from '../../data/services';
+import { footerNav } from '../../data/navigation';
+import { useContent } from '../../content/ContentContext';
 import { Logo } from './Logo';
 
 export function Footer() {
+  const { services } = useContent();
   const hasContact = company.email || company.phone || company.address;
   const year = new Date().getFullYear();
 
@@ -21,7 +22,7 @@ export function Footer() {
           <nav aria-label="Footer">
             <h2>Company</h2>
             <ul>
-              {mainNav.map((item) => (
+              {footerNav.map((item) => (
                 <li key={item.to}>
                   <Link to={item.to}>{item.label}</Link>
                 </li>
@@ -82,7 +83,7 @@ export function Footer() {
 
         <div className="site-footer__bottom">
           <span>
-            © {year} {company.name}. All rights reserved.
+            © {year} {company.legalName}. All rights reserved.
           </span>
           <span>Designed &amp; built with React.</span>
         </div>

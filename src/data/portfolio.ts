@@ -1,5 +1,6 @@
 /**
- * Portfolio entries. ALL ITEMS BELOW ARE DEMONSTRATION CONCEPTS, not client work.
+ * Built-in portfolio entries, used until content is imported into the admin dashboard.
+ * ALL ITEMS BELOW ARE DEMONSTRATION CONCEPTS, not client work.
  * Replace with real projects (and set `isDemo: false`) once available. Do not add
  * client names or measurable results unless they are genuine and approved.
  */
@@ -14,9 +15,14 @@ export interface Project {
   details: string;
   features: string[];
   tech: string[];
+  /** Illustration shown when there is no image. */
   preview: PreviewKind;
+  /** Optional screenshot uploaded in the admin dashboard. Replaces the illustration. */
+  imageUrl?: string;
   isDemo: boolean;
 }
+
+export const previewKinds: PreviewKind[] = ['dashboard', 'store', 'mobile', 'kanban', 'booking', 'learning'];
 
 export const categoryLabels: Record<ProjectCategory, string> = {
   web: 'Web Applications',

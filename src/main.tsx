@@ -2,8 +2,10 @@ import { StrictMode } from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router';
 import { App } from './app/App';
-import '@fontsource-variable/inter';
-import '@fontsource-variable/space-grotesk';
+import { defaultContent } from './content/schema';
+import '@fontsource-variable/figtree';
+import '@fontsource-variable/sora';
+import '@fontsource-variable/jetbrains-mono';
 import './styles/tokens.css';
 import './styles/global.css';
 import './styles/components.css';
@@ -19,7 +21,7 @@ const root = document.getElementById('root')!;
 const app = (
   <StrictMode>
     <BrowserRouter>
-      <App />
+      <App content={window.__CONTENT__ ?? defaultContent} />
     </BrowserRouter>
   </StrictMode>
 );

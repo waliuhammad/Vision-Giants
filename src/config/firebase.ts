@@ -2,9 +2,12 @@
  * Firebase integration boundary.
  *
  * Firebase is loaded lazily (dynamic import) and only when every required VITE_FIREBASE_* variable
- * is present, so marketing pages stay static and unaffected. See README > Firebase setup and
- * firestore.rules for the required, write-only security rules.
+ * is present, so marketing pages stay static and unaffected. Public submissions go through Cloud
+ * Functions (functions/src); see README > Backend for setup and firestore.rules / storage.rules.
  */
+import type { FirebaseApp } from 'firebase/app';
+import type { Firestore } from 'firebase/firestore/lite';
+
 const env = import.meta.env;
 
 export const firebaseConfig = {
@@ -18,6 +21,44 @@ export const firebaseConfig = {
 
 export const isFirebaseConfigured = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.appId);
 
+/** Connects to the local Firebase emulators (`npm run emulators`) instead of the real project. */
+export const useEmulators = env.VITE_FIREBASE_USE_EMULATORS === 'true';
+
+/** Must match REGION in functions/src/options.ts. */
+export const FUNCTIONS_REGION = 'us-central1';
+
+let appPromise: Promise<FirebaseApp> | undefined;
+export function getFirebaseApp(): Promise<FirebaseApp> {
+  if (!isFirebaseConfigured) return Promise.reject(new Error('Firebase is not configured'));
+  appPromise ??= import('firebase/app').then(({ initializeApp, getApps }) => getApps()[0] ?? initializeApp(firebaseConfig));
+  return appPromise;
+}
+
+let dbPromise: Promise<Firestore> | undefined;
+/** Firestore Lite (REST, no realtime listeners): small, and works in Node for prerendering. */
+export function getDb(): Promise<Firestore> {
+  dbPromise ??= Promise.all([getFirebaseApp(), import('firebase/firestore/lite')]).then(([app, fs]) => {
+    const db = fs.getFirestore(app);
+    if (useEmulators) fs.connectFirestoreEmulator(db, '127.0.0.1', 8080);
+    return db;
+  });
+  return dbPromise;
+}
+
+async function callFunction(name: string, data: unknown): Promise<void> {
+  const [app, { getFunctions, httpsCallable, connectFunctionsEmulator }] = await Promise.all([
+    getFirebaseApp(),
+    import('firebase/functions'),
+  ]);
+  const functions = getFunctions(app, FUNCTIONS_REGION);
+  if (useEmulators) connectFunctionsEmulator(functions, '127.0.0.1', 5001);
+  await httpsCallable(functions, name)(data);
+}
+
+/** Error code from a failed callable (e.g. 'functions/resource-exhausted'), if any. */
+export const errorCode = (err: unknown): string | undefined =>
+  err && typeof err === 'object' && 'code' in err ? String(err.code) : undefined;
+
 export interface InquiryPayload {
   name: string;
   email: string;
@@ -28,13 +69,25 @@ export interface InquiryPayload {
   consent: boolean;
 }
 
-/** Stores a contact inquiry in the Firestore `inquiries` collection. Throws if not configured. */
-export async function submitInquiry(payload: InquiryPayload): Promise<void> {
-  if (!isFirebaseConfigured) throw new Error('Firebase is not configured');
-  const [{ initializeApp, getApps }, { getFirestore, collection, addDoc, serverTimestamp }] = await Promise.all([
-    import('firebase/app'),
-    import('firebase/firestore'),
-  ]);
-  const app = getApps()[0] ?? initializeApp(firebaseConfig);
-  await addDoc(collection(getFirestore(app), 'inquiries'), { ...payload, createdAt: serverTimestamp() });
+/** Sends a contact inquiry to the `submitInquiry` Cloud Function. */
+export function submitInquiry(payload: InquiryPayload): Promise<void> {
+  return callFunction('submitInquiry', payload);
+}
+
+export interface ApplicationPayload {
+  positionId: string;
+  name: string;
+  email: string;
+  phone: string;
+  portfolioUrl: string;
+  linkedinUrl: string;
+  message: string;
+  consent: boolean;
+  /** CV file name and base64-encoded contents. */
+  cv: { name: string; data: string };
+}
+
+/** Sends a job application (including the CV) to the `submitApplication` Cloud Function. */
+export function submitApplication(payload: ApplicationPayload): Promise<void> {
+  return callFunction('submitApplication', payload);
 }

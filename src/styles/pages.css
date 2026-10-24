@@ -12,9 +12,9 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(40% 50% at 72% 40%, rgba(23, 107, 255, 0.24), transparent 70%),
-    radial-gradient(30% 35% at 88% 18%, rgba(139, 92, 246, 0.2), transparent 70%),
-    radial-gradient(35% 40% at 10% 90%, rgba(34, 211, 238, 0.07), transparent 70%);
+    radial-gradient(40% 50% at 72% 40%, rgba(91, 143, 214, 0.24), transparent 70%),
+    radial-gradient(30% 35% at 88% 18%, rgba(74, 116, 184, 0.2), transparent 70%),
+    radial-gradient(35% 40% at 10% 90%, rgba(143, 184, 232, 0.07), transparent 70%);
   pointer-events: none;
 }
 .hero__grid {
@@ -23,13 +23,13 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
   align-items: center;
   gap: var(--space-6);
-  min-height: min(640px, calc(100vh - var(--header-h) - 140px));
+  min-height: min(680px, calc(100vh - var(--header-h) - 150px));
 }
 .hero h1 {
   font-size: var(--fs-display);
   line-height: 1.04;
   letter-spacing: -0.03em;
-  max-width: 13ch;
+  max-width: 16ch;
 }
 .hero .lead {
   max-width: 46ch;
@@ -46,7 +46,9 @@
 /* Globe composition */
 .globe {
   position: relative;
-  width: min(100%, 600px);
+  /* Capped by the viewport height so the whole globe sits in the first screen */
+  width: min(100%, 600px, calc(100vh - var(--header-h) - 120px));
+  min-width: min(100%, 320px);
   aspect-ratio: 1;
   margin-inline: auto;
 }
@@ -54,7 +56,7 @@
   position: absolute;
   inset: 12%;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(23, 107, 255, 0.45) 0%, rgba(139, 92, 246, 0.18) 45%, transparent 70%);
+  background: radial-gradient(circle, rgba(91, 143, 214, 0.45) 0%, rgba(74, 116, 184, 0.18) 45%, transparent 70%);
   filter: blur(20px);
   animation: pulse-glow 6s ease-in-out infinite;
 }
@@ -108,7 +110,7 @@
   font-size: 0.78rem;
   font-weight: 500;
   color: var(--color-text);
-  background: rgba(9, 18, 42, 0.72);
+  background: rgba(16, 37, 72, 0.72);
   border: 1px solid var(--border-strong);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -281,8 +283,8 @@
 .service-detail__deliverables {
   padding: var(--space-5);
   border-radius: 12px;
-  background: rgba(7, 13, 32, 0.55);
-  border: 1px solid rgba(96, 140, 255, 0.12);
+  background: rgba(13, 31, 62, 0.55);
+  border: 1px solid rgba(160, 186, 228, 0.12);
 }
 .service-detail__deliverables h4 {
   font-family: var(--font-body);
@@ -435,7 +437,7 @@ dialog.modal[open] {
   left: calc(var(--space-6) * -1);
   width: var(--space-6);
   height: 1px;
-  background: linear-gradient(90deg, rgba(34, 211, 238, 0.1), rgba(34, 211, 238, 0.8));
+  background: linear-gradient(90deg, rgba(143, 184, 232, 0.1), rgba(143, 184, 232, 0.8));
 }
 .arch__col + .arch__col::after {
   content: '';
@@ -485,7 +487,7 @@ dialog.modal[open] {
     left: 50%;
     width: 1px;
     height: var(--space-6);
-    background: linear-gradient(180deg, rgba(34, 211, 238, 0.1), rgba(34, 211, 238, 0.8));
+    background: linear-gradient(180deg, rgba(143, 184, 232, 0.1), rgba(143, 184, 232, 0.8));
   }
   .arch__col + .arch__col::after {
     top: -10px;
@@ -498,7 +500,7 @@ dialog.modal[open] {
 }
 .stack-list li {
   padding: 10px 0;
-  border-bottom: 1px solid rgba(96, 140, 255, 0.1);
+  border-bottom: 1px solid rgba(160, 186, 228, 0.1);
   color: var(--color-muted);
   font-size: 0.95rem;
 }
@@ -519,8 +521,8 @@ dialog.modal[open] {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(35% 40% at 20% 70%, rgba(23, 107, 255, 0.2), transparent 70%),
-    radial-gradient(30% 35% at 85% 20%, rgba(139, 92, 246, 0.14), transparent 70%);
+    radial-gradient(35% 40% at 20% 70%, rgba(91, 143, 214, 0.2), transparent 70%),
+    radial-gradient(30% 35% at 85% 20%, rgba(74, 116, 184, 0.14), transparent 70%);
   pointer-events: none;
 }
 .contact__grid {
@@ -622,7 +624,7 @@ dialog.modal[open] {
   font-family: var(--font-heading);
   font-size: 2.4rem;
   font-weight: 600;
-  color: rgba(96, 140, 255, 0.12);
+  color: rgba(160, 186, 228, 0.12);
 }
 
 /* =========================================================

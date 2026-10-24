@@ -1,15 +1,14 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Send, LoaderCircle, CircleCheck, CircleAlert, Info } from 'lucide-react';
 import { company } from '../../data/company';
-import { services } from '../../data/services';
-import { isFirebaseConfigured, submitInquiry, type InquiryPayload } from '../../config/firebase';
+import { useContent } from '../../content/ContentContext';
+import { errorCode, isFirebaseConfigured, submitInquiry, type InquiryPayload } from '../../config/firebase';
 import { Button } from './Button';
 
-const projectTypes = [...services.map((s) => s.title), 'Careers / general interest', 'Other'];
 /** Editable budget brackets. */
 const budgets = ['Not sure yet', 'Under $5,000', '$5,000 – $15,000', '$15,000 – $50,000', '$50,000+'];
 
-type Status = 'idle' | 'submitting' | 'success' | 'error' | 'unconfigured';
+type Status = 'idle' | 'submitting' | 'success' | 'error' | 'rate-limited' | 'unconfigured';
 type Errors = Partial<Record<keyof InquiryPayload, string>>;
 
 const empty: InquiryPayload = { name: '', email: '', company: '', projectType: '', budget: '', message: '', consent: false };
@@ -26,6 +25,8 @@ function validate(v: InquiryPayload): Errors {
 }
 
 export function ContactForm() {
+  const { services } = useContent();
+  const projectTypes = [...services.map((s) => s.title), 'Careers / general interest', 'Other'];
   const [values, setValues] = useState<InquiryPayload>(empty);
   const [errors, setErrors] = useState<Errors>({});
   const [touched, setTouched] = useState(false);
@@ -80,7 +81,7 @@ export function ContactForm() {
       setTouched(false);
     } catch (err) {
       console.error('Inquiry submission failed', err);
-      setStatus('error');
+      setStatus(errorCode(err) === 'functions/resource-exhausted' ? 'rate-limited' : 'error');
     }
   };
 
@@ -204,6 +205,12 @@ export function ContactForm() {
           <p className="alert alert--error">
             <CircleAlert size={18} aria-hidden="true" />
             <span>Sorry, your message could not be sent. Please try again in a moment.{emailFallback}</span>
+          </p>
+        )}
+        {status === 'rate-limited' && (
+          <p className="alert alert--error">
+            <CircleAlert size={18} aria-hidden="true" />
+            <span>You’ve sent several messages in a short time. Please wait a while before trying again.{emailFallback}</span>
           </p>
         )}
         {status === 'unconfigured' && (

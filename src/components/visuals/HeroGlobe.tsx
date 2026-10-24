@@ -25,14 +25,14 @@ export function HeroGlobe() {
       <svg className="globe__orbits" viewBox="0 0 500 500" fill="none">
         <defs>
           <linearGradient id="orbit-a" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stopColor="#22d3ee" stopOpacity="0" />
-            <stop offset="0.5" stopColor="#22d3ee" stopOpacity="0.7" />
-            <stop offset="1" stopColor="#8b5cf6" stopOpacity="0" />
+            <stop offset="0" stopColor="#8fb8e8" stopOpacity="0" />
+            <stop offset="0.5" stopColor="#8fb8e8" stopOpacity="0.7" />
+            <stop offset="1" stopColor="#4a74b8" stopOpacity="0" />
           </linearGradient>
           <linearGradient id="orbit-b" x1="0" y1="1" x2="1" y2="0">
-            <stop offset="0" stopColor="#8b5cf6" stopOpacity="0" />
-            <stop offset="0.5" stopColor="#8b5cf6" stopOpacity="0.6" />
-            <stop offset="1" stopColor="#176bff" stopOpacity="0" />
+            <stop offset="0" stopColor="#4a74b8" stopOpacity="0" />
+            <stop offset="0.5" stopColor="#4a74b8" stopOpacity="0.6" />
+            <stop offset="1" stopColor="#5b8fd6" stopOpacity="0" />
           </linearGradient>
         </defs>
         {stars.map((s, i) => (
@@ -42,17 +42,17 @@ export function HeroGlobe() {
             cx={s.cx}
             cy={s.cy}
             r={s.r}
-            fill="#9cc3ff"
+            fill="#a9c6ee"
             style={{ animationDelay: s.d }}
           />
         ))}
         <g className="globe__orbit globe__orbit--1">
           <ellipse cx="250" cy="250" rx="235" ry="82" stroke="url(#orbit-a)" strokeWidth="1.2" />
-          <circle cx="485" cy="250" r="3.5" fill="#22d3ee" />
+          <circle cx="485" cy="250" r="3.5" fill="#8fb8e8" />
         </g>
         <g className="globe__orbit globe__orbit--2">
           <ellipse cx="250" cy="250" rx="225" ry="120" stroke="url(#orbit-b)" strokeWidth="1" />
-          <circle cx="25" cy="250" r="3" fill="#a78bfa" />
+          <circle cx="25" cy="250" r="3" fill="#9db9e3" />
         </g>
       </svg>
       <Globe />

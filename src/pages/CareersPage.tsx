@@ -1,5 +1,6 @@
 import { ArrowRight, Briefcase, GraduationCap, Handshake, Sparkles, Compass, Code, Server, Layers, PenTool } from 'lucide-react';
-import { openPositions, disciplines } from '../data/careers';
+import { disciplines } from '../data/careers';
+import { useContent } from '../content/ContentContext';
 import { PageHero } from '../components/ui/PageHero';
 import { Button } from '../components/ui/Button';
 import { SectionHeading } from '../components/ui/SectionHeading';
@@ -17,12 +18,13 @@ const principles = [
 const disciplineIcons = [Code, Server, Layers, PenTool];
 
 const steps = [
-  { title: 'Introduce yourself', text: 'Send us a short message about who you are and the kind of work you enjoy.' },
-  { title: 'Share your work', text: 'Include links to your portfolio, GitHub or CV so we can learn about your experience.' },
+  { title: 'Apply online', text: 'Choose an open role, or send a general application if nothing fits yet.' },
+  { title: 'Share your work', text: 'Attach your CV and add links to your portfolio, GitHub or LinkedIn.' },
   { title: 'Start a conversation', text: 'When a suitable opportunity opens, we’ll reach out to talk about next steps.' },
 ];
 
 export default function CareersPage() {
+  const { positions: openPositions } = useContent();
   return (
     <>
       <PageHero
@@ -31,7 +33,7 @@ export default function CareersPage() {
         title="Build Your Future With Us."
         lead="We’re always interested in meeting talented, curious people who love building great digital products. Learn how we work and how to get in touch."
         actions={
-          <Button to="/contact/?type=careers" icon={<ArrowRight size={18} />}>
+          <Button to="/careers/apply/" icon={<ArrowRight size={18} />}>
             Express Your Interest
           </Button>
         }
@@ -75,7 +77,7 @@ export default function CareersPage() {
                       {job.type} · {job.location}
                     </p>
                     <p>{job.summary}</p>
-                    <Button to="/contact/?type=careers" variant="outline" size="sm" icon={<ArrowRight size={15} />}>
+                    <Button to={`/careers/apply/?position=${encodeURIComponent(job.id)}`} variant="outline" size="sm" icon={<ArrowRight size={15} />}>
                       Apply<span className="visually-hidden"> for {job.title}</span>
                     </Button>
                   </article>
@@ -94,7 +96,7 @@ export default function CareersPage() {
                   to work with us in the future.
                 </p>
               </div>
-              <Button to="/contact/?type=careers" icon={<ArrowRight size={16} />}>
+              <Button to="/careers/apply/" icon={<ArrowRight size={16} />}>
                 Get in touch
               </Button>
             </Reveal>
@@ -146,7 +148,7 @@ export default function CareersPage() {
       <CTASection
         title="Interested in working with us?"
         text="Tell us about yourself and the kind of work you’d love to do. We’ll keep your details in mind for future opportunities."
-        primary={{ label: 'Express Your Interest', to: '/contact/?type=careers' }}
+        primary={{ label: 'Express Your Interest', to: '/careers/apply/' }}
         secondary={{ label: 'About Us', to: '/about/' }}
       />
     </>

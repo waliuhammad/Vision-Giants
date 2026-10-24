@@ -1,29 +1,71 @@
 rules_version = '2';
 
-// Contact-form inquiries are write-only from the public website:
-// visitors can create a validated document but can never read, update or delete.
-// Read submissions in the Firebase console or from a trusted server using the Admin SDK.
+// Access model
+// - Public visitors can read published website content and nothing else.
+// - Inquiries and job applications are created only by Cloud Functions (functions/src), which
+//   validate and rate-limit them; the website can never write them directly.
+// - Admins are users whose UID has a document in `admins` (create it in the Firebase console).
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /inquiries/{id} {
-      allow read, update, delete: if false;
-      allow create: if request.resource.data.keys().hasOnly(
-                         ['name', 'email', 'company', 'projectType', 'budget', 'message', 'consent', 'createdAt'])
-                    && request.resource.data.name is string
-                    && request.resource.data.name.size() >= 2 && request.resource.data.name.size() <= 120
-                    && request.resource.data.email is string
-                    && request.resource.data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
-                    && request.resource.data.email.size() <= 200
-                    && request.resource.data.company is string && request.resource.data.company.size() <= 200
-                    && request.resource.data.projectType is string && request.resource.data.projectType.size() <= 80
-                    && request.resource.data.budget is string && request.resource.data.budget.size() <= 80
-                    && request.resource.data.message is string
-                    && request.resource.data.message.size() >= 20 && request.resource.data.message.size() <= 5000
-                    && request.resource.data.consent == true
-                    && request.resource.data.createdAt == request.time;
+    function isAdmin() {
+      return request.auth != null && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
 
-    // Deny everything else by default.
+    // Lets the dashboard check whether the signed-in user is an admin. Managed in the console only.
+    match /admins/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // ---- Submissions (written by Cloud Functions, managed by admins) ----
+    match /inquiries/{id} {
+      allow read, delete: if isAdmin();
+      allow update: if isAdmin()
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'notes', 'updatedAt'])
+                    && request.resource.data.status in ['new', 'contacted', 'closed']
+                    && request.resource.data.notes is string && request.resource.data.notes.size() <= 5000;
+      allow create: if false;
+    }
+
+    match /applications/{id} {
+      allow read, delete: if isAdmin();
+      allow update: if isAdmin()
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'notes', 'updatedAt'])
+                    && request.resource.data.status in ['new', 'reviewing', 'interview', 'rejected', 'hired']
+                    && request.resource.data.notes is string && request.resource.data.notes.size() <= 5000;
+      allow create: if false;
+    }
+
+    // ---- Website content (managed in the admin dashboard) ----
+    function isContent() {
+      return request.resource.data.published is bool && request.resource.data.order is number;
+    }
+
+    match /projects/{id} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow create, update: if isAdmin() && isContent();
+      allow delete: if isAdmin();
+    }
+
+    match /services/{id} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow create, update: if isAdmin() && isContent();
+      allow delete: if isAdmin();
+    }
+
+    match /positions/{id} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow create, update: if isAdmin() && isContent();
+      allow delete: if isAdmin();
+    }
+
+    // `config/public` tells the website whether to use Firestore content or its built-in defaults.
+    match /config/public {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // `mail` (email queue) and `rateLimits` are server-only. Deny everything else by default.
     match /{document=**} {
       allow read, write: if false;
     }

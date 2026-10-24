@@ -2,7 +2,7 @@ import { Link } from 'react-router';
 import { ArrowRight } from 'lucide-react';
 import type { Project } from '../../data/portfolio';
 import { categoryLabels } from '../../data/portfolio';
-import { ProjectPreview } from '../visuals/ProjectPreview';
+import { ProjectMedia } from '../visuals/ProjectPreview';
 
 interface ProjectCardProps {
   project: Project;
@@ -14,7 +14,7 @@ export function ProjectCard({ project, onOpen, headingLevel: H = 'h3' }: Project
   return (
     <article className="card card--interactive project-card">
       <div className="project-card__media">
-        <ProjectPreview kind={project.preview} />
+        <ProjectMedia project={project} />
         {project.isDemo && <span className="badge badge--neutral">Concept</span>}
       </div>
       <div className="project-card__body">

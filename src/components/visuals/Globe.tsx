@@ -132,9 +132,9 @@ export function Globe() {
 
       // Sphere body
       const body = ctx.createRadialGradient(cx - R * 0.35, cy - R * 0.4, R * 0.1, cx, cy, R);
-      body.addColorStop(0, 'rgba(40, 110, 255, 0.35)');
-      body.addColorStop(0.6, 'rgba(14, 40, 110, 0.32)');
-      body.addColorStop(1, 'rgba(10, 24, 70, 0.15)');
+      body.addColorStop(0, 'rgba(70, 120, 200, 0.32)');
+      body.addColorStop(0.6, 'rgba(20, 48, 100, 0.3)');
+      body.addColorStop(1, 'rgba(14, 33, 66, 0.15)');
       ctx.fillStyle = body;
       ctx.beginPath();
       ctx.arc(cx, cy, R, 0, Math.PI * 2);
@@ -142,16 +142,16 @@ export function Globe() {
 
       // Atmosphere rim
       const rim = ctx.createRadialGradient(cx, cy, R * 0.92, cx, cy, R * 1.12);
-      rim.addColorStop(0, 'rgba(34, 211, 238, 0)');
-      rim.addColorStop(0.35, 'rgba(34, 211, 238, 0.28)');
-      rim.addColorStop(1, 'rgba(23, 107, 255, 0)');
+      rim.addColorStop(0, 'rgba(143, 184, 232, 0)');
+      rim.addColorStop(0.35, 'rgba(143, 184, 232, 0.28)');
+      rim.addColorStop(1, 'rgba(91, 143, 214, 0)');
       ctx.fillStyle = rim;
       ctx.beginPath();
       ctx.arc(cx, cy, R * 1.12, 0, Math.PI * 2);
       ctx.fill();
 
       // Ocean grid dots (very faint)
-      ctx.fillStyle = 'rgba(120, 160, 255, 0.16)';
+      ctx.fillStyle = 'rgba(150, 185, 235, 0.16)';
       for (const p of ocean) {
         const [x, y, z] = project(p.x, p.y, p.z, cosR, sinR);
         if (z < 0) continue;
@@ -165,16 +165,16 @@ export function Globe() {
         const sy = cy - y * R;
         if (z < 0) {
           if (z > -0.6) {
-            ctx.fillStyle = 'rgba(90, 120, 255, 0.10)';
+            ctx.fillStyle = 'rgba(120, 155, 215, 0.10)';
             ctx.fillRect(sx, sy, 1, 1);
           }
           continue;
         }
         const a = 0.4 + 0.6 * z;
         const s = 1.1 + 1.3 * z;
-        const r = Math.round(34 + 105 * p.hue);
-        const g = Math.round(200 - 110 * p.hue);
-        ctx.fillStyle = `rgba(${r}, ${g}, 246, ${a.toFixed(2)})`;
+        const r = Math.round(110 + 70 * p.hue);
+        const g = Math.round(165 + 35 * p.hue);
+        ctx.fillStyle = `rgba(${r}, ${g}, 238, ${a.toFixed(2)})`;
         ctx.fillRect(sx - s / 2, sy - s / 2, s, s);
       }
 
@@ -200,7 +200,7 @@ export function Globe() {
           }
         }
         if (!visible) continue;
-        ctx.strokeStyle = 'rgba(34, 211, 238, 0.32)';
+        ctx.strokeStyle = 'rgba(143, 184, 232, 0.32)';
         ctx.stroke();
 
         const end = arc.pts[0]!;
@@ -221,7 +221,7 @@ export function Globe() {
           const sy = cy - qy * R;
           const halo = ctx.createRadialGradient(sx, sy, 0, sx, sy, 7);
           halo.addColorStop(0, 'rgba(200, 245, 255, 0.95)');
-          halo.addColorStop(1, 'rgba(34, 211, 238, 0)');
+          halo.addColorStop(1, 'rgba(143, 184, 232, 0)');
           ctx.fillStyle = halo;
           ctx.beginPath();
           ctx.arc(sx, sy, 7, 0, Math.PI * 2);
