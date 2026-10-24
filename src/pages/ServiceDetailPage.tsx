@@ -1,8 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { useParams } from 'react-router';
 import { ArrowRight, ArrowLeft, Check } from 'lucide-react';
 import { getServiceById, getServiceIcon, services } from '../data/services';
+import { serviceProjectCategory, type Project } from '../data/portfolio';
+import { company } from '../data/company';
+import { useContent } from '../content/ContentContext';
+import { ProjectCard } from '../components/ui/ProjectCard';
+import { ProjectDialog } from '../components/ui/ProjectDialog';
 import { PageHero } from '../components/ui/PageHero';
 import { Button } from '../components/ui/Button';
 import { SectionHeading } from '../components/ui/SectionHeading';
@@ -20,15 +25,19 @@ const sectionLastStyle: CSSProperties = { paddingTop: SPACE, paddingBottom: 0 };
 export function ServiceDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const service = slug ? getServiceById(slug) : undefined;
+  const { projects } = useContent();
+  const [activeProject, setActiveProject] = useState<Project | null>(null);
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
-    if (service) document.title = `${service.title} | Your Company`;
+    if (service) document.title = `${service.title} | ${company.name}`;
   }, [slug, service]);
 
   if (!service) return <NotFoundPage />;
 
   const Icon = getServiceIcon(service.icon);
+  const projectCategory = serviceProjectCategory[service.id];
+  const serviceProjects = projectCategory ? projects.filter((p) => p.category === projectCategory) : [];
   const related = services.filter((s) => s.id !== service.id).slice(0, 3);
   const hasPlatforms = !!service.platforms && service.platforms.length > 0;
 
@@ -108,6 +117,33 @@ export function ServiceDetailPage() {
           </div>
         </div>
       </section>
+
+      {/* Projects (portfolio items in this service's category, e.g. Website Development) */}
+      {serviceProjects.length > 0 && (
+        <section className="section section--alt" style={sectionStyle} aria-labelledby="service-projects-title">
+          <div className="container">
+            <SectionHeading
+              id="service-projects-title"
+              eyebrow="Projects"
+              title={`${service.title} projects`}
+              lead="Live websites we’ve designed and built. Open a project to see screenshots and details."
+              aside={
+                <Button to="/portfolio/" variant="outline" icon={<ArrowRight size={16} />}>
+                  Full portfolio
+                </Button>
+              }
+            />
+            <div className="portfolio-grid">
+              {serviceProjects.map((p, i) => (
+                <Reveal key={p.id} delay={(i % 2) * 90}>
+                  <ProjectCard project={p} onOpen={setActiveProject} />
+                </Reveal>
+              ))}
+            </div>
+          </div>
+          <ProjectDialog project={activeProject} onClose={() => setActiveProject(null)} />
+        </section>
+      )}
 
       {/* Platforms (only for services that have them, e.g. Ecommerce) */}
       {hasPlatforms && (

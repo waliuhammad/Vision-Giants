@@ -359,3 +359,11 @@ export const projects: Project[] = [
     isDemo: false,
   },
 ];
+
+/** Which portfolio category is shown on each service's page (keys are service ids in services.ts). */
+export const serviceProjectCategory: Record<string, ProjectCategory> = {
+  'website-development': 'web',
+  ecommerce: 'ecommerce',
+  'app-development': 'mobile',
+  'software-development': 'custom',
+};
