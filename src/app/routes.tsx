@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router';
 import HomePage from '../pages/HomePage';
 import ServicesPage from '../pages/ServicesPage';
+import ServiceDetailPage from '../pages/ServiceDetailPage';
 import PortfolioPage from '../pages/PortfolioPage';
 import AboutPage from '../pages/AboutPage';
 import TechnologiesPage from '../pages/TechnologiesPage';
@@ -14,6 +15,7 @@ export function AppRoutes() {
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/services" element={<ServicesPage />} />
+      <Route path="/services/:slug" element={<ServiceDetailPage />} />
       <Route path="/portfolio" element={<PortfolioPage />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/technologies" element={<TechnologiesPage />} />

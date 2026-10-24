@@ -42,6 +42,8 @@ const values = [
   },
 ];
 
+const HOME_SERVICES_COUNT = 6;
+
 const delay = (ms: number) => ({ '--delay': `${ms}ms` }) as CSSProperties;
 
 export default function HomePage() {
@@ -96,18 +98,19 @@ export default function HomePage() {
             eyebrow="What we do"
             title="End-to-end digital solutions for your business"
             lead="A complete range of design and development services to help you plan, build and scale digital products."
-            aside={
-              <Button to="/services/" variant="outline" icon={<ArrowRight size={16} />}>
-                All services
-              </Button>
-            }
           />
           <div className="grid grid--3">
-            {services.map((s, i) => (
+            {services.slice(0, HOME_SERVICES_COUNT).map((s, i) => (
               <Reveal key={s.id} delay={(i % 3) * 90}>
                 <ServiceCard service={s} />
               </Reveal>
             ))}
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2.5rem' }}>
+            <Button to="/services/" variant="outline" icon={<ArrowRight size={16} />}>
+              See all services
+            </Button>
           </div>
         </div>
       </section>
