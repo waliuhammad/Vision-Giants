@@ -1,0 +1,75 @@
+:root {
+  /* Brand palette */
+  --color-background: #070b1a;
+  --color-surface: #0b1630;
+  --color-surface-2: #0e1b3a;
+  --color-primary: #176bff;
+  --color-primary-strong: #0f5ae6;
+  --color-cyan: #22d3ee;
+  --color-purple: #8b5cf6;
+  --color-text: #f4f7ff;
+  --color-muted: #9aa8c7;
+  --color-subtle: #6f7fa3;
+  --color-success: #34d399;
+  --color-danger: #f87171;
+  --color-warning: #fbbf24;
+
+  /* Borders & surfaces */
+  --border: rgba(96, 140, 255, 0.16);
+  --border-strong: rgba(96, 140, 255, 0.34);
+  --card-bg: linear-gradient(180deg, rgba(16, 32, 70, 0.72) 0%, rgba(10, 20, 46, 0.72) 100%);
+  --glass-bg: rgba(9, 16, 36, 0.72);
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #176bff 0%, #3b82f6 55%, #22d3ee 140%);
+  --gradient-text: linear-gradient(90deg, #3b8cff 0%, #22d3ee 100%);
+  --gradient-accent: linear-gradient(135deg, #176bff 0%, #8b5cf6 100%);
+
+  /* Shadows & glows */
+  --shadow-card: 0 10px 30px -12px rgba(0, 0, 0, 0.6);
+  --shadow-card-hover: 0 18px 40px -16px rgba(23, 107, 255, 0.45);
+  --glow-primary: 0 0 0 1px rgba(23, 107, 255, 0.5), 0 8px 28px -6px rgba(23, 107, 255, 0.6);
+
+  /* Typography */
+  --font-heading: 'Space Grotesk Variable', 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --fs-display: clamp(2.35rem, 1.4rem + 3.6vw, 4rem);
+  --fs-h1: clamp(2.1rem, 1.4rem + 2.6vw, 3.4rem);
+  --fs-h2: clamp(1.75rem, 1.3rem + 1.6vw, 2.6rem);
+  --fs-h3: clamp(1.1rem, 1rem + 0.35vw, 1.3rem);
+  --fs-lead: clamp(1rem, 0.95rem + 0.25vw, 1.15rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+  --fs-eyebrow: 0.75rem;
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --section-y: clamp(4rem, 2.5rem + 6vw, 7.5rem);
+
+  /* Layout */
+  --container: 1200px;
+  --gutter: clamp(16px, 4vw, 32px);
+  --header-h: 72px;
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+
+  /* Motion */
+  --dur-fast: 160ms;
+  --dur: 260ms;
+  --dur-slow: 600ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Breakpoints (reference only; CSS custom properties can't be used in media queries)
+     sm 640px · md 768px · lg 1024px · xl 1280px */
+}
