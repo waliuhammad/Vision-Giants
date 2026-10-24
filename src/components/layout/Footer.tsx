@@ -2,10 +2,11 @@ import { Link } from 'react-router';
 import { Mail, Phone, MapPin, Info } from 'lucide-react';
 import { company } from '../../data/company';
 import { mainNav } from '../../data/navigation';
-import { services } from '../../data/services';
+import { useContent } from '../../content/ContentContext';
 import { Logo } from './Logo';
 
 export function Footer() {
+  const { services } = useContent();
   const hasContact = company.email || company.phone || company.address;
   const year = new Date().getFullYear();
 

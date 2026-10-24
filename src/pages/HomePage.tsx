@@ -1,8 +1,7 @@
 import { ArrowRight, ArrowDown, CodeXml, Smartphone, Cpu, Palette, Lightbulb, Users, Layers, ShieldCheck } from 'lucide-react';
 import type { CSSProperties } from 'react';
 import { company } from '../data/company';
-import { services } from '../data/services';
-import { projects } from '../data/portfolio';
+import { useContent } from '../content/ContentContext';
 import { Button } from '../components/ui/Button';
 import { SectionHeading } from '../components/ui/SectionHeading';
 import { ServiceCard } from '../components/ui/ServiceCard';
@@ -45,6 +44,7 @@ const values = [
 const delay = (ms: number) => ({ '--delay': `${ms}ms` }) as CSSProperties;
 
 export default function HomePage() {
+  const { services, projects } = useContent();
   return (
     <>
       <section className="hero" aria-labelledby="hero-title">

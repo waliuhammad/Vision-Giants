@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, m } from 'motion/react';
 import { ArrowRight, Check, Info, X } from 'lucide-react';
-import { projects, categoryLabels, type Project, type ProjectCategory } from '../data/portfolio';
+import { categoryLabels, type Project, type ProjectCategory } from '../data/portfolio';
+import { useContent } from '../content/ContentContext';
 import { PageHero } from '../components/ui/PageHero';
 import { Button } from '../components/ui/Button';
 import { ProjectCard } from '../components/ui/ProjectCard';
 import { CTASection } from '../components/ui/CTASection';
 import { Reveal } from '../components/animations/Reveal';
 import { NetworkVisual } from '../components/visuals/IsoVisuals';
-import { ProjectPreview } from '../components/visuals/ProjectPreview';
+import { ProjectMedia } from '../components/visuals/ProjectPreview';
 
 type Filter = 'all' | ProjectCategory;
 const filters: { id: Filter; label: string }[] = [
@@ -37,7 +38,7 @@ function ProjectDialog({ project, onClose }: { project: Project | null; onClose:
       {project && (
         <>
           <div className="modal__media">
-            <ProjectPreview kind={project.preview} />
+            <ProjectMedia project={project} />
           </div>
           <button type="button" className="modal__close" onClick={onClose} aria-label="Close project details">
             <X size={18} />
@@ -83,6 +84,7 @@ function ProjectDialog({ project, onClose }: { project: Project | null; onClose:
 }
 
 export default function PortfolioPage() {
+  const { projects } = useContent();
   const [filter, setFilter] = useState<Filter>('all');
   const [active, setActive] = useState<Project | null>(null);
   const visible = filter === 'all' ? projects : projects.filter((p) => p.category === filter);
@@ -109,11 +111,14 @@ export default function PortfolioPage() {
             Projects
           </h2>
           <Reveal>
-            <p className="note" style={{ marginBottom: 'var(--space-6)' }}>
-              <Info size={16} aria-hidden="true" />
-              The projects below are demonstration concepts that illustrate our design and engineering approach. They
-              are not client case studies.
-            </p>
+            {projects.some((p) => p.isDemo) && (
+              <p className="note" style={{ marginBottom: 'var(--space-6)' }}>
+                <Info size={16} aria-hidden="true" />
+                {projects.every((p) => p.isDemo)
+                  ? 'The projects below are demonstration concepts that illustrate our design and engineering approach. They are not client case studies.'
+                  : 'Projects marked “Concept” are demonstrations that illustrate our design and engineering approach, not client case studies.'}
+              </p>
+            )}
             <div className="filters" role="group" aria-label="Filter projects by category">
               {filters.map((f) => (
                 <button

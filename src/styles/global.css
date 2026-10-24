@@ -13,6 +13,8 @@ body {
   margin: 0;
   min-height: 100vh;
   background-color: var(--color-background);
+  background-image: var(--gradient-page);
+  background-attachment: fixed;
   color: var(--color-text);
   font-family: var(--font-body);
   font-size: var(--fs-body);
@@ -39,7 +41,7 @@ h3,
 h4 {
   margin: 0;
   font-family: var(--font-heading);
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.12;
   letter-spacing: -0.02em;
   text-wrap: balance;
@@ -94,7 +96,7 @@ button {
 }
 
 ::selection {
-  background: rgba(23, 107, 255, 0.5);
+  background: rgba(91, 143, 214, 0.5);
   color: #fff;
 }
 
@@ -145,9 +147,9 @@ button {
 
 .section--alt {
   background:
-    radial-gradient(60% 50% at 50% 0%, rgba(23, 107, 255, 0.07), transparent 70%),
-    linear-gradient(180deg, rgba(11, 22, 48, 0.55), rgba(7, 11, 26, 0));
-  border-top: 1px solid rgba(96, 140, 255, 0.08);
+    radial-gradient(60% 50% at 50% 0%, rgba(91, 143, 214, 0.07), transparent 70%),
+    linear-gradient(180deg, rgba(11, 22, 48, 0.55), rgba(14, 33, 66, 0));
+  border-top: 1px solid rgba(160, 186, 228, 0.08);
 }
 
 .grid {
@@ -187,17 +189,18 @@ button {
   align-items: center;
   gap: 10px;
   margin-bottom: var(--space-4);
+  font-family: var(--font-mono);
   font-size: var(--fs-eyebrow);
-  font-weight: 600;
-  letter-spacing: 0.18em;
+  font-weight: 500;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--color-cyan);
+  color: #b9c6dc;
 }
 .eyebrow::before {
   content: '';
-  width: 22px;
+  width: 18px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--color-cyan));
+  background: rgba(185, 198, 220, 0.6);
 }
 
 .text-gradient {
@@ -223,8 +226,8 @@ button {
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(96, 140, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(96, 140, 255, 0.06) 1px, transparent 1px);
+    linear-gradient(rgba(160, 186, 228, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(160, 186, 228, 0.06) 1px, transparent 1px);
   background-size: 56px 56px;
   mask-image: radial-gradient(70% 60% at 50% 30%, #000 0%, transparent 75%);
   -webkit-mask-image: radial-gradient(70% 60% at 50% 30%, #000 0%, transparent 75%);

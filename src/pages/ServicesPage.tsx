@@ -1,5 +1,6 @@
 import { ArrowRight, Check, Plus } from 'lucide-react';
-import { services } from '../data/services';
+import { getServiceIcon } from '../data/services';
+import { useContent } from '../content/ContentContext';
 import { faqs } from '../data/faq';
 import { PageHero } from '../components/ui/PageHero';
 import { Button } from '../components/ui/Button';
@@ -11,6 +12,7 @@ import { Reveal } from '../components/animations/Reveal';
 import { LayersVisual } from '../components/visuals/IsoVisuals';
 
 export default function ServicesPage() {
+  const { services } = useContent();
   return (
     <>
       <PageHero
@@ -59,7 +61,7 @@ export default function ServicesPage() {
           />
           <div className="stack">
             {services.map((s, i) => {
-              const Icon = s.icon;
+              const Icon = getServiceIcon(s.icon);
               return (
                 <Reveal key={s.id} as="article" id={s.id} className="card service-detail">
                   <div>

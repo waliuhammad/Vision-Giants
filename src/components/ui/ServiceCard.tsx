@@ -1,9 +1,9 @@
 import { Link } from 'react-router';
 import { ArrowRight } from 'lucide-react';
-import type { Service } from '../../data/services';
+import { getServiceIcon, type Service } from '../../data/services';
 
 export function ServiceCard({ service }: { service: Service }) {
-  const Icon = service.icon;
+  const Icon = getServiceIcon(service.icon);
   return (
     <article className="card card--interactive service-card">
       <span className="icon-wrap" aria-hidden="true">

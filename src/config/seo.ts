@@ -52,7 +52,19 @@ export const pages: PageMeta[] = [
     description:
       'Interested in joining our team? Learn about our culture and working principles, and how to express your interest.',
   },
+  {
+    path: '/careers/apply/',
+    title: `Apply | Careers | ${company.name}`,
+    description: 'Apply for an open position or send a general application with your CV.',
+  },
 ];
+
+/** Client-only admin dashboard shell (not indexed, not in the sitemap). */
+export const adminMeta: PageMeta = {
+  path: '/admin/',
+  title: `Admin | ${company.name}`,
+  description: 'Website administration.',
+};
 
 export const notFoundMeta: PageMeta = {
   path: '/404',
@@ -88,19 +100,19 @@ function organizationJsonLd(): string {
 
 /** Head tags injected into each prerendered HTML file. */
 export function renderHeadTags(meta: PageMeta): string {
-  const isNotFound = meta === notFoundMeta;
+  const noIndex = meta === notFoundMeta || meta === adminMeta;
   const url = canonicalUrl(meta.path);
   const t = escapeHtml(meta.title);
   const d = escapeHtml(meta.description);
   return [
     `<title>${t}</title>`,
     `<meta name="description" content="${d}" />`,
-    isNotFound ? '<meta name="robots" content="noindex" />' : `<link rel="canonical" href="${url}" />`,
+    noIndex ? '<meta name="robots" content="noindex" />' : `<link rel="canonical" href="${url}" />`,
     `<meta property="og:type" content="website" />`,
     `<meta property="og:site_name" content="${escapeHtml(company.name)}" />`,
     `<meta property="og:title" content="${t}" />`,
     `<meta property="og:description" content="${d}" />`,
-    isNotFound ? '' : `<meta property="og:url" content="${url}" />`,
+    noIndex ? '' : `<meta property="og:url" content="${url}" />`,
     `<meta property="og:image" content="${SITE_URL}/og-image.png" />`,
     `<meta name="twitter:card" content="summary_large_image" />`,
     meta.path === '/' ? organizationJsonLd() : '',

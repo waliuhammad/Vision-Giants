@@ -1,6 +1,6 @@
 /**
- * Open positions. Intentionally EMPTY: no confirmed vacancies were supplied.
- * Add real roles here; the Careers page renders job cards automatically when this list is non-empty.
+ * Built-in open positions. Intentionally EMPTY: no confirmed vacancies were supplied.
+ * Positions are managed in the admin dashboard; the Careers page renders job cards when any are published.
  */
 export interface Position {
   id: string;
@@ -8,6 +8,8 @@ export interface Position {
   type: string;
   location: string;
   summary: string;
+  /** Longer role description shown on the application page. */
+  description?: string;
 }
 
 export const openPositions: Position[] = [];
