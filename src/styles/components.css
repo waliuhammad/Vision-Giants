@@ -39,27 +39,42 @@
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 1.05rem;
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
+  gap: 12px;
   white-space: nowrap;
 }
-.logo__mark {
+.logo__mark img {
+  width: auto;
+  height: 40px;
+}
+.logo__text {
+  display: grid;
+  line-height: 1.1;
+}
+.logo__name {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+.logo__suffix {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+/* On dark backgrounds (footer) the dark mark sits on a light badge */
+.site-footer .logo__mark {
   display: grid;
   place-items: center;
-  width: 38px;
-  height: 38px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
-  color: #fff;
-  background: var(--color-navy);
-}
-/* Logo used on dark backgrounds (footer) */
-.site-footer .logo__mark {
-  color: var(--color-navy);
   background: var(--header-bg);
+}
+.site-footer .logo__mark img {
+  height: 26px;
 }
 
 .nav {
@@ -1154,4 +1169,92 @@ select.input option {
 }
 .file-input:has(input[aria-invalid='true']) {
   border-color: var(--color-danger);
+}
+
+/* =========================================================
+   Header: centred nav, Services dropdown, Contact pill
+   ========================================================= */
+.site-header .nav {
+  flex: 1;
+  justify-content: center;
+  gap: 8px;
+}
+.nav__menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.nav__menu .nav__link {
+  padding-right: 4px;
+}
+.nav__menu-toggle {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  margin-right: 6px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--header-text);
+}
+.nav__menu-toggle svg {
+  transition: transform var(--dur) var(--ease-out);
+}
+.nav__menu.is-open .nav__menu-toggle svg {
+  transform: rotate(180deg);
+}
+.nav__menu-toggle:hover {
+  color: var(--header-text-strong);
+}
+.nav__dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 260px;
+  margin-top: 0;
+  padding-top: 12px;
+  /* Invisible top padding bridges the gap so hovering into the menu doesn't close it */
+  background: transparent;
+}
+.nav__dropdown[hidden] {
+  display: none;
+}
+.nav__dropdown-panel {
+  padding: 8px;
+  border-radius: var(--radius);
+  background: var(--header-bg);
+  box-shadow: 0 18px 40px -14px rgba(3, 10, 25, 0.6);
+}
+.nav__dropdown ul {
+  display: grid;
+  gap: 2px;
+}
+.nav__dropdown-extras {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(19, 41, 79, 0.12);
+}
+.nav__dropdown-link {
+  display: block;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--header-text);
+  font-size: 0.93rem;
+  font-weight: 500;
+}
+.nav__dropdown-link:hover,
+.nav__dropdown-link.active {
+  color: var(--header-text-strong);
+  background: rgba(19, 41, 79, 0.07);
+}
+.site-header .btn.header-cta {
+  padding-inline: 32px;
+  background: linear-gradient(90deg, #13294f 0%, #1d3a69 55%, #5378b0 100%);
+  background-size: 160% 100%;
+  background-position: 0% 0%;
+}
+.site-header .btn.header-cta:hover {
+  background-position: 100% 0%;
 }

@@ -1,14 +1,14 @@
 /**
  * Single source of truth for company identity and contact details.
- *
- * ⚠ TEMPORARY BRANDING: no company name, logo or contact details were supplied.
- * Replace the values below (and public/favicon.svg / src/components/layout/Logo.tsx)
- * before publishing. Fields set to `null` are hidden across the site rather than faked.
+ * Fields set to `null` are hidden across the site rather than faked.
+ * The logo mark lives in public/logo-mark.png (favicon: public/favicon.png).
  */
 export interface Company {
   /** Set to false once real branding has been entered. Gates Organization structured data. */
   isPlaceholder: boolean;
   name: string;
+  /** Registered company name, used in the footer and structured data. */
+  legalName: string;
   tagline: string;
   description: string;
   email: string | null;
@@ -18,9 +18,10 @@ export interface Company {
 }
 
 export const company: Company = {
-  isPlaceholder: true,
-  name: 'Your Company',
-  tagline: 'Software House',
+  isPlaceholder: false,
+  name: 'Vision Giants',
+  legalName: 'Vision Giants Pvt Ltd',
+  tagline: 'Software Development Studio',
   description:
     'We design and develop web applications, mobile apps and custom software that help businesses work better and grow.',
   email: null,

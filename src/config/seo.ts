@@ -88,7 +88,8 @@ function organizationJsonLd(): string {
   const data: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: company.name,
+    name: company.legalName,
+    alternateName: company.name,
     url: SITE_URL,
     description: company.description,
   };

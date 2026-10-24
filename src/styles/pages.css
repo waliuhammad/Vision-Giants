@@ -23,13 +23,13 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
   align-items: center;
   gap: var(--space-6);
-  min-height: min(640px, calc(100vh - var(--header-h) - 140px));
+  min-height: min(680px, calc(100vh - var(--header-h) - 150px));
 }
 .hero h1 {
   font-size: var(--fs-display);
   line-height: 1.04;
   letter-spacing: -0.03em;
-  max-width: 13ch;
+  max-width: 16ch;
 }
 .hero .lead {
   max-width: 46ch;
@@ -46,7 +46,9 @@
 /* Globe composition */
 .globe {
   position: relative;
-  width: min(100%, 600px);
+  /* Capped by the viewport height so the whole globe sits in the first screen */
+  width: min(100%, 600px, calc(100vh - var(--header-h) - 120px));
+  min-width: min(100%, 320px);
   aspect-ratio: 1;
   margin-inline: auto;
 }

@@ -2,7 +2,7 @@
 
 A prerendered marketing website for a software house, built with React, Vite, TypeScript and React Router, with a Firebase backend and an admin dashboard. The theme follows the Vision Giants brand: a deep navy background, a floating light pill header, monospace uppercase labels and navy pill buttons.
 
-> **⚠ Temporary branding.** No company name, logo or contact details were supplied. The site uses the placeholder name **"Your Company"**, a generic `</>` mark, and hides every contact field that is empty. See [Configuration still required](#configuration-still-required).
+> **Branding.** Name and logo are Vision Giants Pvt Ltd (`src/data/company.ts`, `public/logo-mark.png`). Contact details are still empty, so they stay hidden, and `public/og-image.png` still shows the old placeholder name. See [Configuration still required](#configuration-still-required).
 
 ## Commands
 
@@ -168,8 +168,8 @@ Never expose the Cloudinary API key or secret in frontend code. Signed uploads n
 
 | Item | Where |
 |---|---|
-| Real company name, tagline, description | `src/data/company.ts`. Set `isPlaceholder: false` to enable Organization JSON-LD. |
-| Logo | `src/components/layout/Logo.tsx`, `public/favicon.svg` |
+| Company description | `src/data/company.ts` |
+| Logo (higher resolution / SVG) | `public/logo-mark.png` and `public/favicon.png` were cut from a screenshot. Replace them with the original artwork when available. |
 | Social preview image | `public/og-image.png` (1200×630). It currently shows the placeholder name, so regenerate it with real branding. |
 | Email / phone / address / social links | `src/data/company.ts` (hidden while `null` / empty) |
 | Production URL | `VITE_SITE_URL` |

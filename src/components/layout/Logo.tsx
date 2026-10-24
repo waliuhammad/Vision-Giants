@@ -1,18 +1,18 @@
 import { Link } from 'react-router';
-import { CodeXml } from 'lucide-react';
 import { company } from '../../data/company';
 
-/**
- * Temporary logo: icon mark + company name from config.
- * Replace the mark with the real logo (e.g. an <img src="/logo.svg">) when supplied.
- */
+/** Brand logo: the eye mark plus the company name and "PVT LTD" line. */
 export function Logo({ onClick }: { onClick?: () => void }) {
+  const suffix = company.legalName.slice(company.name.length).trim();
   return (
-    <Link to="/" className="logo" onClick={onClick} aria-label={`${company.name}, home`}>
+    <Link to="/" className="logo" onClick={onClick} aria-label={`${company.legalName}, home`}>
       <span className="logo__mark" aria-hidden="true">
-        <CodeXml size={20} strokeWidth={2.2} />
+        <img src="/logo-mark.png" alt="" width="148" height="98" />
       </span>
-      <span>{company.name}</span>
+      <span className="logo__text">
+        <span className="logo__name">{company.name}</span>
+        {suffix && <span className="logo__suffix">{suffix}</span>}
+      </span>
     </Link>
   );
 }
