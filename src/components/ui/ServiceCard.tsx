@@ -1,13 +1,8 @@
 import { useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { Link } from 'react-router';
-<<<<<<< HEAD
 import { ArrowRight, ChevronDown } from 'lucide-react';
-import type { Service } from '../../data/services';
-=======
-import { ArrowRight } from 'lucide-react';
 import { getServiceIcon, type Service } from '../../data/services';
->>>>>>> d5407b3abf60a45bf5449ce3ff57ee8f9cc4f8b1
 
 export function ServiceCard({ service }: { service: Service }) {
   const Icon = getServiceIcon(service.icon);
