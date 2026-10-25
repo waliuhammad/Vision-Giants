@@ -36,6 +36,12 @@ export const pages: PageMeta[] = [
       'Learn how our team turns ideas into digital products: our mission, values and transparent, four-step development process.',
   },
   {
+    path: '/team/',
+    title: `Team | Meet Our Leaders & Engineers | ${company.name}`,
+    description:
+      'A diverse team of passionate professionals with unique skills driving innovation and excellence in every project.',
+  },
+  {
     path: '/technologies/',
     title: `Technologies | React, Node.js, Firebase & Cloudinary | ${company.name}`,
     description:

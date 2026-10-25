@@ -5,6 +5,7 @@ import ServiceDetailPage from '../pages/ServiceDetailPage';
 import PortfolioPage from '../pages/PortfolioPage';
 import AboutPage from '../pages/AboutPage';
 import TechnologiesPage from '../pages/TechnologiesPage';
+import TeamPage from '../pages/TeamPage';
 import ContactPage from '../pages/ContactPage';
 import CareersPage from '../pages/CareersPage';
 import ApplyPage from '../pages/ApplyPage';
@@ -19,6 +20,7 @@ export function AppRoutes() {
       <Route path="/services/:slug" element={<ServiceDetailPage />} />
       <Route path="/portfolio" element={<PortfolioPage />} />
       <Route path="/about" element={<AboutPage />} />
+      <Route path="/team" element={<TeamPage />} />
       <Route path="/technologies" element={<TechnologiesPage />} />
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/careers" element={<CareersPage />} />
