@@ -83,7 +83,6 @@ export function Globe() {
     const ctx = canvas?.getContext('2d');
     if (!canvas || !ctx) return;
 
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const small = window.innerWidth < 640;
     let land: Pt[] = [];
     let ocean: Pt[] = [];
@@ -240,7 +239,7 @@ export function Globe() {
     };
 
     const start = () => {
-      if (reduceMotion || raf || !inView || document.hidden) return;
+      if (raf || !inView || document.hidden) return;
       last = performance.now();
       raf = requestAnimationFrame(loop);
     };
