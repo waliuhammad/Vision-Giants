@@ -5,9 +5,12 @@ export interface NavItem {
 
 /** Header navigation (matches the brand site). "Services" opens a menu of the managed services. */
 export const mainNav: NavItem[] = [
+  { label: 'Home', to: '/' },
+  { label: 'About', to: '/about/' },
   { label: 'Services', to: '/services/' },
   { label: 'Portfolio', to: '/portfolio/' },
-  { label: 'About', to: '/about/' },
+  { label: 'Team', to: '/team/' },
+  { label: 'Blog', to: '/blog/' },
   { label: 'Careers', to: '/careers/' },
 ];
 

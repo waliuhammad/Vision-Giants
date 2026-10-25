@@ -1,81 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, NavLink, useLocation } from 'react-router';
+import { NavLink, useLocation } from 'react-router';
 import { AnimatePresence, m } from 'motion/react';
-import { Menu, X, ArrowRight, ChevronDown } from 'lucide-react';
-import { mainNav, primaryCta, servicesMenuExtras } from '../../data/navigation';
-import { useContent } from '../../content/ContentContext';
+import { Menu, X, ArrowRight } from 'lucide-react';
+import { mainNav, primaryCta } from '../../data/navigation';
 import { Logo } from './Logo';
 import { Button } from '../ui/Button';
-
-/** Desktop "Services" item: the link goes to /services/, the chevron (or hover) opens the menu. */
-function ServicesMenu({ label, to }: { label: string; to: string }) {
-  const { services } = useContent();
-  const [open, setOpen] = useState(false);
-  const { pathname } = useLocation();
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => setOpen(false), [pathname]);
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
-    const onClick = (e: MouseEvent) => !ref.current?.contains(e.target as Node) && setOpen(false);
-    document.addEventListener('keydown', onKey);
-    document.addEventListener('click', onClick);
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      document.removeEventListener('click', onClick);
-    };
-  }, [open]);
-
-  return (
-    <div
-      ref={ref}
-      className={`nav__menu${open ? ' is-open' : ''}`}
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
-      onBlur={(e) => !ref.current?.contains(e.relatedTarget as Node) && setOpen(false)}
-    >
-      <NavLink to={to} className="nav__link">
-        {label}
-      </NavLink>
-      <button
-        type="button"
-        className="nav__menu-toggle"
-        aria-expanded={open}
-        aria-controls="services-menu"
-        aria-label={`${label} menu`}
-        onClick={() => setOpen((v) => !v)}
-      >
-        <ChevronDown size={15} aria-hidden="true" />
-      </button>
-      <div id="services-menu" className="nav__dropdown" hidden={!open}>
-        <div className="nav__dropdown-panel">
-          <ul>
-            {services.map((s) => (
-              <li key={s.id}>
-                <Link to={`/services/#${s.id}`} className="nav__dropdown-link">
-                  {s.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <ul className="nav__dropdown-extras">
-            {servicesMenuExtras.map((item) => (
-              <li key={item.to}>
-                <NavLink to={item.to} end className="nav__dropdown-link">
-                  {item.label}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/** Mobile menu: the main items plus Technologies, which sits in the Services menu on desktop. */
-const mobileNav = [mainNav[0], servicesMenuExtras[1], ...mainNav.slice(1)];
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
@@ -122,15 +51,11 @@ export function Navbar() {
         <Logo onClick={close} />
 
         <nav className="nav" aria-label="Main">
-          {mainNav.map((item, i) =>
-            i === 0 ? (
-              <ServicesMenu key={item.to} {...item} />
-            ) : (
-              <NavLink key={item.to} to={item.to} className="nav__link">
-                {item.label}
-              </NavLink>
-            ),
-          )}
+          {mainNav.map((item) => (
+            <NavLink key={item.to} to={item.to} className="nav__link">
+              {item.label}
+            </NavLink>
+          ))}
         </nav>
 
         <div className="header-actions">
@@ -164,7 +89,7 @@ export function Navbar() {
           >
             <nav aria-label="Mobile">
               <ul>
-                {mobileNav.map((item, i) => (
+                {mainNav.map((item, i) => (
                   <m.li
                     key={item.to}
                     initial={{ opacity: 0, x: -10 }}
