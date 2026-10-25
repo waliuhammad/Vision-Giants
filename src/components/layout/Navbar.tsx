@@ -102,7 +102,7 @@ export function Navbar() {
                   </m.li>
                 ))}
               </ul>
-              <Button to={primaryCta.to} icon={<ArrowRight size={18} />} onClick={close}>
+              <Button to={primaryCta.to} className="header-cta" icon={<ArrowRight size={18} />} onClick={close}>
                 {primaryCta.label}
               </Button>
             </nav>

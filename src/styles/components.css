@@ -1,50 +1,59 @@
 /* =========================================================
    Header & navigation
+   (the original design: transparent over the page, frosted dark glass once scrolled)
    ========================================================= */
-/* The header is a floating light "pill" over the dark page, as on the brand site. */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 50;
   height: var(--header-h);
-  padding-top: 12px;
-  pointer-events: none;
+  transition:
+    background-color var(--dur) ease,
+    border-color var(--dur) ease,
+    backdrop-filter var(--dur) ease;
+  border-bottom: 1px solid transparent;
+}
+.site-header.is-scrolled,
+.site-header.is-open {
+  background-color: rgba(14, 33, 66, 0.82);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border-bottom-color: var(--border);
+}
+/* backdrop-filter would make the header the containing block for the fixed mobile panel */
+.site-header.is-open {
+  background-color: var(--color-background);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 .site-header__inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-5);
-  height: calc(var(--header-h) - 20px);
-  pointer-events: auto;
-}
-.site-header__inner.container {
-  width: min(100% - 24px, 1360px);
-  max-width: none;
-  padding: 0 8px 0 clamp(16px, 2vw, 26px);
-  border-radius: var(--radius-pill);
-  background: var(--header-bg);
-  color: var(--header-text-strong);
-  box-shadow:
-    0 10px 30px -12px rgba(3, 10, 25, 0.55),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.6);
-  transition: box-shadow var(--dur) ease;
-}
-.site-header.is-scrolled .site-header__inner.container {
-  box-shadow:
-    0 14px 36px -12px rgba(3, 10, 25, 0.75),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+  height: 100%;
 }
 
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   white-space: nowrap;
+}
+/* The dark logo mark sits on a light tile so it reads on the dark header and footer */
+.logo__mark {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--header-bg);
+  border: 1px solid var(--border-strong);
+  box-shadow: 0 0 18px -4px rgba(143, 184, 232, 0.45);
 }
 .logo__mark img {
   width: auto;
-  height: 40px;
+  height: 22px;
 }
 .logo__text {
   display: grid;
@@ -52,26 +61,22 @@
 }
 .logo__name {
   font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 1.15rem;
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: -0.01em;
 }
 .logo__suffix {
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   font-weight: 500;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  opacity: 0.85;
+  color: var(--color-subtle);
 }
-/* On dark backgrounds (footer) the dark mark sits on a light badge */
 .site-footer .logo__mark {
-  display: grid;
-  place-items: center;
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: var(--header-bg);
+  box-shadow: none;
 }
 .site-footer .logo__mark img {
   height: 26px;
@@ -84,35 +89,29 @@
 }
 .nav__link {
   position: relative;
-  padding: 8px 14px;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
+  padding: 8px 12px;
+  font-size: 0.9rem;
   font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--header-text);
-  border-radius: var(--radius-pill);
-  transition:
-    color var(--dur-fast),
-    background-color var(--dur-fast);
+  color: var(--color-muted);
+  border-radius: var(--radius-sm);
+  transition: color var(--dur-fast);
 }
 .nav__link:hover {
-  color: var(--header-text-strong);
-  background: rgba(19, 41, 79, 0.06);
+  color: var(--color-text);
 }
 .nav__link.active {
-  color: var(--header-text-strong);
-  font-weight: 700;
+  color: var(--color-text);
 }
 .nav__link.active::after {
   content: '';
   position: absolute;
-  left: 14px;
-  right: 14px;
-  bottom: 3px;
+  left: 12px;
+  right: 12px;
+  bottom: 2px;
   height: 2px;
   border-radius: 2px;
-  background: var(--color-navy);
+  background: var(--gradient-text);
+  box-shadow: 0 0 10px rgba(143, 184, 232, 0.7);
 }
 
 .header-actions {
@@ -126,10 +125,9 @@
   place-items: center;
   width: 44px;
   height: 44px;
-  border-radius: 50%;
-  border: 0;
-  color: #fff;
-  background: var(--color-navy);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(24, 50, 92, 0.6);
 }
 
 .mobile-nav {
@@ -264,15 +262,6 @@
 .btn--ghost:hover .btn__circle {
   border-color: rgba(220, 230, 246, 0.6);
   background: rgba(255, 255, 255, 0.14);
-}
-/* Buttons inside the light header pill */
-.site-header .btn--primary {
-  background: var(--color-navy);
-  border-color: transparent;
-  box-shadow: none;
-}
-.site-header .btn--primary:hover {
-  background: #1d3a69;
 }
 .btn[disabled],
 .btn[aria-disabled='true'] {
@@ -1172,12 +1161,12 @@ select.input option {
 }
 
 /* =========================================================
-   Header: centred nav, Services dropdown, Contact pill
+   Header: Services dropdown and Contact button
    ========================================================= */
 .site-header .nav {
   flex: 1;
   justify-content: center;
-  gap: 8px;
+  gap: 2px;
 }
 .nav__menu {
   position: relative;
@@ -1249,14 +1238,23 @@ select.input option {
   color: var(--header-text-strong);
   background: rgba(19, 41, 79, 0.07);
 }
+/* Header button in the original style: rounded rectangle, normal case, bright gradient */
 .site-header .btn.header-cta {
-  padding-inline: 32px;
-  background: linear-gradient(90deg, #13294f 0%, #1d3a69 55%, #5378b0 100%);
+  --btn-h: 40px;
+  padding: 0 18px;
+  border-radius: 10px;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  letter-spacing: 0;
+  text-transform: none;
+  background: linear-gradient(135deg, #5b8fd6 0%, #4a7cc2 55%, #8fb8e8 140%);
   background-size: 160% 100%;
   background-position: 0% 0%;
+  box-shadow: 0 6px 22px -8px rgba(91, 143, 214, 0.75);
 }
 .site-header .btn.header-cta:hover {
-  background-position: 100% 0%;
+  background-position: 70% 0%;
+  box-shadow: var(--glow-primary);
 }
 
 /* =========================================================

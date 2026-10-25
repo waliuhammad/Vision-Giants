@@ -67,7 +67,7 @@
   /* Layout */
   --container: 1200px;
   --gutter: clamp(16px, 4vw, 32px);
-  --header-h: 96px;
+  --header-h: 72px;
 
   /* Radii */
   --radius-sm: 8px;
