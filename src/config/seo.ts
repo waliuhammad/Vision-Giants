@@ -1,4 +1,5 @@
 import { company } from '../data/company';
+import { services } from '../data/services';
 
 /** Public site origin, without trailing slash. Set VITE_SITE_URL before a production build. */
 export const SITE_URL = (import.meta.env.VITE_SITE_URL || 'https://www.example.com').replace(/\/+$/, '');
@@ -24,9 +25,9 @@ export const pages: PageMeta[] = [
   },
   {
     path: '/portfolio/',
-    title: `Portfolio | Selected Project Concepts | ${company.name}`,
+    title: `Portfolio | Websites We’ve Built | ${company.name}`,
     description:
-      'Explore web, mobile, e-commerce and custom software project concepts that show how we approach design and engineering.',
+      'Live websites we have designed and built: e-commerce stores, service businesses, agencies, B2B suppliers and non-profits.',
   },
   {
     path: '/about/',
@@ -57,6 +58,12 @@ export const pages: PageMeta[] = [
     title: `Apply | Careers | ${company.name}`,
     description: 'Apply for an open position or send a general application with your CV.',
   },
+  // One page per service (src/pages/ServiceDetailPage.tsx)
+  ...services.map((s) => ({
+    path: `/services/${s.id}/`,
+    title: `${s.title} | Services | ${company.name}`,
+    description: s.short,
+  })),
 ];
 
 /** Client-only admin dashboard shell (not indexed, not in the sitemap). */

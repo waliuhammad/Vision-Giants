@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { ArrowDown, ArrowUp, CircleAlert, ExternalLink, Info, LoaderCircle, Pencil, Plus, Save, Trash2, Upload, X } from 'lucide-react';
+import { ArrowDown, ArrowUp, ChevronLeft, ChevronRight, CircleAlert, ExternalLink, Info, LoaderCircle, Pencil, Plus, Save, Trash2, Upload, X } from 'lucide-react';
 import { getAdminDb, getAdminStorage } from './firebase';
 import { builtInItems, projectsConfig, servicesConfig, positionsConfig, type ContentConfig, type FieldDef } from './contentConfig';
 
@@ -17,7 +17,7 @@ function toDraft(config: ContentConfig, item: Record<string, unknown> | null): D
   for (const f of config.fields) {
     const v = item?.[f.key];
     if (f.kind === 'checkbox') draft[f.key] = v === true;
-    else if (f.kind === 'lines') draft[f.key] = Array.isArray(v) ? v.join('\n') : '';
+    else if (f.kind === 'lines' || f.kind === 'gallery') draft[f.key] = Array.isArray(v) ? v.join('\n') : '';
     else if (f.kind === 'tags') draft[f.key] = Array.isArray(v) ? v.join(', ') : '';
     else draft[f.key] = typeof v === 'string' ? v : (f.options?.[0]?.value ?? '');
   }
@@ -29,7 +29,7 @@ function fromDraft(config: ContentConfig, draft: Draft): Record<string, unknown>
   for (const f of config.fields) {
     const v = draft[f.key];
     if (f.kind === 'checkbox') data[f.key] = v === true;
-    else if (f.kind === 'lines') data[f.key] = String(v).split('\n').map((s) => s.trim()).filter(Boolean);
+    else if (f.kind === 'lines' || f.kind === 'gallery') data[f.key] = String(v).split('\n').map((s) => s.trim()).filter(Boolean);
     else if (f.kind === 'tags') data[f.key] = String(v).split(',').map((s) => s.trim()).filter(Boolean);
     else data[f.key] = String(v).trim();
   }
@@ -414,6 +414,8 @@ function FieldInput({
     );
   } else if (field.kind === 'textarea' || field.kind === 'lines') {
     input = <textarea {...common} rows={field.kind === 'lines' ? 4 : 3} value={String(value)} onChange={(e) => onChange(e.target.value)} />;
+  } else if (field.kind === 'gallery') {
+    input = <GalleryInput id={id} value={String(value)} onChange={onChange} prefix={uploadPrefix} />;
   } else if (field.kind === 'image') {
     input = <ImageInput id={id} value={String(value)} onChange={onChange} prefix={uploadPrefix} />;
   } else {
@@ -434,7 +436,23 @@ function FieldInput({
 
 const IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/avif', 'image/gif'];
 
-/** Uploads an image to Storage (content/…, publicly readable) and stores its download URL. */
+/** Checks and uploads an image to Storage (content/…, publicly readable); returns its download URL. */
+async function uploadImage(file: File, prefix: string): Promise<string> {
+  if (!IMAGE_TYPES.includes(file.type)) throw new Error('Use PNG, JPEG, WebP, AVIF or GIF images.');
+  if (file.size >= 5 * 1024 * 1024) throw new Error('Images must be smaller than 5 MB.');
+  const [storage, { ref, uploadBytes, getDownloadURL }] = await Promise.all([getAdminStorage(), import('firebase/storage')]);
+  const safe = file.name.replace(/[^\w.-]+/g, '_').slice(-80);
+  const result = await uploadBytes(ref(storage, `${prefix}/${Date.now()}-${safe}`), file, {
+    contentType: file.type,
+    cacheControl: 'public, max-age=31536000',
+  });
+  return getDownloadURL(result.ref);
+}
+
+const uploadError = (err: unknown) =>
+  err instanceof Error && err.message.startsWith('Use') ? err.message : err instanceof Error && err.message.startsWith('Images') ? err.message : 'Upload failed. Please try again.';
+
+/** A single image, stored as its URL. */
 function ImageInput({ id, value, onChange, prefix }: { id: string; value: string; onChange: (v: string) => void; prefix: string }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -442,20 +460,12 @@ function ImageInput({ id, value, onChange, prefix }: { id: string; value: string
   const upload = async (file: File | undefined) => {
     if (!file) return;
     setError('');
-    if (!IMAGE_TYPES.includes(file.type)) return setError('Use a PNG, JPEG, WebP, AVIF or GIF image.');
-    if (file.size >= 5 * 1024 * 1024) return setError('Images must be smaller than 5 MB.');
     setBusy(true);
     try {
-      const [storage, { ref, uploadBytes, getDownloadURL }] = await Promise.all([getAdminStorage(), import('firebase/storage')]);
-      const safe = file.name.replace(/[^\w.-]+/g, '_').slice(-80);
-      const result = await uploadBytes(ref(storage, `${prefix}/${Date.now()}-${safe}`), file, {
-        contentType: file.type,
-        cacheControl: 'public, max-age=31536000',
-      });
-      onChange(await getDownloadURL(result.ref));
+      onChange(await uploadImage(file, prefix));
     } catch (err) {
       console.error(err);
-      setError('Upload failed. Please try again.');
+      setError(uploadError(err));
     } finally {
       setBusy(false);
     }
@@ -479,6 +489,67 @@ function ImageInput({ id, value, onChange, prefix }: { id: string; value: string
           </button>
         )}
       </div>
+      {error && <span className="field__error">{error}</span>}
+    </div>
+  );
+}
+
+/** An ordered list of images. The editor keeps it as newline-separated URLs (see toDraft/fromDraft). */
+function GalleryInput({ id, value, onChange, prefix }: { id: string; value: string; onChange: (v: string) => void; prefix: string }) {
+  const urls = value.split('\n').filter(Boolean);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const set = (list: string[]) => onChange(list.join('\n'));
+  const move = (i: number, delta: -1 | 1) => {
+    const list = [...urls];
+    [list[i], list[i + delta]] = [list[i + delta], list[i]];
+    set(list);
+  };
+
+  const upload = async (files: FileList | null) => {
+    if (!files?.length) return;
+    setError('');
+    setBusy(true);
+    try {
+      const added: string[] = [];
+      for (const file of Array.from(files)) added.push(await uploadImage(file, prefix));
+      set([...urls, ...added]);
+    } catch (err) {
+      console.error(err);
+      setError(uploadError(err));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="admin-gallery">
+      {urls.length > 0 && (
+        <ul className="admin-gallery__list">
+          {urls.map((url, i) => (
+            <li key={url} className="admin-gallery__item">
+              <img src={url} alt="" />
+              {i === 0 && <span className="admin-gallery__cover">Cover</span>}
+              <span className="admin-gallery__tools">
+                <button type="button" className="admin-icon-btn" onClick={() => move(i, -1)} disabled={i === 0} aria-label={`Move image ${i + 1} earlier`}>
+                  <ChevronLeft size={15} />
+                </button>
+                <button type="button" className="admin-icon-btn" onClick={() => move(i, 1)} disabled={i === urls.length - 1} aria-label={`Move image ${i + 1} later`}>
+                  <ChevronRight size={15} />
+                </button>
+                <button type="button" className="admin-icon-btn" onClick={() => set(urls.filter((_, j) => j !== i))} aria-label={`Remove image ${i + 1}`}>
+                  <X size={15} />
+                </button>
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+      <label className="btn btn--outline btn--sm admin-upload">
+        {busy ? 'Uploading…' : 'Add images'}
+        <span aria-hidden="true">{busy ? <LoaderCircle size={15} className="spin" /> : <Upload size={15} />}</span>
+        <input id={id} type="file" multiple accept={IMAGE_TYPES.join(',')} disabled={busy} onChange={(e) => upload(e.target.files)} />
+      </label>
       {error && <span className="field__error">{error}</span>}
     </div>
   );

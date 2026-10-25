@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AnimatePresence, m } from 'motion/react';
-import { ArrowRight, Check, Info, X } from 'lucide-react';
+import { ArrowRight, Info } from 'lucide-react';
 import { categoryLabels, type Project, type ProjectCategory } from '../data/portfolio';
 import { useContent } from '../content/ContentContext';
 import { PageHero } from '../components/ui/PageHero';
@@ -9,79 +9,9 @@ import { ProjectCard } from '../components/ui/ProjectCard';
 import { CTASection } from '../components/ui/CTASection';
 import { Reveal } from '../components/animations/Reveal';
 import { NetworkVisual } from '../components/visuals/IsoVisuals';
-import { ProjectMedia } from '../components/visuals/ProjectPreview';
+import { ProjectDialog } from '../components/ui/ProjectDialog';
 
 type Filter = 'all' | ProjectCategory;
-const filters: { id: Filter; label: string }[] = [
-  { id: 'all', label: 'All' },
-  ...(Object.keys(categoryLabels) as ProjectCategory[]).map((id) => ({ id, label: categoryLabels[id] })),
-];
-
-function ProjectDialog({ project, onClose }: { project: Project | null; onClose: () => void }) {
-  const ref = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    const dialog = ref.current;
-    if (!dialog) return;
-    if (project && !dialog.open) dialog.showModal();
-    if (!project && dialog.open) dialog.close();
-  }, [project]);
-
-  return (
-    <dialog
-      ref={ref}
-      className="modal"
-      aria-labelledby="project-dialog-title"
-      onClose={onClose}
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-    >
-      {project && (
-        <>
-          <div className="modal__media">
-            <ProjectMedia project={project} />
-          </div>
-          <button type="button" className="modal__close" onClick={onClose} aria-label="Close project details">
-            <X size={18} />
-          </button>
-          <div className="modal__body">
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <span className="badge">{categoryLabels[project.category]}</span>
-              {project.isDemo && <span className="badge badge--neutral">Concept project</span>}
-            </div>
-            <h2 id="project-dialog-title">{project.title}</h2>
-            <p className="muted">{project.details}</p>
-            <div className="modal__cols">
-              <div>
-                <h3>Key features</h3>
-                <ul className="check-list">
-                  {project.features.map((f) => (
-                    <li key={f}>
-                      <Check size={15} aria-hidden="true" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h3>Technologies</h3>
-                <ul className="tech-tags">
-                  {project.tech.map((t) => (
-                    <li key={t}>{t}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <div style={{ marginTop: 'var(--space-6)' }}>
-              <Button to="/contact/" icon={<ArrowRight size={16} />}>
-                Discuss a similar project
-              </Button>
-            </div>
-          </div>
-        </>
-      )}
-    </dialog>
-  );
-}
 
 export default function PortfolioPage() {
   const { projects } = useContent();
@@ -89,6 +19,20 @@ export default function PortfolioPage() {
   const [active, setActive] = useState<Project | null>(null);
   const visible = filter === 'all' ? projects : projects.filter((p) => p.category === filter);
   const count = (f: Filter) => (f === 'all' ? projects.length : projects.filter((p) => p.category === f).length);
+  // Only offer filters for categories that have projects.
+  const filters: { id: Filter; label: string }[] = [
+    { id: 'all', label: 'All' },
+    ...(Object.keys(categoryLabels) as ProjectCategory[])
+      .filter((id) => count(id) > 0)
+      .map((id) => ({ id, label: categoryLabels[id] })),
+  ];
+
+  // Links like /portfolio/?project=<id> open that project directly.
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get('project');
+    const match = id && projects.find((p) => p.id === id);
+    if (match) setActive(match);
+  }, [projects]);
 
   return (
     <>

@@ -6,8 +6,14 @@ export interface NavItem {
 /** Header navigation. */
 export const mainNav: NavItem[] = [
   { label: 'Home', to: '/' },
+<<<<<<< HEAD
   { label: 'About Us', to: '/about/' },
   { label: 'Services', to: '/services/' },
+=======
+  { label: 'About', to: '/about/' },
+  { label: 'Services', to: '/services/' },
+  { label: 'Portfolio', to: '/portfolio/' },
+>>>>>>> 70a4f020b9472b6aa3179cfb004655de2bd48893
   { label: 'Team', to: '/team/' },
   { label: 'Blog', to: '/blog/' },
   { label: 'Careers', to: '/careers/' },
