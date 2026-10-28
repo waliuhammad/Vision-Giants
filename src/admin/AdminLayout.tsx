@@ -5,6 +5,7 @@ import {
   Inbox,
   FileUser,
   FolderKanban,
+  BookUser,
   Layers,
   Briefcase,
   LogOut,
@@ -33,7 +34,8 @@ const nav = [
   {
     group: 'Website content',
     items: [
-      { to: '/admin/projects', label: 'Portfolio', icon: FolderKanban },
+      { to: '/admin/portfolio-page', label: 'Portfolio page', icon: BookUser },
+      { to: '/admin/projects', label: 'Projects', icon: FolderKanban },
       { to: '/admin/services', label: 'Services', icon: Layers },
       { to: '/admin/positions', label: 'Open positions', icon: Briefcase },
     ],

@@ -763,3 +763,61 @@ button.admin-row:hover,
   margin-top: var(--space-4);
 }
 
+
+/* Portfolio page (company profile) editor */
+.admin-profile {
+  display: grid;
+  gap: var(--space-5);
+  max-width: 900px;
+}
+.admin-profile__section {
+  display: grid;
+  gap: var(--space-4);
+}
+.admin-profile__section h2 {
+  margin: 0;
+  font-size: var(--fs-h3);
+}
+.admin-profile__section > .muted {
+  margin: calc(-1 * var(--space-2)) 0 0;
+  font-size: var(--fs-small);
+}
+.admin-profile__bar {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  background: linear-gradient(transparent, var(--color-background) 35%);
+}
+.admin-rows {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+}
+.admin-rows__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+}
+.admin-rows__row .input {
+  flex: 1;
+  min-width: 0;
+  min-height: 42px;
+  padding: 8px 12px;
+}
+.admin-rows__row .admin-rows__narrow {
+  flex: 0 0 90px;
+}
+@media (max-width: 640px) {
+  .admin-rows__row {
+    flex-wrap: wrap;
+  }
+  .admin-rows__row .input {
+    flex-basis: 100%;
+  }
+}

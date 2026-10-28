@@ -26,9 +26,9 @@ export const pages: PageMeta[] = [
   },
   {
     path: '/portfolio/',
-    title: `Portfolio | Websites We’ve Built | ${company.name}`,
+    title: `Portfolio | Company Profile | ${company.name}`,
     description:
-      'Live websites we have designed and built: e-commerce stores, service businesses, agencies, B2B suppliers and non-profits.',
+      'Our company profile: who we are, what we do, our mission and vision, certifications and honours.',
   },
   {
     path: '/about/',

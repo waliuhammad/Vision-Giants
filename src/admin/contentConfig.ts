@@ -33,7 +33,7 @@ const labelFor = (value: string) => value.charAt(0).toUpperCase() + value.slice(
 
 export const projectsConfig: ContentConfig = {
   collection: 'projects',
-  title: 'Portfolio',
+  title: 'Projects',
   singular: 'project',
   publicPath: '/portfolio/',
   labelKey: 'title',
