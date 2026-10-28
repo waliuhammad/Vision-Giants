@@ -1260,8 +1260,10 @@ select.input option {
 /* =========================================================
    Portfolio: card details, wide project dialog and gallery
    ========================================================= */
-.project-card__industry {
-  margin: -4px 0 0;
+/* Two classes so it outranks `.card p` and `.project-card__body p` */
+.project-card .project-card__industry {
+  flex: none;
+  margin: -4px 0 var(--space-2);
   font-family: var(--font-mono);
   font-size: 0.72rem;
   letter-spacing: 0.1em;

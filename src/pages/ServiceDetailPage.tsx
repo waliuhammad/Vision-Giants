@@ -3,7 +3,7 @@ import type { CSSProperties } from 'react';
 import { useParams } from 'react-router';
 import { ArrowRight, ArrowLeft, Check } from 'lucide-react';
 import { getServiceById, getServiceIcon, services } from '../data/services';
-import { serviceProjectCategory, type Project } from '../data/portfolio';
+import { categoryLabels, serviceProjectCategories, type Project } from '../data/portfolio';
 import { company } from '../data/company';
 import { useContent } from '../content/ContentContext';
 import { ProjectCard } from '../components/ui/ProjectCard';
@@ -36,8 +36,9 @@ export function ServiceDetailPage() {
   if (!service) return <NotFoundPage />;
 
   const Icon = getServiceIcon(service.icon);
-  const projectCategory = serviceProjectCategory[service.id];
-  const serviceProjects = projectCategory ? projects.filter((p) => p.category === projectCategory) : [];
+  const projectGroups = (serviceProjectCategories[service.id] ?? [])
+    .map((category) => ({ category, items: projects.filter((p) => p.category === category) }))
+    .filter((g) => g.items.length > 0);
   const related = services.filter((s) => s.id !== service.id).slice(0, 3);
   const hasPlatforms = !!service.platforms && service.platforms.length > 0;
 
@@ -118,28 +119,28 @@ export function ServiceDetailPage() {
         </div>
       </section>
 
-      {/* Projects (portfolio items in this service's category, e.g. Website Development) */}
-      {serviceProjects.length > 0 && (
+      {/* Projects: one group per category mapped to this service (e.g. Web Development, then WordPress) */}
+      {projectGroups.length > 0 && (
         <section className="section section--alt" style={sectionStyle} aria-labelledby="service-projects-title">
           <div className="container">
             <SectionHeading
               id="service-projects-title"
               eyebrow="Projects"
-              title={`${service.title} projects`}
+              title={projectGroups.length > 1 ? 'Our work' : `${categoryLabels[projectGroups[0].category]} projects`}
               lead="Live websites we’ve designed and built. Open a project to see screenshots and details."
-              aside={
-                <Button to="/portfolio/" variant="outline" icon={<ArrowRight size={16} />}>
-                  Full portfolio
-                </Button>
-              }
             />
-            <div className="portfolio-grid">
-              {serviceProjects.map((p, i) => (
-                <Reveal key={p.id} delay={(i % 2) * 90}>
-                  <ProjectCard project={p} onOpen={setActiveProject} />
-                </Reveal>
-              ))}
-            </div>
+            {projectGroups.map((g) => (
+              <div key={g.category} className="project-group">
+                {projectGroups.length > 1 && <h3 className="project-group__title">{categoryLabels[g.category]} projects</h3>}
+                <div className="portfolio-grid portfolio-grid--compact">
+                  {g.items.map((p, i) => (
+                    <Reveal key={p.id} delay={(i % 4) * 60}>
+                      <ProjectCard project={p} onOpen={setActiveProject} headingLevel={projectGroups.length > 1 ? 'h4' : 'h3'} compact />
+                    </Reveal>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
           <ProjectDialog project={activeProject} onClose={() => setActiveProject(null)} />
         </section>

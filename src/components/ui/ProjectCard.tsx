@@ -1,34 +1,38 @@
 import { Link } from 'react-router';
 import { ArrowRight, ExternalLink } from 'lucide-react';
 import type { Project } from '../../data/portfolio';
-import { categoryLabels } from '../../data/portfolio';
+import { categoryLabels, projectServicePath } from '../../data/portfolio';
 import { ProjectMedia } from '../visuals/ProjectPreview';
 
 interface ProjectCardProps {
   project: Project;
   onOpen?: (project: Project) => void;
-  headingLevel?: 'h2' | 'h3';
+  headingLevel?: 'h2' | 'h3' | 'h4';
+  /** Smaller card for dense grids: no category badge or tech tags, shorter summary. */
+  compact?: boolean;
 }
 
-export function ProjectCard({ project, onOpen, headingLevel: H = 'h3' }: ProjectCardProps) {
+export function ProjectCard({ project, onOpen, headingLevel: H = 'h3', compact = false }: ProjectCardProps) {
   return (
-    <article className="card card--interactive project-card">
+    <article className={`card card--interactive project-card${compact ? ' project-card--compact' : ''}`}>
       <div className="project-card__media">
         <ProjectMedia project={project} />
         {project.isDemo && <span className="badge badge--neutral">Concept</span>}
       </div>
       <div className="project-card__body">
         <div className="project-card__meta">
-          <H style={{ margin: 0, fontSize: 'var(--fs-h3)' }}>{project.title}</H>
-          <span className="badge">{categoryLabels[project.category]}</span>
+          <H style={{ margin: 0, fontSize: compact ? '1.05rem' : 'var(--fs-h3)' }}>{project.title}</H>
+          {!compact && <span className="badge">{categoryLabels[project.category]}</span>}
         </div>
         {project.industry && <p className="project-card__industry">{project.industry}</p>}
         <p>{project.summary}</p>
-        <ul className="tech-tags" aria-label="Technologies">
-          {project.tech.map((t) => (
-            <li key={t}>{t}</li>
-          ))}
-        </ul>
+        {!compact && (
+          <ul className="tech-tags" aria-label="Technologies">
+            {project.tech.map((t) => (
+              <li key={t}>{t}</li>
+            ))}
+          </ul>
+        )}
         <div className="project-card__actions">
           {onOpen ? (
             <button
@@ -41,7 +45,7 @@ export function ProjectCard({ project, onOpen, headingLevel: H = 'h3' }: Project
               <ArrowRight size={15} aria-hidden="true" />
             </button>
           ) : (
-            <Link to={`/portfolio/?project=${encodeURIComponent(project.id)}`} className="text-link project-card__action">
+            <Link to={projectServicePath(project.category)} className="text-link project-card__action">
               View project<span className="visually-hidden">: {project.title}</span>
               <ArrowRight size={15} aria-hidden="true" />
             </Link>

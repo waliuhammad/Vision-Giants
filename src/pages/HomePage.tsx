@@ -124,15 +124,15 @@ export default function HomePage() {
               title="Featured projects"
               lead="A selection of websites we’ve designed and built for clients in e-commerce, services, B2B and non-profit."
               aside={
-                <Button to="/portfolio/" variant="outline" icon={<ArrowRight size={16} />}>
-                  View portfolio
+                <Button to="/services/website-development/" variant="outline" icon={<ArrowRight size={16} />}>
+                  View all projects
                 </Button>
               }
             />
-            <div className="grid grid--2">
+            <div className="portfolio-grid portfolio-grid--compact">
               {projects.slice(0, 4).map((p, i) => (
-                <Reveal key={p.id} delay={(i % 2) * 90}>
-                  <ProjectCard project={p} />
+                <Reveal key={p.id} delay={i * 60}>
+                  <ProjectCard project={p} compact />
                 </Reveal>
               ))}
             </div>
