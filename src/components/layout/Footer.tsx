@@ -200,29 +200,20 @@ const footerStyles = `
   margin-top: 3px;
 }
 
-.site-footer__cta-text {
-  margin: 0 0 1.25rem;
-  color: rgba(255, 255, 255, 0.8);
-  line-height: 1.6;
+/* Map */
+.site-footer__map {
+  margin-top: 1.25rem;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  aspect-ratio: 4 / 3;
 }
 
-.site-footer a.site-footer__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
-  padding: 0.75rem 1.4rem;
-  border-radius: 999px;
-  background: #fff;
-  color: #0d2147;
-  font-weight: 700;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.site-footer a.site-footer__cta:hover {
-  text-decoration: none;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+.site-footer__map iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
 }
 
 /* Bottom bar */
@@ -294,7 +285,6 @@ const footerStyles = `
 export function Footer() {
   const { services } = useContent();
   const footerServices = services.slice(0, FOOTER_SERVICES_LIMIT);
-  const hasContact = company.email || company.phone || company.address;
   const year = new Date().getFullYear();
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -385,15 +375,16 @@ export function Footer() {
               )}
             </ul>
 
-            {!hasContact && (
-              <p className="site-footer__cta-text">
-                Have a project in mind? Tell us about it and we'll get back to you.
-              </p>
+            {company.address && (
+              <div className="site-footer__map">
+                <iframe
+                  title={`Map showing ${company.name} office location`}
+                  src={`https://www.google.com/maps?q=${encodeURIComponent(company.address)}&output=embed`}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              </div>
             )}
-
-            <Link to="/contact/" className="site-footer__cta">
-              Start a Project <ArrowRight size={16} aria-hidden="true" />
-            </Link>
           </div>
         </div>
 

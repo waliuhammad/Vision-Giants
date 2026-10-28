@@ -26,6 +26,6 @@ export const company: Company = {
     'We design and develop web applications, mobile apps and custom software that help businesses work better and grow.',
   email: null,
   phone: null,
-  address: null,
+  address: 'Chapter 2 Plaza, near Zavia School, Gulgasht, Multan, Pakistan',
   social: [],
 };
