@@ -158,8 +158,7 @@ export function ContentPage({ config }: { config: ContentConfig }) {
             <h2>The website is showing its built-in content</h2>
             <p className="muted">
               To manage portfolio projects, services and open positions here, import the built-in content first. Everything
-              currently on the site is copied into the database (including the “Concept” projects, which you can then edit or
-              delete), and from then on the site shows what you publish here.
+              currently on the site is copied into the database, and from then on the site shows what you publish here.
             </p>
             <button type="button" className="btn btn--primary btn--sm" onClick={runImport} disabled={busy}>
               {busy ? 'Importing…' : 'Import content & start managing'}

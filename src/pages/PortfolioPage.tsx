@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, m } from 'motion/react';
-import { ArrowRight, Info } from 'lucide-react';
+import { ArrowRight, FolderKanban, Info } from 'lucide-react';
 import { categoryLabels, type Project, type ProjectCategory } from '../data/portfolio';
 import { useContent } from '../content/ContentContext';
 import { PageHero } from '../components/ui/PageHero';
@@ -54,55 +54,75 @@ export default function PortfolioPage() {
           <h2 id="projects-title" className="visually-hidden">
             Projects
           </h2>
-          <Reveal>
-            {projects.some((p) => p.isDemo) && (
-              <p className="note" style={{ marginBottom: 'var(--space-6)' }}>
-                <Info size={16} aria-hidden="true" />
-                {projects.every((p) => p.isDemo)
-                  ? 'The projects below are demonstration concepts that illustrate our design and engineering approach. They are not client case studies.'
-                  : 'Projects marked “Concept” are demonstrations that illustrate our design and engineering approach, not client case studies.'}
+          {projects.length === 0 ? (
+            <Reveal className="card empty-state">
+              <span className="icon-wrap" aria-hidden="true">
+                <FolderKanban size={22} />
+              </span>
+              <div>
+                <h3>Our portfolio is being updated</h3>
+                <p>
+                  We’re putting together case studies of our recent work. In the meantime, we’re happy to walk you
+                  through relevant projects on a call.
+                </p>
+              </div>
+              <Button to="/contact/" icon={<ArrowRight size={16} />}>
+                Get in touch
+              </Button>
+            </Reveal>
+          ) : (
+            <>
+              <Reveal>
+                {projects.some((p) => p.isDemo) && (
+                  <p className="note" style={{ marginBottom: 'var(--space-6)' }}>
+                    <Info size={16} aria-hidden="true" />
+                    {projects.every((p) => p.isDemo)
+                      ? 'The projects below are demonstration concepts that illustrate our design and engineering approach. They are not client case studies.'
+                      : 'Projects marked “Concept” are demonstrations that illustrate our design and engineering approach, not client case studies.'}
+                  </p>
+                )}
+                <div className="filters" role="group" aria-label="Filter projects by category">
+                  {filters.map((f) => (
+                    <button
+                      key={f.id}
+                      type="button"
+                      className="filter-btn"
+                      aria-pressed={filter === f.id}
+                      onClick={() => setFilter(f.id)}
+                    >
+                      {filter === f.id && (
+                        <m.span layoutId="filter-active" className="filter-btn__bg" transition={{ duration: 0.3 }} />
+                      )}
+                      <span>
+                        {f.label}
+                        <span className="filter-count">{count(f.id)}</span>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </Reveal>
+    
+              <p className="visually-hidden" aria-live="polite">
+                Showing {visible.length} {visible.length === 1 ? 'project' : 'projects'}
               </p>
-            )}
-            <div className="filters" role="group" aria-label="Filter projects by category">
-              {filters.map((f) => (
-                <button
-                  key={f.id}
-                  type="button"
-                  className="filter-btn"
-                  aria-pressed={filter === f.id}
-                  onClick={() => setFilter(f.id)}
-                >
-                  {filter === f.id && (
-                    <m.span layoutId="filter-active" className="filter-btn__bg" transition={{ duration: 0.3 }} />
-                  )}
-                  <span>
-                    {f.label}
-                    <span className="filter-count">{count(f.id)}</span>
-                  </span>
-                </button>
-              ))}
-            </div>
-          </Reveal>
-
-          <p className="visually-hidden" aria-live="polite">
-            Showing {visible.length} {visible.length === 1 ? 'project' : 'projects'}
-          </p>
-          <m.div layout className="portfolio-grid">
-            <AnimatePresence mode="popLayout" initial={false}>
-              {visible.map((p) => (
-                <m.div
-                  key={p.id}
-                  layout
-                  initial={{ opacity: 0, scale: 0.96 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.96 }}
-                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <ProjectCard project={p} onOpen={setActive} headingLevel="h3" />
-                </m.div>
-              ))}
-            </AnimatePresence>
-          </m.div>
+              <m.div layout className="portfolio-grid">
+                <AnimatePresence mode="popLayout" initial={false}>
+                  {visible.map((p) => (
+                    <m.div
+                      key={p.id}
+                      layout
+                      initial={{ opacity: 0, scale: 0.96 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.96 }}
+                      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <ProjectCard project={p} onOpen={setActive} headingLevel="h3" />
+                    </m.div>
+                  ))}
+                </AnimatePresence>
+              </m.div>
+            </>
+          )}
         </div>
       </section>
 

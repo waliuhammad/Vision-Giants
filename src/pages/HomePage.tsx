@@ -115,28 +115,30 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section section--alt" aria-labelledby="work-title">
-        <div className="container">
-          <SectionHeading
-            id="work-title"
-            eyebrow="Our work"
-            title="Featured projects"
-            lead="A selection of websites we’ve designed and built for clients in e-commerce, services, B2B and non-profit."
-            aside={
-              <Button to="/portfolio/" variant="outline" icon={<ArrowRight size={16} />}>
-                View portfolio
-              </Button>
-            }
-          />
-          <div className="grid grid--2">
-            {projects.slice(0, 4).map((p, i) => (
-              <Reveal key={p.id} delay={(i % 2) * 90}>
-                <ProjectCard project={p} />
-              </Reveal>
-            ))}
+      {projects.length > 0 && (
+        <section className="section section--alt" aria-labelledby="work-title">
+          <div className="container">
+            <SectionHeading
+              id="work-title"
+              eyebrow="Our work"
+              title="Featured projects"
+              lead="A selection of websites we’ve designed and built for clients in e-commerce, services, B2B and non-profit."
+              aside={
+                <Button to="/portfolio/" variant="outline" icon={<ArrowRight size={16} />}>
+                  View portfolio
+                </Button>
+              }
+            />
+            <div className="grid grid--2">
+              {projects.slice(0, 4).map((p, i) => (
+                <Reveal key={p.id} delay={(i % 2) * 90}>
+                  <ProjectCard project={p} />
+                </Reveal>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <section className="section" aria-labelledby="why-title">
         <div className="container why">
