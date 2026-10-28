@@ -27,6 +27,7 @@ export const footerNav: NavItem[] = [
   { label: 'Portfolio', to: '/portfolio/' },
   { label: 'About', to: '/about/' },
   { label: 'Team', to: '/team/' },
+  { label: 'Blog', to: '/blog/' },
   { label: 'Technologies', to: '/technologies/' },
   { label: 'Careers', to: '/careers/' },
   { label: 'Contact', to: '/contact/' },

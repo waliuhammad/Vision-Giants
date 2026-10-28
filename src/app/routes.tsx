@@ -6,6 +6,8 @@ import PortfolioPage from '../pages/PortfolioPage';
 import AboutPage from '../pages/AboutPage';
 import TechnologiesPage from '../pages/TechnologiesPage';
 import TeamPage from '../pages/TeamPage';
+import BlogPage from '../pages/BlogPage';
+import BlogDetailPage from '../pages/BlogDetailPage';
 import ContactPage from '../pages/ContactPage';
 import CareersPage from '../pages/CareersPage';
 import ApplyPage from '../pages/ApplyPage';
@@ -21,6 +23,8 @@ export function AppRoutes() {
       <Route path="/portfolio" element={<PortfolioPage />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/team" element={<TeamPage />} />
+      <Route path="/blog" element={<BlogPage />} />
+      <Route path="/blog/:slug" element={<BlogDetailPage />} />
       <Route path="/technologies" element={<TechnologiesPage />} />
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/careers" element={<CareersPage />} />

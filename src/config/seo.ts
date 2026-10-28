@@ -1,5 +1,6 @@
 import { company } from '../data/company';
 import { services } from '../data/services';
+import { blogPosts } from '../data/blog';
 
 /** Public site origin, without trailing slash. Set VITE_SITE_URL before a production build. */
 export const SITE_URL = (import.meta.env.VITE_SITE_URL || 'https://www.example.com').replace(/\/+$/, '');
@@ -42,6 +43,12 @@ export const pages: PageMeta[] = [
       'A diverse team of passionate professionals with unique skills driving innovation and excellence in every project.',
   },
   {
+    path: '/blog/',
+    title: `Blog | Insights, Tutorials & Technology | ${company.name}`,
+    description:
+      'In-depth perspectives on modern web and mobile architecture, cloud infrastructure, AI engineering, UI/UX trends, and digital business strategy.',
+  },
+  {
     path: '/technologies/',
     title: `Technologies | React, Node.js, Firebase & Cloudinary | ${company.name}`,
     description:
@@ -69,6 +76,12 @@ export const pages: PageMeta[] = [
     path: `/services/${s.id}/`,
     title: `${s.title} | Services | ${company.name}`,
     description: s.short,
+  })),
+  // One page per blog post (src/pages/BlogDetailPage.tsx)
+  ...blogPosts.map((p) => ({
+    path: `/blog/${p.slug}/`,
+    title: `${p.title} | Blog | ${company.name}`,
+    description: p.excerpt,
   })),
 ];
 

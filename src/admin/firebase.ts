@@ -69,14 +69,45 @@ export function useAdminAuth(): AuthState {
   return state;
 }
 
-export async function signIn(email: string, password: string) {
-  const [auth, { signInWithEmailAndPassword }] = await Promise.all([getAdminAuth(), import('firebase/auth')]);
-  await signInWithEmailAndPassword(auth, email, password);
+export async function signIn(email: string, password: string, username?: string) {
+  const [auth, { signInWithEmailAndPassword, updateProfile }] = await Promise.all([
+    getAdminAuth(),
+    import('firebase/auth'),
+  ]);
+  const userCredential = await signInWithEmailAndPassword(auth, email, password);
+  if (username && !userCredential.user.displayName) {
+    try {
+      await updateProfile(userCredential.user, { displayName: username });
+    } catch {
+      // Non-critical if displayName update fails
+    }
+  }
 }
 
 export async function sendPasswordReset(email: string) {
   const [auth, { sendPasswordResetEmail }] = await Promise.all([getAdminAuth(), import('firebase/auth')]);
   await sendPasswordResetEmail(auth, email);
+}
+
+export async function changeAdminPassword(currentPassword: string, newPassword: string): Promise<void> {
+  const [auth, { EmailAuthProvider, reauthenticateWithCredential, updatePassword }] = await Promise.all([
+    getAdminAuth(),
+    import('firebase/auth'),
+  ]);
+  const user = auth.currentUser;
+  if (!user || !user.email) {
+    throw new Error('No authenticated administrator session found. Please sign in again.');
+  }
+  const credential = EmailAuthProvider.credential(user.email, currentPassword);
+  await reauthenticateWithCredential(user, credential);
+  await updatePassword(user, newPassword);
+}
+
+export async function updateAdminProfile(displayName: string): Promise<void> {
+  const [auth, { updateProfile }] = await Promise.all([getAdminAuth(), import('firebase/auth')]);
+  if (auth.currentUser) {
+    await updateProfile(auth.currentUser, { displayName });
+  }
 }
 
 export async function signOutAdmin() {
