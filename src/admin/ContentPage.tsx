@@ -122,7 +122,10 @@ export function ContentPage({ config }: { config: ContentConfig }) {
   return (
     <div className="admin-page">
       <header className="admin-page__head">
-        <h1>{config.title}</h1>
+        <div>
+          <p className="eyebrow">Website content</p>
+          <h1>{config.title}</h1>
+        </div>
         <div className="admin-actions">
           <a className="btn btn--outline btn--sm" href={config.publicPath} target="_blank" rel="noopener noreferrer">
             View on site

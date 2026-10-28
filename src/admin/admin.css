@@ -8,14 +8,31 @@
 }
 
 .admin-center {
+  position: relative;
   display: grid;
   place-items: center;
   min-height: 100vh;
   padding: var(--space-5) var(--gutter);
+  overflow: hidden;
+}
+/* Keep content above the .bg-grid decoration */
+.admin-center > :not(.bg-grid),
+.admin__main > :not(.bg-grid) {
+  position: relative;
+}
+.admin-login__head {
+  display: grid;
+  justify-items: start;
+}
+.admin-login__head .logo {
+  margin-bottom: var(--space-5);
+}
+.admin-login__head .eyebrow {
+  margin-bottom: var(--space-2);
 }
 .admin-login,
 .admin-message {
-  width: min(100%, 420px);
+  width: min(100%, 460px);
   display: grid;
   gap: var(--space-4);
 }
@@ -27,16 +44,20 @@
   font-size: var(--fs-h3);
   margin: 0;
 }
+/* Block layout, not grid: the body mixes text and inline <code>, which grid would split into rows */
 .admin-message__body {
-  display: grid;
-  gap: var(--space-3);
   color: var(--color-muted);
 }
 .admin-message__body p {
   margin: 0;
 }
-.admin-message__body .btn {
-  justify-self: start;
+.admin-message__body > * + * {
+  margin-top: var(--space-3);
+}
+.admin-message__body code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  color: var(--color-text);
 }
 .admin-uid {
   display: inline-block;
@@ -79,14 +100,24 @@
   height: 100vh;
   padding: var(--space-5) var(--space-4);
   border-right: 1px solid var(--border);
-  background: rgba(16, 37, 72, 0.72);
+  background: var(--glass-bg);
 }
 .admin__brand {
   display: grid;
-  padding: 0 var(--space-2);
+  justify-items: start;
+  gap: var(--space-3);
+  padding: 0 var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--border);
 }
-.admin__brand .muted {
-  font-size: var(--fs-small);
+.admin__brand-tag {
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-strong);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
 }
 .admin__nav-group {
   display: grid;
@@ -131,7 +162,7 @@
   gap: 2px;
 }
 .admin__email {
-  margin: var(--space-2) 0 0;
+  margin: 0;
   padding: 0 var(--space-2);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -140,6 +171,7 @@
   color: var(--color-subtle);
 }
 .admin__main {
+  position: relative;
   min-width: 0;
   padding: var(--space-6) var(--gutter);
 }
@@ -160,6 +192,9 @@
 .admin-page__head h1 {
   margin: 0;
   font-size: var(--fs-h2);
+}
+.admin-page__head .eyebrow {
+  margin-bottom: var(--space-2);
 }
 .admin-actions {
   display: flex;
@@ -336,8 +371,8 @@ button.admin-row:hover,
 .admin-status--contacted,
 .admin-status--reviewing,
 .admin-status--interview {
-  border-color: rgba(74, 116, 184, 0.5);
-  color: #c4b5fd;
+  border-color: rgba(91, 143, 214, 0.5);
+  color: #a9c6ee;
 }
 .admin-status--hired,
 .admin-status--published {
@@ -523,24 +558,6 @@ button.admin-row:hover,
 }
 
 /* --- Admin Login & Auth Extensions --- */
-.admin-url-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: var(--radius-pill);
-  background: rgba(37, 99, 235, 0.12);
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  font-size: var(--fs-small);
-  color: var(--color-primary-light, #93c5fd);
-  margin-bottom: var(--space-2);
-}
-.admin-url-badge code {
-  color: #fff;
-  font-family: var(--font-mono, monospace);
-  font-weight: 600;
-}
-
 .admin-tabs {
   display: flex;
   border-bottom: 1px solid var(--border);
@@ -555,6 +572,7 @@ button.admin-row:hover,
   color: var(--color-muted);
   font-size: var(--fs-small);
   font-weight: 500;
+  white-space: nowrap;
   cursor: pointer;
   border-bottom: 2px solid transparent;
   transition: all 0.15s ease;
@@ -649,13 +667,13 @@ button.admin-row:hover,
   margin-bottom: 6px;
 }
 .admin-code-block code {
-  color: #38bdf8;
+  color: var(--color-cyan);
   font-family: var(--font-mono, monospace);
   font-size: 0.85rem;
 }
 
 .admin-setup-card {
-  background: rgba(15, 23, 42, 0.6);
+  background: rgba(13, 31, 62, 0.75);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: var(--space-3);
@@ -668,9 +686,11 @@ button.admin-row:hover,
 
 /* Account Info & Badges in Sidebar */
 .admin__account-info {
-  margin-top: var(--space-2);
+  margin-top: var(--space-3);
+  padding: var(--space-3) var(--space-2) 0;
+  border-top: 1px solid var(--border);
   display: grid;
-  gap: 2px;
+  gap: 4px;
 }
 .admin__username {
   display: flex;
@@ -686,9 +706,9 @@ button.admin-row:hover,
   align-items: center;
   gap: 4px;
   font-size: 0.7rem;
-  color: #38bdf8;
-  background: rgba(56, 189, 248, 0.1);
-  padding: 1px 6px;
+  color: var(--color-cyan);
+  background: rgba(91, 143, 214, 0.16);
+  padding: 1px 8px;
   border-radius: var(--radius-pill);
   width: fit-content;
   margin-top: 2px;

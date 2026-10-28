@@ -40,6 +40,25 @@ const nav = [
   },
 ];
 
+/**
+ * The site's logo (components/layout/Logo) as a plain link: the admin app has its own router,
+ * so a router Link to "/" would stay inside it instead of opening the website.
+ */
+export function AdminLogo() {
+  const suffix = company.legalName.slice(company.name.length).trim();
+  return (
+    <a href="/" className="logo" aria-label={`${company.legalName} website`}>
+      <span className="logo__mark" aria-hidden="true">
+        <img src="/logo-mark.png" alt="" width="148" height="98" />
+      </span>
+      <span className="logo__text">
+        <span className="logo__name">{company.name}</span>
+        {suffix && <span className="logo__suffix">{suffix}</span>}
+      </span>
+    </a>
+  );
+}
+
 export function AdminLayout({ user }: { user: User }) {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
@@ -92,8 +111,8 @@ export function AdminLayout({ user }: { user: User }) {
     <div className="admin">
       <aside className="admin__sidebar">
         <div className="admin__brand">
-          <strong>{company.name}</strong>
-          <span className="muted">Admin Panel</span>
+          <AdminLogo />
+          <span className="admin__brand-tag">Admin panel</span>
         </div>
         <nav aria-label="Admin">
           {nav.map((section) => (
@@ -146,6 +165,7 @@ export function AdminLayout({ user }: { user: User }) {
         </div>
       </aside>
       <main className="admin__main">
+        <div className="bg-grid" aria-hidden="true" />
         <Outlet />
       </main>
 

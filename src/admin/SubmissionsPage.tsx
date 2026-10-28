@@ -64,7 +64,10 @@ export function SubmissionsPage({ config }: { config: SubmissionsConfig }) {
   return (
     <div className="admin-page">
       <header className="admin-page__head">
-        <h1>{config.title}</h1>
+        <div>
+          <p className="eyebrow">Submissions</p>
+          <h1>{config.title}</h1>
+        </div>
         <button type="button" className="btn btn--outline btn--sm" onClick={() => { setItems(null); load(); }}>
           Refresh
           <span aria-hidden="true">

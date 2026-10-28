@@ -6,17 +6,15 @@ import {
   CircleCheck,
   Eye,
   EyeOff,
-  ShieldCheck,
   KeyRound,
-  User as UserIcon,
   Mail,
-  Lock,
   ArrowLeft,
   Sparkles,
   Terminal,
 } from 'lucide-react';
 import { errorCode } from '../config/firebase';
 import { signIn, sendPasswordReset } from './firebase';
+import { AdminLogo } from './AdminLayout';
 
 type TabMode = 'signin' | 'reset' | 'setup';
 
@@ -36,8 +34,6 @@ export function LoginPage() {
   const [showSetupPassword, setShowSetupPassword] = useState(false);
   const [passwordCopied, setPasswordCopied] = useState(false);
 
-  const currentOrigin = typeof window !== 'undefined' ? window.location.origin : '';
-  const adminLoginUrl = `${currentOrigin}/admin`;
 
   const onSignIn = async (e: FormEvent) => {
     e.preventDefault();
@@ -107,15 +103,13 @@ export function LoginPage() {
 
   return (
     <div className="admin-center">
+      <div className="bg-grid" aria-hidden="true" />
       <div className="card admin-login form">
         {/* Header / Admin Info */}
-        <div>
-          <div className="admin-url-badge" title="Canonical Administrator Route">
-            <ShieldCheck size={14} className="accent-icon" aria-hidden="true" />
-            <span>Admin Login URL: <code>{adminLoginUrl ? `${adminLoginUrl}` : '/admin'}</code></span>
-          </div>
-          <p className="eyebrow" style={{ marginTop: '0.75rem' }}>Vision Giants</p>
-          <h1>Administrator Portal</h1>
+        <div className="admin-login__head">
+          <AdminLogo />
+          <p className="eyebrow">Admin panel</p>
+          <h1>Sign in to manage your website</h1>
         </div>
 
         {/* Tab Navigation */}
@@ -131,7 +125,7 @@ export function LoginPage() {
               setNotice('');
             }}
           >
-            Sign In
+            Sign in
           </button>
           <button
             type="button"
@@ -144,7 +138,7 @@ export function LoginPage() {
               setNotice('');
             }}
           >
-            First-Time Setup
+            First-time setup
           </button>
           <button
             type="button"
@@ -157,7 +151,7 @@ export function LoginPage() {
               setNotice('');
             }}
           >
-            Reset Password
+            Reset password
           </button>
         </div>
 
@@ -167,11 +161,7 @@ export function LoginPage() {
             {/* Field: Username */}
             <div className="field">
               <label htmlFor="login-username">
-                <span className="field-label-text">
-                  <UserIcon size={15} aria-hidden="true" />
-                  Username
-                </span>
-                <span className="field-hint">(Optional identifier)</span>
+                Username <span className="optional">(optional)</span>
               </label>
               <input
                 id="login-username"
@@ -187,11 +177,7 @@ export function LoginPage() {
             {/* Field: Email Address */}
             <div className="field">
               <label htmlFor="login-email">
-                <span className="field-label-text">
-                  <Mail size={15} aria-hidden="true" />
-                  Email Address
-                </span>
-                <span className="field-hint" style={{ color: 'var(--color-primary)' }}>*Required</span>
+                Email address <span className="req">*</span>
               </label>
               <input
                 id="login-email"
@@ -209,11 +195,7 @@ export function LoginPage() {
             <div className="field">
               <div className="field-row">
                 <label htmlFor="login-password">
-                  <span className="field-label-text">
-                    <Lock size={15} aria-hidden="true" />
-                    Password
-                  </span>
-                  <span className="field-hint" style={{ color: 'var(--color-primary)' }}>*Required</span>
+                  Password <span className="req">*</span>
                 </label>
                 <button
                   type="button"
@@ -251,7 +233,7 @@ export function LoginPage() {
             </div>
 
             <button type="submit" className="btn btn--primary" disabled={busy} style={{ width: '100%', marginTop: '0.5rem' }}>
-              {busy ? 'Authenticating…' : 'Sign in to Admin Panel'}
+              {busy ? 'Signing in…' : 'Sign in'}
               <span aria-hidden="true">
                 {busy ? <LoaderCircle size={17} className="spin" /> : <LogIn size={17} />}
               </span>
@@ -267,10 +249,7 @@ export function LoginPage() {
             </p>
             <div className="field">
               <label htmlFor="reset-email">
-                <span className="field-label-text">
-                  <Mail size={15} aria-hidden="true" />
-                  Administrator Email
-                </span>
+                Email address <span className="req">*</span>
               </label>
               <input
                 id="reset-email"
@@ -388,7 +367,7 @@ export function LoginPage() {
                       <CircleCheck size={14} /> Passwords match securely
                     </span>
                   ) : (
-                    <span style={{ color: 'var(--color-error)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <span style={{ color: 'var(--color-danger)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                       <CircleAlert size={14} /> Passwords do not match yet
                     </span>
                   )}
