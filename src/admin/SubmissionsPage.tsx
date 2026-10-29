@@ -29,7 +29,8 @@ export function SubmissionsPage({ config }: { config: SubmissionsConfig }) {
           return {
             ...data,
             id: d.id,
-            status: typeof data.status === 'string' ? data.status : 'new',
+            // "reviewing" was the applications' old name for "reviewed".
+            status: data.status === 'reviewing' ? 'reviewed' : typeof data.status === 'string' ? data.status : 'new',
             notes: typeof data.notes === 'string' ? data.notes : '',
             createdAt: data.createdAt?.toDate?.(),
           };
@@ -177,9 +178,26 @@ function SubmissionDetail({
     }
   };
 
-  /** After a reply is sent: move a "new" item to the next status and log the reply in the notes. */
+  // Opening a new submission counts as reviewing it, so it stops showing as "New".
+  useEffect(() => {
+    if (item.status !== 'new') return;
+    (async () => {
+      try {
+        const [db, { doc, updateDoc, serverTimestamp }] = await Promise.all([getAdminDb(), import('firebase/firestore/lite')]);
+        await updateDoc(doc(db, config.collection, item.id), { status: 'reviewed', updatedAt: serverTimestamp() });
+        setStatus((s) => (s === 'new' ? 'reviewed' : s));
+        onSaved({ ...item, status: 'reviewed' });
+      } catch (err) {
+        console.error(err);
+      }
+    })();
+    // Runs once per opened submission.
+  }, [item.id]);
+
+  /** After a reply is sent: move an unanswered item on to the next status and log the reply in the notes. */
   const markReplied = async () => {
-    const nextStatus = item.status === 'new' ? (config.collection === 'inquiries' ? 'contacted' : 'reviewing') : status;
+    const unanswered = item.status === 'new' || item.status === 'reviewed';
+    const nextStatus = unanswered && config.collection === 'inquiries' ? 'contacted' : item.status === 'new' ? 'reviewed' : status;
     const stamp = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date());
     const nextNotes = [notes.trim(), `Replied by email on ${stamp}.`].filter(Boolean).join('\n');
     const [db, { doc, updateDoc, serverTimestamp }] = await Promise.all([getAdminDb(), import('firebase/firestore/lite')]);

@@ -41,7 +41,7 @@ export const inquiriesConfig: SubmissionsConfig = {
   collection: 'inquiries',
   title: 'Inquiries',
   singular: 'inquiry',
-  statuses: ['new', 'contacted', 'closed'],
+  statuses: ['new', 'reviewed', 'contacted', 'closed'],
   row: (s) => ({ title: str(s.name), subtitle: [str(s.projectType), str(s.company)].filter(Boolean).join(' · ') }),
   searchKeys: ['name', 'email', 'company', 'projectType', 'message'],
   details: (s) => (
@@ -95,7 +95,7 @@ export const applicationsConfig: SubmissionsConfig = {
   collection: 'applications',
   title: 'Applications',
   singular: 'application',
-  statuses: ['new', 'reviewing', 'interview', 'rejected', 'hired'],
+  statuses: ['new', 'reviewed', 'interview', 'rejected', 'hired'],
   row: (s) => ({ title: str(s.name), subtitle: str(s.positionTitle) }),
   searchKeys: ['name', 'email', 'positionTitle', 'message'],
   details: (s) => (

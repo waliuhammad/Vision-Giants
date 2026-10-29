@@ -357,8 +357,8 @@ button.admin-row:hover,
   border-color: rgba(143, 184, 232, 0.45);
   color: var(--color-cyan);
 }
+.admin-status--reviewed,
 .admin-status--contacted,
-.admin-status--reviewing,
 .admin-status--interview {
   border-color: rgba(91, 143, 214, 0.5);
   color: var(--color-primary-strong);
