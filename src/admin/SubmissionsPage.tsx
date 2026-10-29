@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { RefreshCw, Trash2, Save, Mail, CircleAlert, Inbox, Check, Copy } from 'lucide-react';
+import { RefreshCw, Trash2, Save, Mail, CircleAlert, Inbox, Check, Copy, Send } from 'lucide-react';
+import { SuccessDialog } from '../components/ui/SuccessDialog';
 import { replyTemplate } from './replyTemplates';
 import { getAdminAuth, getAdminDb, getAdminStorage } from './firebase';
 import type { Submission, SubmissionsConfig } from './submissionsConfig';
@@ -176,6 +177,19 @@ function SubmissionDetail({
     }
   };
 
+  /** After a reply is sent: move a "new" item to the next status and log the reply in the notes. */
+  const markReplied = async () => {
+    const nextStatus = item.status === 'new' ? (config.collection === 'inquiries' ? 'contacted' : 'reviewing') : status;
+    const stamp = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date());
+    const nextNotes = [notes.trim(), `Replied by email on ${stamp}.`].filter(Boolean).join('\n');
+    const [db, { doc, updateDoc, serverTimestamp }] = await Promise.all([getAdminDb(), import('firebase/firestore/lite')]);
+    await updateDoc(doc(db, config.collection, item.id), { status: nextStatus, notes: nextNotes, updatedAt: serverTimestamp() });
+    setStatus(nextStatus);
+    setNotes(nextNotes);
+    onSaved({ ...item, status: nextStatus, notes: nextNotes });
+    return nextStatus;
+  };
+
   const remove = async () => {
     if (!window.confirm(`Delete this ${config.singular} from ${row.title}? This cannot be undone.`)) return;
     setBusy(true);
@@ -239,7 +253,7 @@ function SubmissionDetail({
               <Save size={15} />
             </span>
           </button>
-          {email && <ReplyActions item={item} email={email} collection={config.collection} />}
+          {email && <ReplyActions item={item} email={email} collection={config.collection} onReplied={markReplied} />}
           <button type="button" className="btn btn--outline btn--sm admin-danger" onClick={remove} disabled={busy}>
             Delete
             <span aria-hidden="true">
@@ -257,8 +271,53 @@ function SubmissionDetail({
  * on Windows with webmail), so the main button opens a pre-filled Gmail draft in a new tab; the
  * desktop email app and copying the address are offered as alternatives.
  */
-function ReplyActions({ item, email, collection }: { item: Submission; email: string; collection: SubmissionsConfig['collection'] }) {
+function ReplyActions({
+  item,
+  email,
+  collection,
+  onReplied,
+}: {
+  item: Submission;
+  email: string;
+  collection: SubmissionsConfig['collection'];
+  onReplied: () => Promise<string>;
+}) {
   const [copied, setCopied] = useState(false);
+  // Gmail and email apps can't tell us when a message is sent, so when the admin comes back to this
+  // tab after opening a draft we ask, then confirm with the same pop-up visitors see.
+  const [awaitingReturn, setAwaitingReturn] = useState(false);
+  const [dialog, setDialog] = useState<'ask' | 'sent' | null>(null);
+  const [sentStatus, setSentStatus] = useState('');
+  const [replyError, setReplyError] = useState('');
+  const name = typeof item.name === 'string' && item.name.trim() ? item.name.trim() : email;
+
+  useEffect(() => {
+    if (!awaitingReturn) return;
+    const opened = Date.now();
+    const onReturn = () => {
+      if (document.visibilityState !== 'visible' || Date.now() - opened < 2000) return;
+      setAwaitingReturn(false);
+      setDialog('ask');
+    };
+    window.addEventListener('focus', onReturn);
+    document.addEventListener('visibilitychange', onReturn);
+    return () => {
+      window.removeEventListener('focus', onReturn);
+      document.removeEventListener('visibilitychange', onReturn);
+    };
+  }, [awaitingReturn]);
+
+  const confirmSent = async () => {
+    setReplyError('');
+    try {
+      setSentStatus(await onReplied());
+      setDialog('sent');
+    } catch (err) {
+      console.error(err);
+      setDialog(null);
+      setReplyError('The reply was sent, but the status could not be updated. Change it manually and press Save.');
+    }
+  };
   const [sender, setSender] = useState('');
   useEffect(() => {
     getAdminAuth().then((auth) => setSender(auth.currentUser?.displayName?.trim() ?? ''));
@@ -292,6 +351,7 @@ function ReplyActions({ item, email, collection }: { item: Submission; email: st
     window.location.href = fits ? full : base;
     window.setTimeout(() => {
       window.removeEventListener('blur', onBlur);
+      if (left) setAwaitingReturn(true);
       if (!left) {
         setAppHint(
           `No email app opened on this computer. Use “Reply in Gmail” instead${copiedBody ? ' (the reply text is already copied, so you can also paste it into any email)' : ''}.`,
@@ -316,7 +376,7 @@ function ReplyActions({ item, email, collection }: { item: Submission; email: st
 
   return (
     <>
-      <a className="btn btn--outline btn--sm" href={gmail} target="_blank" rel="noopener noreferrer">
+      <a className="btn btn--outline btn--sm" href={gmail} target="_blank" rel="noopener noreferrer" onClick={() => setAwaitingReturn(true)}>
         Reply in Gmail
         <span aria-hidden="true">
           <Mail size={15} />
@@ -334,6 +394,38 @@ function ReplyActions({ item, email, collection }: { item: Submission; email: st
           {appHint}
         </p>
       )}
+      {replyError && (
+        <p className="field__error" role="alert" style={{ flexBasis: '100%', order: 1, margin: 0 }}>
+          {replyError}
+        </p>
+      )}
+
+      <SuccessDialog
+        open={dialog === 'ask'}
+        title="Did you send your reply?"
+        icon={<Send size={26} />}
+        doneLabel="Yes, I sent it"
+        onDone={confirmSent}
+        onClose={() => setDialog((d) => (d === 'ask' ? null : d))}
+        actions={
+          <button type="button" className="btn btn--outline" onClick={() => setDialog(null)}>
+            Not yet
+          </button>
+        }
+      >
+        <p>
+          Let us know once your email to <strong>{email}</strong> has gone out, and we’ll mark this {collection === 'inquiries' ? 'inquiry' : 'application'} as replied.
+        </p>
+      </SuccessDialog>
+
+      <SuccessDialog open={dialog === 'sent'} title="Reply sent!" onClose={() => setDialog((d) => (d === 'sent' ? null : d))}>
+        <p>
+          Your reply to <strong>{name}</strong> has been sent to <strong>{email}</strong>.
+        </p>
+        <p>
+          Status: <strong>{statusLabel(sentStatus)}</strong>. The reply is logged in the internal notes.
+        </p>
+      </SuccessDialog>
     </>
   );
 }

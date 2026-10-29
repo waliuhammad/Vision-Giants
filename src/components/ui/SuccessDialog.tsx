@@ -8,13 +8,18 @@ interface SuccessDialogProps {
   onClose: () => void;
   /** Extra actions shown beside the Close button. */
   actions?: ReactNode;
+  /** Replaces the check mark, e.g. for a question rather than a confirmation. */
+  icon?: ReactNode;
+  /** Label and handler for the main button; defaults to "Done", which closes the dialog. */
+  doneLabel?: string;
+  onDone?: () => void;
 }
 
 /**
  * Confirmation pop-up shown after a form is sent. Uses the native <dialog> (focus trap, Escape to
  * close, page behind it inert); clicking the backdrop also closes it.
  */
-export function SuccessDialog({ open, title, children, onClose, actions }: SuccessDialogProps) {
+export function SuccessDialog({ open, title, children, onClose, actions, icon, doneLabel = 'Done', onDone }: SuccessDialogProps) {
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -37,13 +42,13 @@ export function SuccessDialog({ open, title, children, onClose, actions }: Succe
       </button>
       <div className="success-dialog__body">
         <span className="success-dialog__icon" aria-hidden="true">
-          <Check size={28} strokeWidth={2.5} />
+          {icon ?? <Check size={28} strokeWidth={2.5} />}
         </span>
         <h2 id="success-dialog-title">{title}</h2>
         <div className="success-dialog__text">{children}</div>
         <div className="success-dialog__actions">
-          <button type="button" className="btn btn--primary" onClick={onClose} autoFocus>
-            Done
+          <button type="button" className="btn btn--primary" onClick={onDone ?? onClose} autoFocus>
+            {doneLabel}
           </button>
           {actions}
         </div>
