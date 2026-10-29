@@ -5,7 +5,7 @@ import { useContent } from '../content/ContentContext';
 import { Button } from '../components/ui/Button';
 import { SectionHeading } from '../components/ui/SectionHeading';
 import { ServiceCard } from '../components/ui/ServiceCard';
-import { ProjectCard } from '../components/ui/ProjectCard';
+import { ProjectCarousel } from '../components/ui/ProjectCarousel';
 import { ProcessTimeline } from '../components/ui/ProcessTimeline';
 import { CTASection } from '../components/ui/CTASection';
 import { Reveal } from '../components/animations/Reveal';
@@ -123,19 +123,16 @@ export default function HomePage() {
               eyebrow="Our work"
               title="Featured projects"
               lead="A selection of websites we’ve designed and built for clients in e-commerce, services, B2B and non-profit."
+            />
+            <ProjectCarousel
+              projects={projects}
+              label="Featured projects"
               aside={
                 <Button to="/services/website-development/" variant="outline" icon={<ArrowRight size={16} />}>
                   View all projects
                 </Button>
               }
             />
-            <div className="portfolio-grid portfolio-grid--compact">
-              {projects.slice(0, 4).map((p, i) => (
-                <Reveal key={p.id} delay={i * 60}>
-                  <ProjectCard project={p} compact />
-                </Reveal>
-              ))}
-            </div>
           </div>
         </section>
       )}
