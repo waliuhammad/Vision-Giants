@@ -45,14 +45,22 @@ export function getDb(): Promise<Firestore> {
   return dbPromise;
 }
 
-async function callFunction(name: string, data: unknown): Promise<void> {
-  const [app, { getFunctions, httpsCallable, connectFunctionsEmulator }] = await Promise.all([
-    getFirebaseApp(),
-    import('firebase/functions'),
-  ]);
-  const functions = getFunctions(app, FUNCTIONS_REGION);
-  if (useEmulators) connectFunctionsEmulator(functions, '127.0.0.1', 5001);
-  await httpsCallable(functions, name)(data);
+/**
+ * Saves a form submission straight to Firestore. The project is on the free Spark plan, where Cloud
+ * Functions can't be deployed, so firestore.rules validates every field instead and lets visitors
+ * only create new records (never read or change them). The functions in functions/src are kept for
+ * a later move to the Blaze plan, which would add rate limiting, email alerts and CV uploads.
+ */
+async function addSubmission(collectionName: 'inquiries' | 'applications', data: Record<string, unknown>): Promise<void> {
+  const [db, { addDoc, collection, serverTimestamp }] = await Promise.all([getDb(), import('firebase/firestore/lite')]);
+  await addDoc(collection(db, collectionName), {
+    ...data,
+    consent: true,
+    status: 'new',
+    notes: '',
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
 }
 
 /** Error code from a failed callable (e.g. 'functions/resource-exhausted'), if any. */
@@ -69,13 +77,15 @@ export interface InquiryPayload {
   consent: boolean;
 }
 
-/** Sends a contact inquiry to the `submitInquiry` Cloud Function. */
-export function submitInquiry(payload: InquiryPayload): Promise<void> {
-  return callFunction('submitInquiry', payload);
+/** Saves a contact inquiry; it appears under Admin → Inquiries. */
+export function submitInquiry({ name, email, company, projectType, budget, message }: InquiryPayload): Promise<void> {
+  return addSubmission('inquiries', { name, email, company, projectType, budget, message });
 }
 
 export interface ApplicationPayload {
   positionId: string;
+  /** "General application" when no position is chosen. */
+  positionTitle: string;
   name: string;
   email: string;
   phone: string;
@@ -83,11 +93,11 @@ export interface ApplicationPayload {
   linkedinUrl: string;
   message: string;
   consent: boolean;
-  /** CV file name and base64-encoded contents. */
-  cv: { name: string; data: string };
+  /** Shareable link to the CV (file uploads need Cloud Storage, which the Spark plan doesn't include). */
+  cvUrl: string;
 }
 
-/** Sends a job application (including the CV) to the `submitApplication` Cloud Function. */
-export function submitApplication(payload: ApplicationPayload): Promise<void> {
-  return callFunction('submitApplication', payload);
+/** Saves a job application; it appears under Admin → Applications. */
+export function submitApplication({ consent: _consent, ...application }: ApplicationPayload): Promise<void> {
+  return addSubmission('applications', application);
 }

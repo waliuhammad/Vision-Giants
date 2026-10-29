@@ -1,13 +1,10 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Send, LoaderCircle, CircleCheck, CircleAlert, Info, FileText } from 'lucide-react';
+import { Send, LoaderCircle, CircleCheck, CircleAlert, Info } from 'lucide-react';
 import { company } from '../../data/company';
 import type { Position } from '../../data/careers';
 import { errorCode, isFirebaseConfigured, submitApplication } from '../../config/firebase';
 import { Button } from './Button';
 
-/** Must match MAX_CV_BYTES in functions/src/applications.ts. */
-const MAX_CV_BYTES = 5 * 1024 * 1024;
-const CV_EXTENSIONS = ['pdf', 'doc', 'docx'];
 
 type Status = 'idle' | 'submitting' | 'success' | 'error' | 'rate-limited' | 'unconfigured';
 
@@ -19,12 +16,14 @@ interface Values {
   portfolioUrl: string;
   linkedinUrl: string;
   message: string;
+  /** Shareable link to the CV (Google Drive, Dropbox, OneDrive…). */
+  cvUrl: string;
   consent: boolean;
 }
-type Field = keyof Values | 'cv';
+type Field = keyof Values;
 type Errors = Partial<Record<Field, string>>;
 
-const empty: Values = { positionId: '', name: '', email: '', phone: '', portfolioUrl: '', linkedinUrl: '', message: '', consent: false };
+const empty: Values = { positionId: '', name: '', email: '', phone: '', portfolioUrl: '', linkedinUrl: '', message: '', cvUrl: '', consent: false };
 
 const isUrl = (v: string) => {
   try {
@@ -34,39 +33,27 @@ const isUrl = (v: string) => {
   }
 };
 
-function validate(v: Values, cv: File | null): Errors {
+function validate(v: Values): Errors {
   const e: Errors = {};
   if (v.name.trim().length < 2) e.name = 'Please enter your full name.';
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.email.trim())) e.email = 'Please enter a valid email address.';
   if (v.portfolioUrl.trim() && !isUrl(v.portfolioUrl.trim())) e.portfolioUrl = 'Please enter a full link starting with https://';
   if (v.linkedinUrl.trim() && !isUrl(v.linkedinUrl.trim())) e.linkedinUrl = 'Please enter a full link starting with https://';
   if (v.message.length > 5000) e.message = 'Please keep your message under 5,000 characters.';
-  if (!cv) e.cv = 'Please attach your CV.';
-  else if (!CV_EXTENSIONS.includes(cv.name.split('.').pop()?.toLowerCase() ?? '')) e.cv = 'Please attach a PDF or Word document.';
-  else if (cv.size > MAX_CV_BYTES) e.cv = 'Your CV must be 5 MB or smaller.';
+  if (!isUrl(v.cvUrl.trim())) e.cvUrl = 'Please paste a link to your CV, starting with https://';
+  else if (v.cvUrl.trim().length > 500) e.cvUrl = 'Please use a shorter link (up to 500 characters).';
   if (!v.consent) e.consent = 'Please confirm so we can review your application.';
   return e;
 }
 
-/** Reads a file as base64 (without the data: URL prefix). */
-const toBase64 = (file: File) =>
-  new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result).split(',')[1] ?? '');
-    reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(file);
-  });
-
 export function ApplicationForm({ positions }: { positions: Position[] }) {
   const [values, setValues] = useState<Values>(empty);
-  const [cv, setCv] = useState<File | null>(null);
   const [errors, setErrors] = useState<Errors>({});
   const [touched, setTouched] = useState(false);
   const [status, setStatus] = useState<Status>('idle');
   const startedAt = useRef(0);
   const honeypot = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     startedAt.current = Date.now();
@@ -78,17 +65,13 @@ export function ApplicationForm({ positions }: { positions: Position[] }) {
   const set = <K extends keyof Values>(key: K, value: Values[K]) => {
     const next = { ...values, [key]: value };
     setValues(next);
-    if (touched) setErrors(validate(next, cv));
-  };
-  const pickCv = (file: File | null) => {
-    setCv(file);
-    if (touched) setErrors(validate(values, file));
+    if (touched) setErrors(validate(next));
   };
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setTouched(true);
-    const errs = validate(values, cv);
+    const errs = validate(values);
     setErrors(errs);
     if (Object.keys(errs).length) {
       const first = Object.keys(errs)[0];
@@ -114,12 +97,11 @@ export function ApplicationForm({ positions }: { positions: Position[] }) {
         portfolioUrl: values.portfolioUrl.trim(),
         linkedinUrl: values.linkedinUrl.trim(),
         message: values.message.trim(),
-        cv: { name: cv!.name, data: await toBase64(cv!) },
+        cvUrl: values.cvUrl.trim(),
+        positionTitle: positions.find((p) => p.id === values.positionId)?.title ?? 'General application',
       });
       setStatus('success');
       setValues(empty);
-      setCv(null);
-      if (fileRef.current) fileRef.current.value = '';
       setTouched(false);
     } catch (err) {
       console.error('Application submission failed', err);
@@ -213,15 +195,12 @@ export function ApplicationForm({ positions }: { positions: Position[] }) {
       </div>
 
       <div className="field">
-        <label htmlFor="a-cv">
-          CV <span className="req" aria-hidden="true">*</span> <span className="optional">(PDF or Word, max 5 MB)</span>
+        <label htmlFor="a-cvUrl">
+          Link to your CV <span className="req" aria-hidden="true">*</span>
         </label>
-        <label className="input file-input">
-          <FileText size={18} aria-hidden="true" />
-          <span>{cv ? cv.name : 'Choose a file…'}</span>
-          <input ref={fileRef} type="file" accept=".pdf,.doc,.docx" required onChange={(e) => pickCv(e.target.files?.[0] ?? null)} {...fieldProps('cv')} />
-        </label>
-        {err('cv')}
+        <input className="input" type="url" placeholder="https://drive.google.com/…" required value={values.cvUrl} onChange={(e) => set('cvUrl', e.target.value)} {...fieldProps('cvUrl')} />
+        <small className="muted">Upload your CV to Google Drive, Dropbox or OneDrive and paste a link that anyone can view.</small>
+        {err('cvUrl')}
       </div>
 
       <div className="field">
@@ -259,7 +238,7 @@ export function ApplicationForm({ positions }: { positions: Position[] }) {
         {status === 'error' && (
           <p className="alert alert--error">
             <CircleAlert size={18} aria-hidden="true" />
-            <span>Sorry, your application could not be sent. Please check your CV file and try again.{emailFallback}</span>
+            <span>Sorry, your application could not be sent. Please check your details and try again.{emailFallback}</span>
           </p>
         )}
         {status === 'rate-limited' && (

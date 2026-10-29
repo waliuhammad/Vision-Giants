@@ -2,8 +2,9 @@ rules_version = '2';
 
 // Access model
 // - Public visitors can read published website content and nothing else.
-// - Inquiries and job applications are created only by Cloud Functions (functions/src), which
-//   validate and rate-limit them; the website can never write them directly.
+// - Inquiries and job applications are created by the website's forms. The project is on the free
+//   Spark plan (no Cloud Functions), so these rules are the validation: visitors may only create a
+//   new record with exactly the expected fields and limits, and can never read or change one.
 // - Admins are users whose UID has a document in `admins` (create it in the Firebase console).
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -17,14 +18,36 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // ---- Submissions (written by Cloud Functions, managed by admins) ----
+    // ---- Submissions (created by the website's forms, managed by admins) ----
+    function text(v, min, max) {
+      return v is string && v.size() >= min && v.size() <= max;
+    }
+    function isEmail(v) {
+      return text(v, 5, 254) && v.matches('^[^@ ]+@[^@ ]+[.][^@ ]{2,}$');
+    }
+    function isLink(v) {
+      return v is string && (v == '' || (v.size() <= 500 && v.matches('^https?://.+')));
+    }
+    // Fields every new submission gets from the form code (src/config/firebase.ts)
+    function isNewSubmission(d) {
+      return d.consent == true && d.status == 'new' && d.notes == ''
+          && d.createdAt == request.time && d.updatedAt == request.time;
+    }
+
     match /inquiries/{id} {
       allow read, delete: if isAdmin();
       allow update: if isAdmin()
                     && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'notes', 'updatedAt'])
                     && request.resource.data.status in ['new', 'contacted', 'closed']
                     && request.resource.data.notes is string && request.resource.data.notes.size() <= 5000;
-      allow create: if false;
+      allow create: if request.resource.data.keys().hasOnly(['name', 'email', 'company', 'projectType', 'budget', 'message', 'consent', 'status', 'notes', 'createdAt', 'updatedAt'])
+                    && text(request.resource.data.name, 2, 120)
+                    && isEmail(request.resource.data.email)
+                    && text(request.resource.data.company, 0, 200)
+                    && text(request.resource.data.projectType, 1, 80)
+                    && text(request.resource.data.budget, 0, 80)
+                    && text(request.resource.data.message, 20, 5000)
+                    && isNewSubmission(request.resource.data);
     }
 
     match /applications/{id} {
@@ -33,7 +56,17 @@ service cloud.firestore {
                     && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'notes', 'updatedAt'])
                     && request.resource.data.status in ['new', 'reviewing', 'interview', 'rejected', 'hired']
                     && request.resource.data.notes is string && request.resource.data.notes.size() <= 5000;
-      allow create: if false;
+      allow create: if request.resource.data.keys().hasOnly(['positionId', 'positionTitle', 'name', 'email', 'phone', 'portfolioUrl', 'linkedinUrl', 'message', 'cvUrl', 'consent', 'status', 'notes', 'createdAt', 'updatedAt'])
+                    && text(request.resource.data.positionId, 0, 120)
+                    && text(request.resource.data.positionTitle, 1, 200)
+                    && text(request.resource.data.name, 2, 120)
+                    && isEmail(request.resource.data.email)
+                    && text(request.resource.data.phone, 0, 40)
+                    && isLink(request.resource.data.portfolioUrl)
+                    && isLink(request.resource.data.linkedinUrl)
+                    && text(request.resource.data.message, 0, 5000)
+                    && isLink(request.resource.data.cvUrl) && request.resource.data.cvUrl != ''
+                    && isNewSubmission(request.resource.data);
     }
 
     // ---- Website content (managed in the admin dashboard) ----

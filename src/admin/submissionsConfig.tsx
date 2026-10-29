@@ -105,7 +105,9 @@ export const applicationsConfig: SubmissionsConfig = {
         <a href={`mailto:${str(s.email)}`}>{str(s.email)}</a>
       </Detail>
       <Detail label="Phone">{str(s.phone) && <a href={`tel:${str(s.phone)}`}>{str(s.phone)}</a>}</Detail>
-      <Detail label="CV">{str(s.cvPath) && <CvButton path={str(s.cvPath)} fileName={str(s.cvFileName)} />}</Detail>
+      <Detail label="CV">
+        {str(s.cvPath) ? <CvButton path={str(s.cvPath)} fileName={str(s.cvFileName)} /> : str(s.cvUrl) && <Link href={str(s.cvUrl)} />}
+      </Detail>
       <Detail label="LinkedIn">{str(s.linkedinUrl) && <Link href={str(s.linkedinUrl)} />}</Detail>
       <Detail label="Portfolio">{str(s.portfolioUrl) && <Link href={str(s.portfolioUrl)} />}</Detail>
       <Detail label="About">{str(s.message) && <p className="admin-pre">{str(s.message)}</p>}</Detail>
