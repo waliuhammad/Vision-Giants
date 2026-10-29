@@ -283,8 +283,11 @@ function ReplyActions({ item, email, collection }: { item: Submission; email: st
     ...(original ? ['', '---', 'Your message:', original] : []),
   ].join('\n');
 
-  const params = (extra: Record<string, string>) => new URLSearchParams({ ...extra, su: subject, body }).toString();
-  const gmail = `https://mail.google.com/mail/?${params({ view: 'cm', fs: '1', to: email })}`;
+  // encodeURIComponent, not URLSearchParams: Gmail can show URLSearchParams' "+" for spaces literally.
+  const gmailQuery = { view: 'cm', fs: '1', to: email, su: subject, body };
+  const gmail = `https://mail.google.com/mail/?${Object.entries(gmailQuery)
+    .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
+    .join('&')}`;
   const mailto = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
   const copy = async () => {
