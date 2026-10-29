@@ -273,14 +273,6 @@ const footerStyles = `
   color: #8fb4ff;
 }
 
-/* Primary CTA in the contact column */
-.site-footer .site-footer__cta {
-  display: flex;
-  width: fit-content;
-  margin-top: 1.25rem;
-  color: #fff;
-}
-
 /* Bottom bar */
 .site-footer__bottom {
   margin-top: 3.5rem;
@@ -466,9 +458,6 @@ export function Footer() {
                 Get directions <ArrowUpRight size={14} aria-hidden="true" />
               </a>
             )}
-            <Link to="/contact/" className="btn btn--primary btn--sm site-footer__cta">
-              Start a Project <ArrowRight size={16} aria-hidden="true" />
-            </Link>
           </div>
         </div>
 
