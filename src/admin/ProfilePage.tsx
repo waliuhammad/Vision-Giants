@@ -15,7 +15,6 @@ const textFields: { key: TextKey; label: string; rows?: number; help?: string }[
   { key: 'whoWeAre', label: 'Who we are', rows: 5, help: 'Leave a blank line between paragraphs.' },
   { key: 'mission', label: 'Our mission', rows: 2 },
   { key: 'vision', label: 'Our vision', rows: 2 },
-  { key: 'whatWeDo', label: 'What we do (intro above the services)', rows: 2, help: 'The service cards come from Admin → Services.' },
 ];
 
 /** Editor for the company profile on the Portfolio page (Firestore `pages/portfolio`). */

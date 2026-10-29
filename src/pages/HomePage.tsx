@@ -11,7 +11,6 @@ import { ProjectCarousel } from '../components/ui/ProjectCarousel';
 import { ProjectDialog } from '../components/ui/ProjectDialog';
 import { FeaturedProject } from '../components/ui/FeaturedProject';
 import { TechLogo } from '../components/visuals/TechLogos';
-import { ProcessTimeline } from '../components/ui/ProcessTimeline';
 import { CTASection } from '../components/ui/CTASection';
 import { Reveal } from '../components/animations/Reveal';
 import { HeroShowcase } from '../components/visuals/HeroShowcase';
@@ -179,20 +178,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section section--alt" aria-labelledby="process-title">
-        <div className="container">
-          <SectionHeading
-            id="process-title"
-            eyebrow="Our process"
-            title="A simple, transparent process"
-            lead="A clear, structured path from first conversation to a product in the hands of your users."
-            align="center"
-          />
-          <ProcessTimeline />
-        </div>
-      </section>
-
-      <section className="section section--tight" aria-labelledby="tech-title">
+      <section className="section section--alt" aria-labelledby="tech-title">
         <div className="container tech-strip">
           <SectionHeading
             id="tech-title"

@@ -5,7 +5,6 @@ import { useContent } from '../content/ContentContext';
 import type { ProfileAward } from '../data/profile';
 import { Button } from '../components/ui/Button';
 import { SectionHeading } from '../components/ui/SectionHeading';
-import { ServiceCard } from '../components/ui/ServiceCard';
 import { CTASection } from '../components/ui/CTASection';
 import { Reveal } from '../components/animations/Reveal';
 import { StackVisual } from '../components/visuals/IsoVisuals';
@@ -15,7 +14,7 @@ const paragraphs = (text: string) => text.split(/\n\s*\n/).map((p) => p.trim()).
 
 /** Company profile: bio, key facts, who we are, what we do, certifications and honours. */
 export default function PortfolioPage() {
-  const { profile, services } = useContent();
+  const { profile } = useContent();
 
   return (
     <>
@@ -106,31 +105,6 @@ export default function PortfolioPage() {
           </div>
         </div>
       </section>
-
-      {services.length > 0 && (
-        <section className="section" aria-labelledby="what-title">
-          <div className="container">
-            <SectionHeading
-              id="what-title"
-              eyebrow="What we do"
-              title="Services we offer"
-              lead={profile.whatWeDo}
-              aside={
-                <Button to="/services/" variant="outline" icon={<ArrowRight size={16} />}>
-                  All services
-                </Button>
-              }
-            />
-            <div className="grid grid--3">
-              {services.slice(0, 6).map((s, i) => (
-                <Reveal key={s.id} delay={(i % 3) * 80}>
-                  <ServiceCard service={s} />
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       <AwardsSection
         id="certifications"
