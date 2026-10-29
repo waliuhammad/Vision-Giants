@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { RefreshCw, Trash2, Save, Mail, CircleAlert, Inbox } from 'lucide-react';
+import { RefreshCw, Trash2, Save, Mail, CircleAlert, Inbox, Check, Copy } from 'lucide-react';
+import { company } from '../data/company';
 import { getAdminDb, getAdminStorage } from './firebase';
 import type { Submission, SubmissionsConfig } from './submissionsConfig';
 
@@ -238,14 +239,7 @@ function SubmissionDetail({
               <Save size={15} />
             </span>
           </button>
-          {email && (
-            <a className="btn btn--outline btn--sm" href={`mailto:${email}`}>
-              Reply
-              <span aria-hidden="true">
-                <Mail size={15} />
-              </span>
-            </a>
-          )}
+          {email && <ReplyActions item={item} email={email} collection={config.collection} />}
           <button type="button" className="btn btn--outline btn--sm admin-danger" onClick={remove} disabled={busy}>
             Delete
             <span aria-hidden="true">
@@ -255,5 +249,69 @@ function SubmissionDetail({
         </div>
       </div>
     </section>
+  );
+}
+
+/**
+ * Reply options. A plain mailto: link does nothing on computers without a default email app (common
+ * on Windows with webmail), so the main button opens a pre-filled Gmail draft in a new tab; the
+ * desktop email app and copying the address are offered as alternatives.
+ */
+function ReplyActions({ item, email, collection }: { item: Submission; email: string; collection: SubmissionsConfig['collection'] }) {
+  const [copied, setCopied] = useState(false);
+  const str = (v: unknown) => (typeof v === 'string' ? v.trim() : '');
+  const firstName = str(item.name).split(/\s+/)[0] || 'there';
+  const original = str(item.message);
+
+  const subject =
+    collection === 'inquiries'
+      ? `Re: Your ${str(item.projectType) || 'project'} inquiry – ${company.name}`
+      : `Your application – ${str(item.positionTitle) || 'General application'} – ${company.name}`;
+  const intro =
+    collection === 'inquiries'
+      ? `Thank you for contacting ${company.name}${str(item.projectType) ? ` about ${str(item.projectType)}` : ''}.`
+      : `Thank you for applying to ${company.name}.`;
+  const body = [
+    `Hi ${firstName},`,
+    '',
+    intro,
+    '',
+    '',
+    '',
+    'Best regards,',
+    company.name,
+    ...(original ? ['', '---', 'Your message:', original] : []),
+  ].join('\n');
+
+  const params = (extra: Record<string, string>) => new URLSearchParams({ ...extra, su: subject, body }).toString();
+  const gmail = `https://mail.google.com/mail/?${params({ view: 'cm', fs: '1', to: email })}`;
+  const mailto = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(email);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      window.prompt('Copy the email address:', email);
+    }
+  };
+
+  return (
+    <>
+      <a className="btn btn--outline btn--sm" href={gmail} target="_blank" rel="noopener noreferrer">
+        Reply in Gmail
+        <span aria-hidden="true">
+          <Mail size={15} />
+        </span>
+      </a>
+      <a className="btn btn--outline btn--sm" href={mailto}>
+        Email app
+      </a>
+      <button type="button" className="btn btn--outline btn--sm" onClick={copy}>
+        {copied ? 'Copied' : 'Copy email'}
+        <span aria-hidden="true">{copied ? <Check size={15} /> : <Copy size={15} />}</span>
+      </button>
+    </>
   );
 }

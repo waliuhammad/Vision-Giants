@@ -1299,3 +1299,64 @@ select.input {
   opacity: 1;
   border-color: var(--color-primary);
 }
+
+/* =========================================================
+   Success dialog (form confirmations)
+   ========================================================= */
+.success-dialog {
+  width: min(100% - 2 * var(--gutter), 460px);
+  overflow: visible;
+}
+.success-dialog__body {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  padding: clamp(2rem, 1.5rem + 2vw, 2.75rem) clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  text-align: center;
+}
+.success-dialog__icon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: var(--space-2);
+  border-radius: 50%;
+  color: #fff;
+  background: var(--color-success);
+  box-shadow: 0 0 0 8px #dcfce7;
+  animation: success-pop 0.45s var(--ease-out) both;
+}
+@keyframes success-pop {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+.success-dialog h2 {
+  font-size: clamp(1.4rem, 1.2rem + 0.6vw, 1.75rem);
+}
+.success-dialog__text {
+  display: grid;
+  gap: var(--space-2);
+  max-width: 36ch;
+  color: var(--color-muted);
+}
+.success-dialog__text strong {
+  color: var(--color-text);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.success-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+.success-dialog__actions .btn {
+  min-width: 140px;
+}

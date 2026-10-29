@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Send, LoaderCircle, CircleCheck, CircleAlert, Info } from 'lucide-react';
+import { Send, LoaderCircle, CircleAlert, Info } from 'lucide-react';
 import { company } from '../../data/company';
 import { useContent } from '../../content/ContentContext';
 import { errorCode, isFirebaseConfigured, submitInquiry, type InquiryPayload } from '../../config/firebase';
 import { Button } from './Button';
+import { SuccessDialog } from './SuccessDialog';
 
 /** Editable budget brackets. */
 const budgets = ['Not sure yet', 'Under $5,000', '$5,000 – $15,000', '$15,000 – $50,000', '$50,000+'];
@@ -31,6 +32,8 @@ export function ContactForm() {
   const [errors, setErrors] = useState<Errors>({});
   const [touched, setTouched] = useState(false);
   const [status, setStatus] = useState<Status>('idle');
+  /** Who just sent the form, for the confirmation pop-up (the fields are cleared on success). */
+  const [sent, setSent] = useState({ name: '', email: '' });
   const startedAt = useRef(0);
   const honeypot = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -76,6 +79,7 @@ export function ContactForm() {
         company: values.company.trim(),
         message: values.message.trim(),
       });
+      setSent({ name: values.name.trim().split(/\s+/)[0], email: values.email.trim() });
       setStatus('success');
       setValues(empty);
       setTouched(false);
@@ -194,13 +198,20 @@ export function ContactForm() {
         {status === 'submitting' ? 'Sending…' : 'Send Message'}
       </Button>
 
-      <div aria-live="polite">
-        {status === 'success' && (
-          <p className="alert alert--success">
-            <CircleCheck size={18} aria-hidden="true" />
-            <span>Thank you, your message has been received. We’ll get back to you as soon as possible.</span>
+      <SuccessDialog
+        open={status === 'success'}
+        title={sent.name ? `Thank you, ${sent.name}!` : 'Thank you!'}
+        onClose={() => setStatus('idle')}
+      >
+        <p>Your message has been received. Our team will review it and get back to you as soon as possible.</p>
+        {sent.email && (
+          <p>
+            We’ll reply to <strong>{sent.email}</strong>.
           </p>
         )}
+      </SuccessDialog>
+
+      <div aria-live="polite">
         {status === 'error' && (
           <p className="alert alert--error">
             <CircleAlert size={18} aria-hidden="true" />
