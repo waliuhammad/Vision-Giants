@@ -34,6 +34,7 @@ export const company: Company = {
     { label: 'WhatsApp', href: 'https://wa.me/', placeholder: true },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/', placeholder: true },
     { label: 'Instagram', href: 'https://www.instagram.com/', placeholder: true },
+    { label: 'Facebook', href: 'https://www.facebook.com/', placeholder: true },
     { label: 'Email', href: 'mailto:', placeholder: true },
   ],
 };
