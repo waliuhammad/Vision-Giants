@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { isFirebaseConfigured } from '../config/firebase';
 import { defaultContent, type SiteContent } from './schema';
+import { resolvePageText } from './pages';
 
 declare global {
   interface Window {
@@ -36,3 +37,9 @@ export function ContentProvider({ initial, children }: { initial: SiteContent; c
 }
 
 export const useContent = () => useContext(ContentContext);
+
+/** Lookup for one page's editable text: `t('heroTitle')` gives the saved edit or the default. */
+export function usePageText(pageId: string) {
+  const { pages } = useContent();
+  return (key: string) => resolvePageText(pages, pageId, key);
+}

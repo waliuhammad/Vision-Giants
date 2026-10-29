@@ -65,10 +65,11 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // Single-document page content edited in the dashboard, e.g. `pages/portfolio` (company profile).
+    // Page text edited in the dashboard: `pages/<page id>` (Admin → Site pages) and
+    // `pages/portfolio` (the company profile, which must keep its bio).
     match /pages/{id} {
       allow read: if true;
-      allow write: if isAdmin() && request.resource.data.bio is string;
+      allow write: if isAdmin() && (id != 'portfolio' || request.resource.data.bio is string);
     }
 
     // `mail` (email queue) and `rateLimits` are server-only. Deny everything else by default.

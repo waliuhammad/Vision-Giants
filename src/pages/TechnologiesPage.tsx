@@ -8,6 +8,7 @@ import { CTASection } from '../components/ui/CTASection';
 import { Reveal } from '../components/animations/Reveal';
 import { StackVisual } from '../components/visuals/IsoVisuals';
 import { TechLogo } from '../components/visuals/TechLogos';
+import { usePageText } from '../content/ContentContext';
 
 const architecture: { label: string; nodes: { id: TechId; name: string; role: string }[] }[] = [
   { label: 'Interface', nodes: [{ id: 'react', name: 'React', role: 'Web interfaces & components' }] },
@@ -22,13 +23,14 @@ const architecture: { label: string; nodes: { id: TechId; name: string; role: st
 ];
 
 export default function TechnologiesPage() {
+  const t = usePageText('technologies');
   return (
     <>
       <PageHero
         crumb="Technologies"
-        eyebrow="Our technologies"
-        title="Modern Technologies. Thoughtful Engineering."
-        lead="We use a modern, well-supported technology stack to build scalable, secure and high-performance applications for the web, mobile and cloud."
+        eyebrow={t('heroEyebrow')}
+        title={t('heroTitle')}
+        lead={t('heroLead')}
         actions={
           <Button to="/contact/" icon={<ArrowRight size={18} />}>
             Discuss Your Stack
@@ -41,9 +43,9 @@ export default function TechnologiesPage() {
         <div className="container">
           <SectionHeading
             id="core-title"
-            eyebrow="Core stack"
-            title="Tools we build with"
-            lead="Each tool is chosen for a clear purpose and combined according to what your project actually needs."
+            eyebrow={t('coreEyebrow')}
+            title={t('coreTitle')}
+            lead={t('coreLead')}
           />
           <div className="grid grid--4">
             {technologies.map((t, i) => (
@@ -59,9 +61,9 @@ export default function TechnologiesPage() {
         <div className="container">
           <SectionHeading
             id="arch-title"
-            eyebrow="How it fits together"
-            title="A typical application architecture"
-            lead="A simplified view of how these technologies commonly work together in a modern web application."
+            eyebrow={t('archEyebrow')}
+            title={t('archTitle')}
+            lead={t('archLead')}
             align="center"
           />
           <Reveal className="arch">
@@ -111,8 +113,8 @@ export default function TechnologiesPage() {
       </section>
 
       <CTASection
-        title="Not sure which technology is right for you?"
-        text="We’ll help you weigh the options and choose a stack that fits your goals, budget and team."
+        title={t('ctaTitle')}
+        text={t('ctaText')}
         secondary={{ label: 'View Services', to: '/services/' }}
       />
     </>

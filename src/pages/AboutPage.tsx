@@ -7,6 +7,7 @@ import { ProcessTimeline } from '../components/ui/ProcessTimeline';
 import { CTASection } from '../components/ui/CTASection';
 import { Reveal } from '../components/animations/Reveal';
 import { CubeVisual } from '../components/visuals/IsoVisuals';
+import { usePageText } from '../content/ContentContext';
 
 const values = [
   { icon: Lightbulb, title: 'Innovation', text: 'We explore new technologies and ideas, and adopt them when they genuinely serve the product.' },
@@ -23,13 +24,14 @@ const approach = [
 ];
 
 export default function AboutPage() {
+  const t = usePageText('about');
   return (
     <>
       <PageHero
         crumb="About"
-        eyebrow="About us"
-        title="Turning Ideas into Exceptional Digital Products."
-        lead="We are a team of developers, designers and problem-solvers focused on building digital products that create real value for the businesses and people who use them."
+        eyebrow={t('heroEyebrow')}
+        title={t('heroTitle')}
+        lead={t('heroLead')}
         actions={
           <Button to="/contact/" icon={<ArrowRight size={18} />}>
             Work With Us
@@ -41,8 +43,8 @@ export default function AboutPage() {
       <section className="section section--tight" aria-labelledby="intro-title">
         <div className="container intro-grid">
           <Reveal>
-            <p className="eyebrow">Who we are</p>
-            <h2 id="intro-title">Design and engineering under one roof</h2>
+            <p className="eyebrow">{t('introEyebrow')}</p>
+            <h2 id="intro-title">{t('introTitle')}</h2>
             <div className="prose" style={{ marginTop: 'var(--space-5)' }}>
               <p>
                 {company.name} is a software house that helps businesses turn ideas into dependable digital products.
@@ -84,7 +86,7 @@ export default function AboutPage() {
 
       <section className="section section--alt" aria-labelledby="values-title">
         <div className="container">
-          <SectionHeading id="values-title" eyebrow="Our values" title="What guides our work" align="center" />
+          <SectionHeading id="values-title" eyebrow={t('valuesEyebrow')} title={t('valuesTitle')} align="center" />
           <div className="grid grid--4">
             {values.map(({ icon: Icon, title, text }, i) => (
               <Reveal key={title} delay={i * 80}>
@@ -105,9 +107,9 @@ export default function AboutPage() {
         <div className="container">
           <SectionHeading
             id="approach-title"
-            eyebrow="Our approach"
-            title="How we think about building software"
-            lead="Principles that shape every project, whatever its size."
+            eyebrow={t('approachEyebrow')}
+            title={t('approachTitle')}
+            lead={t('approachLead')}
           />
           <div className="grid grid--2">
             {approach.map(({ icon: Icon, title, text }, i) => (
@@ -131,16 +133,16 @@ export default function AboutPage() {
         <div className="container">
           <SectionHeading
             id="process-title"
-            eyebrow="Our process"
-            title="A simple, transparent process"
-            lead="We follow a clear process to turn your ideas into successful digital products."
+            eyebrow={t('processEyebrow')}
+            title={t('processTitle')}
+            lead={t('processLead')}
             align="center"
           />
           <ProcessTimeline />
         </div>
       </section>
 
-      <CTASection title="Let’s build something meaningful together." />
+      <CTASection title={t('ctaTitle')} text={t('ctaText')} />
     </>
   );
 }

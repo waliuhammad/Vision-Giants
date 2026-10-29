@@ -1,6 +1,6 @@
 import { ArrowRight, Briefcase, GraduationCap, Handshake, Sparkles, Compass, Code, Server, Layers, PenTool } from 'lucide-react';
 import { disciplines } from '../data/careers';
-import { useContent } from '../content/ContentContext';
+import { useContent, usePageText } from '../content/ContentContext';
 import { PageHero } from '../components/ui/PageHero';
 import { Button } from '../components/ui/Button';
 import { SectionHeading } from '../components/ui/SectionHeading';
@@ -24,14 +24,15 @@ const steps = [
 ];
 
 export default function CareersPage() {
+  const t = usePageText('careers');
   const { positions: openPositions } = useContent();
   return (
     <>
       <PageHero
         crumb="Careers"
-        eyebrow="Careers"
-        title="Build Your Future With Us."
-        lead="We’re always interested in meeting talented, curious people who love building great digital products. Learn how we work and how to get in touch."
+        eyebrow={t('heroEyebrow')}
+        title={t('heroTitle')}
+        lead={t('heroLead')}
         actions={
           <Button to="/careers/apply/" icon={<ArrowRight size={18} />}>
             Express Your Interest
@@ -44,9 +45,9 @@ export default function CareersPage() {
         <div className="container">
           <SectionHeading
             id="culture-title"
-            eyebrow="Culture"
-            title="How we work together"
-            lead="The working principles we aim to live by every day."
+            eyebrow={t('cultureEyebrow')}
+            title={t('cultureTitle')}
+            lead={t('cultureLead')}
           />
           <div className="grid grid--4">
             {principles.map(({ icon: Icon, title, text }, i) => (
@@ -130,9 +131,9 @@ export default function CareersPage() {
         <div className="container">
           <SectionHeading
             id="apply-title"
-            eyebrow="How to apply"
-            title="Getting in touch"
-            lead="There’s no complicated process. Here’s how to introduce yourself."
+            eyebrow={t('applyEyebrow')}
+            title={t('applyTitle')}
+            lead={t('applyLead')}
           />
           <ol className="grid grid--3 steps">
             {steps.map((s, i) => (
@@ -146,8 +147,8 @@ export default function CareersPage() {
       </section>
 
       <CTASection
-        title="Interested in working with us?"
-        text="Tell us about yourself and the kind of work you’d love to do. We’ll keep your details in mind for future opportunities."
+        title={t('ctaTitle')}
+        text={t('ctaText')}
         primary={{ label: 'Express Your Interest', to: '/careers/apply/' }}
         secondary={{ label: 'About Us', to: '/about/' }}
       />

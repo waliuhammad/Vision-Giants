@@ -3,8 +3,11 @@ import { Mail, Phone, MapPin, Info } from 'lucide-react';
 import { company } from '../data/company';
 import { ContactForm } from '../components/ui/ContactForm';
 import { EnvelopeVisual } from '../components/visuals/IsoVisuals';
+import { usePageText } from '../content/ContentContext';
+import { Highlight } from '../components/ui/Highlight';
 
 export default function ContactPage() {
+  const t = usePageText('contact');
   const details = [
     company.email && { icon: Mail, label: 'Email', value: company.email, href: `mailto:${company.email}` },
     company.phone && { icon: Phone, label: 'Phone', value: company.phone, href: `tel:${company.phone.replace(/\s+/g, '')}` },
@@ -24,14 +27,11 @@ export default function ContactPage() {
               <li aria-current="page">Contact</li>
             </ol>
           </nav>
-          <p className="eyebrow enter">Get in touch</p>
+          <p className="eyebrow enter">{t('heroEyebrow')}</p>
           <h1 id="page-title" className="enter">
-            Let’s Build Something Great Together.
+            <Highlight text={t('heroTitle')} />
           </h1>
-          <p className="lead enter">
-            Have a project in mind or just want to say hello? Tell us a little about what you’re planning and we’ll get
-            back to you to discuss the next steps.
-          </p>
+          <p className="lead enter">{t('heroLead')}</p>
 
           {details.length > 0 ? (
             <ul className="contact-list enter">
@@ -72,7 +72,7 @@ export default function ContactPage() {
         </div>
 
         <div className="card form-card enter">
-          <h2>Start a project</h2>
+          <h2>{t('formTitle')}</h2>
           <p className="muted">Fields marked * are required.</p>
           <ContactForm />
         </div>

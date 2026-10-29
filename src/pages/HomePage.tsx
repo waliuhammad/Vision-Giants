@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import { ArrowRight, CodeXml, Smartphone, Cpu, Palette, Lightbulb, Users, Layers, ShieldCheck } from 'lucide-react';
 import { technologies } from '../data/technologies';
 import type { Project } from '../data/portfolio';
-import { useContent } from '../content/ContentContext';
+import { useContent, usePageText } from '../content/ContentContext';
 import { Button } from '../components/ui/Button';
 import { SectionHeading } from '../components/ui/SectionHeading';
 import { ServiceCard } from '../components/ui/ServiceCard';
@@ -14,6 +14,7 @@ import { TechLogo } from '../components/visuals/TechLogos';
 import { CTASection } from '../components/ui/CTASection';
 import { Reveal } from '../components/animations/Reveal';
 import { HeroShowcase } from '../components/visuals/HeroShowcase';
+import { Highlight } from '../components/ui/Highlight';
 
 const capabilities = [
   { icon: CodeXml, label: 'Web Applications & Platforms' },
@@ -50,6 +51,7 @@ const HOME_SERVICES_COUNT = 6;
 const delay = (ms: number) => ({ '--delay': `${ms}ms` }) as CSSProperties;
 
 export default function HomePage() {
+  const t = usePageText('home');
   const { services, projects } = useContent();
   const [active, setActive] = useState<Project | null>(null);
   const [featured, ...moreProjects] = projects;
@@ -61,13 +63,12 @@ export default function HomePage() {
         <div className="container">
           <div className="hero__grid">
             <div className="hero__copy">
-              <p className="eyebrow enter">Your digital growth partner</p>
+              <p className="eyebrow enter">{t('heroEyebrow')}</p>
               <h1 id="hero-title" className="enter" style={delay(80)}>
-                Building <span className="text-gradient">Digital Experiences</span> That Move Businesses Forward.
+                <Highlight text={t('heroTitle')} />
               </h1>
               <p className="lead enter" style={delay(160)}>
-                We design and develop high-quality websites, applications and custom software that help businesses
-                operate smarter, grow faster and compete confidently.
+                {t('heroLead')}
               </p>
               <div className="hero__actions enter" style={delay(240)}>
                 <Button to="/contact/" icon={<ArrowRight size={18} />}>
@@ -108,9 +109,9 @@ export default function HomePage() {
         <div className="container">
           <SectionHeading
             id="services-title"
-            eyebrow="What we do"
-            title="End-to-end digital solutions for your business"
-            lead="A complete range of design and development services to help you plan, build and scale digital products."
+            eyebrow={t('servicesEyebrow')}
+            title={t('servicesTitle')}
+            lead={t('servicesLead')}
             aside={
               <Link to="/services/" className="text-link section-heading__link">
                 View all services <ArrowRight size={16} aria-hidden="true" />
@@ -133,9 +134,9 @@ export default function HomePage() {
           <div className="container">
             <SectionHeading
               id="work-title"
-              eyebrow="Selected work"
-              title="Live products built for real businesses"
-              lead="Websites and online stores we’ve designed and built for clients in e-commerce, services, B2B and non-profit."
+              eyebrow={t('workEyebrow')}
+              title={t('workTitle')}
+              lead={t('workLead')}
               aside={
                 <Button to="/services/website-development/" variant="outline" icon={<ArrowRight size={16} />}>
                   View all projects
@@ -158,9 +159,9 @@ export default function HomePage() {
         <div className="container why">
           <SectionHeading
             id="why-title"
-            eyebrow="Why Vision Giants"
-            title="A partner focused on quality and clarity"
-            lead="We combine product thinking with solid engineering to deliver software that works well today and stays maintainable tomorrow."
+            eyebrow={t('whyEyebrow')}
+            title={t('whyTitle')}
+            lead={t('whyLead')}
           />
           <div className="grid why-grid">
             {values.map(({ icon: Icon, title, text }, i) => (
@@ -182,9 +183,9 @@ export default function HomePage() {
         <div className="container tech-strip">
           <SectionHeading
             id="tech-title"
-            eyebrow="Technology expertise"
-            title="A modern, well-supported stack"
-            lead="We choose proven tools for each project and keep the stack as simple as the requirements allow."
+            eyebrow={t('techEyebrow')}
+            title={t('techTitle')}
+            lead={t('techLead')}
           />
           <ul className="tech-strip__list">
             {technologies.map((t, i) => (
@@ -204,8 +205,8 @@ export default function HomePage() {
       </section>
 
       <CTASection
-        title="Have an idea? Let’s build something great."
-        text="Tell us what you want to build. We’ll help you shape the scope, choose the right technology and plan a clear path to launch."
+        title={t('ctaTitle')}
+        text={t('ctaText')}
         primary={{ label: 'Start Your Project', to: '/contact/' }}
       />
     </>

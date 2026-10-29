@@ -1,5 +1,6 @@
 import type { ReactNode, CSSProperties } from 'react';
 import { Link } from 'react-router';
+import { Highlight } from './Highlight';
 
 const delay = (ms: number) => ({ '--delay': `${ms}ms` }) as CSSProperties;
 
@@ -32,7 +33,7 @@ export function PageHero({ eyebrow, title, lead, crumb, actions, visual }: PageH
             {eyebrow}
           </p>
           <h1 id="page-title" className="enter" style={delay(120)}>
-            {title}
+            {typeof title === 'string' ? <Highlight text={title} /> : title}
           </h1>
           <p className="lead enter" style={delay(200)}>
             {lead}

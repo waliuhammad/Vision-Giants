@@ -4,8 +4,11 @@ import { TeamArcHero } from '../components/ui/TeamArcHero';
 import { SectionHeading } from '../components/ui/SectionHeading';
 import { CTASection } from '../components/ui/CTASection';
 import { Reveal } from '../components/animations/Reveal';
+import { usePageText } from '../content/ContentContext';
+import { Highlight } from '../components/ui/Highlight';
 
 export default function TeamPage() {
+  const t = usePageText('team');
   return (
     <div className="team-page">
       {/* Hero Section with Title and Arc Showcase */}
@@ -13,12 +16,9 @@ export default function TeamPage() {
         <div className="container text-center">
           <Reveal>
             <h1 id="team-hero-title" className="team-hero__title">
-              Meet our Team
+              <Highlight text={t('heroTitle')} />
             </h1>
-            <p className="team-hero__lead">
-              A diverse team of passionate professionals with unique skills driving innovation and excellence in
-              every project.
-            </p>
+            <p className="team-hero__lead">{t('heroLead')}</p>
           </Reveal>
 
           <Reveal delay={150}>
@@ -32,8 +32,8 @@ export default function TeamPage() {
         <div className="container">
           <SectionHeading
             id="team-section-title"
-            title="Team"
-            lead="A diverse group of passionate professionals, each bringing unique skills and experiences to drive innovation and excellence in every project we undertake."
+            title={t('gridTitle')}
+            lead={t('gridLead')}
             align="center"
           />
 
@@ -49,8 +49,8 @@ export default function TeamPage() {
 
       {/* CTA Section */}
       <CTASection
-        title="Want to build the future with us? Join our team."
-        text="We are always looking for passionate engineers, designers and strategists who care about craftsmanship and solving hard problems."
+        title={t('ctaTitle')}
+        text={t('ctaText')}
         primary={{ label: 'Explore Careers', to: '/careers/' }}
         secondary={{ label: 'Get in Touch', to: '/contact/' }}
       />

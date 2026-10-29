@@ -1,6 +1,7 @@
 import { services, serviceIcons, type Service, type ServiceIconName } from '../data/services';
 import { projects, categoryLabels, previewKinds, type Project, type ProjectCategory, type PreviewKind } from '../data/portfolio';
 import { openPositions, type Position } from '../data/careers';
+import type { PageTexts } from './pages';
 import { defaultProfile, type CompanyProfile, type ProfileAward, type ProfileFact } from '../data/profile';
 
 /** Content that can be managed from the admin dashboard. */
@@ -10,10 +11,12 @@ export interface SiteContent {
   positions: Position[];
   /** Company profile on the Portfolio page (a single document, not a collection). */
   profile: CompanyProfile;
+  /** Edited page text from Admin → Site pages; missing fields use the defaults in ./pages.ts. */
+  pages: PageTexts;
 }
 
 /** Built-in content from src/data, used until content is imported into Firestore. */
-export const defaultContent: SiteContent = { services, projects, positions: openPositions, profile: defaultProfile };
+export const defaultContent: SiteContent = { services, projects, positions: openPositions, profile: defaultProfile, pages: {} };
 
 export type ContentCollection = 'services' | 'projects' | 'positions';
 

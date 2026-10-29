@@ -11,10 +11,12 @@ import { BlogPostDialog } from '../components/blog/BlogPostDialog';
 import { Button } from '../components/ui/Button';
 import { Reveal } from '../components/animations/Reveal';
 import { NetworkVisual } from '../components/visuals/IsoVisuals';
+import { usePageText } from '../content/ContentContext';
 
 const ITEMS_PER_PAGE = 6;
 
 export default function BlogPage() {
+  const t = usePageText('blog');
   const [selectedCategory, setSelectedCategory] = useState<BlogCategory>('All Articles');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -97,9 +99,9 @@ export default function BlogPage() {
       {/* Compact, impactful Hero Section */}
       <PageHero
         crumb="Blog"
-        eyebrow="Insights & Ideas"
-        title="Insights, Ideas & Innovation."
-        lead="In-depth perspectives on modern web and mobile architecture, cloud infrastructure, AI engineering, UI/UX trends, and digital business strategy."
+        eyebrow={t('heroEyebrow')}
+        title={t('heroTitle')}
+        lead={t('heroLead')}
         visual={<NetworkVisual />}
       />
 

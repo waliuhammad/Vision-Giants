@@ -1,5 +1,5 @@
 import { ArrowRight, Plus } from 'lucide-react';
-import { useContent } from '../content/ContentContext';
+import { useContent, usePageText } from '../content/ContentContext';
 import { faqs } from '../data/faq';
 import { PageHero } from '../components/ui/PageHero';
 import { Button } from '../components/ui/Button';
@@ -10,15 +10,16 @@ import { CTASection } from '../components/ui/CTASection';
 import { LayersVisual } from '../components/visuals/IsoVisuals';
 
 export default function ServicesPage() {
+  const t = usePageText('services');
   const { services } = useContent();
 
   return (
     <>
       <PageHero
         crumb="Services"
-        eyebrow="Our services"
-        title="End-to-End Digital Solutions for Modern Businesses"
-        lead="From the first idea to launch and beyond, we design, build and integrate the digital products your business needs to grow."
+        eyebrow={t('heroEyebrow')}
+        title={t('heroTitle')}
+        lead={t('heroLead')}
         actions={
           <>
             <Button to="/contact/" icon={<ArrowRight size={18} />}>
@@ -36,9 +37,9 @@ export default function ServicesPage() {
         <div className="container">
           <SectionHeading
             id="overview-title"
-            eyebrow="What we do"
-            title="Everything you need to build and scale"
-            lead="Pick a single service or combine them into a complete product team."
+            eyebrow={t('listEyebrow')}
+            title={t('listTitle')}
+            lead={t('listLead')}
           />
           <ServicesGrid services={services} initialCount={6} />
         </div>
@@ -48,9 +49,9 @@ export default function ServicesPage() {
         <div className="container">
           <SectionHeading
             id="process-title"
-            eyebrow="How we work"
-            title="A simple, transparent process"
-            lead="Short feedback loops and clear milestones keep projects predictable."
+            eyebrow={t('processEyebrow')}
+            title={t('processTitle')}
+            lead={t('processLead')}
             align="center"
           />
           <ProcessTimeline />
@@ -75,8 +76,8 @@ export default function ServicesPage() {
       </section>
 
       <CTASection
-        title="Ready to start your project?"
-        text="Share a few details about what you want to build and we’ll suggest the best way forward."
+        title={t('ctaTitle')}
+        text={t('ctaText')}
       />
     </>
   );
