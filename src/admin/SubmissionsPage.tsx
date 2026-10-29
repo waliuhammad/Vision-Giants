@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { RefreshCw, Trash2, Save, Mail, CircleAlert, Inbox, Check, Copy } from 'lucide-react';
-import { company } from '../data/company';
-import { getAdminDb, getAdminStorage } from './firebase';
+import { replyTemplate } from './replyTemplates';
+import { getAdminAuth, getAdminDb, getAdminStorage } from './firebase';
 import type { Submission, SubmissionsConfig } from './submissionsConfig';
 
 const formatDate = (d?: Date) =>
@@ -259,29 +259,11 @@ function SubmissionDetail({
  */
 function ReplyActions({ item, email, collection }: { item: Submission; email: string; collection: SubmissionsConfig['collection'] }) {
   const [copied, setCopied] = useState(false);
-  const str = (v: unknown) => (typeof v === 'string' ? v.trim() : '');
-  const firstName = str(item.name).split(/\s+/)[0] || 'there';
-  const original = str(item.message);
-
-  const subject =
-    collection === 'inquiries'
-      ? `Re: Your ${str(item.projectType) || 'project'} inquiry – ${company.name}`
-      : `Your application – ${str(item.positionTitle) || 'General application'} – ${company.name}`;
-  const intro =
-    collection === 'inquiries'
-      ? `Thank you for contacting ${company.name}${str(item.projectType) ? ` about ${str(item.projectType)}` : ''}.`
-      : `Thank you for applying to ${company.name}.`;
-  const body = [
-    `Hi ${firstName},`,
-    '',
-    intro,
-    '',
-    '',
-    '',
-    'Best regards,',
-    company.name,
-    ...(original ? ['', '---', 'Your message:', original] : []),
-  ].join('\n');
+  const [sender, setSender] = useState('');
+  useEffect(() => {
+    getAdminAuth().then((auth) => setSender(auth.currentUser?.displayName?.trim() ?? ''));
+  }, []);
+  const { subject, body } = replyTemplate(collection, item, sender);
 
   // encodeURIComponent, not URLSearchParams: Gmail can show URLSearchParams' "+" for spaces literally.
   const gmailQuery = { view: 'cm', fs: '1', to: email, su: subject, body };
