@@ -5,6 +5,7 @@ import {
   MapPin,
   ArrowRight,
   ArrowUp,
+  ArrowUpRight,
   Globe,
 } from 'lucide-react';
 import type { ReactElement, ReactNode } from 'react';
@@ -107,23 +108,46 @@ function getSocialIcon(label: string, href: string): IconComponent {
 
 const footerStyles = `
 .site-footer {
-  background: #0d2147;
+  position: relative;
+  background: linear-gradient(180deg, #0b1d3f 0%, #091830 100%);
   color: #fff;
-  padding: 4.5rem 0 1.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 4.5rem 0 1.5rem;
+}
+/* Soft accent line along the top edge */
+.site-footer::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(143, 184, 232, 0.45), transparent);
 }
 
 .site-footer__grid {
   display: grid;
-  grid-template-columns: 1.6fr 1fr 1.2fr 1.4fr;
+  grid-template-columns: 1.5fr 0.8fr 1fr 1.4fr;
   gap: 3rem;
 }
 
 .site-footer h2 {
-  font-size: 0.85rem;
-  letter-spacing: 0.15em;
+  position: relative;
+  margin: 0 0 1.4rem;
+  padding-bottom: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  margin: 0 0 1.5rem;
+  color: #fff;
+}
+.site-footer h2::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 28px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--color-primary);
 }
 
 .site-footer ul {
@@ -131,149 +155,186 @@ const footerStyles = `
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 0.85rem;
+  gap: 0.7rem;
 }
 
 .site-footer a {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.95rem;
   text-decoration: none;
-  transition: color 0.2s ease, opacity 0.2s ease;
+  transition: color 0.2s ease;
 }
-
 .site-footer a:hover,
 .site-footer a:focus-visible {
   color: #fff;
-  text-decoration: underline;
-  text-underline-offset: 4px;
+}
+.site-footer nav[aria-label='Company'] li a,
+.site-footer__links li a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+.site-footer nav[aria-label='Company'] li a:hover,
+.site-footer__links li a:hover {
+  transform: translateX(3px);
 }
 
 /* Brand */
 .site-footer__brand p {
   margin: 1.25rem 0 1.5rem;
-  max-width: 34ch;
+  max-width: 36ch;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+.site-footer__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(143, 184, 232, 0.25);
+  background: rgba(91, 143, 214, 0.1);
+  font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.8);
-  line-height: 1.6;
 }
 
 /* Social icons */
 .site-footer ul.site-footer__social {
   display: flex;
-  gap: 0.75rem;
+  gap: 0.6rem;
+  margin-top: 1.25rem;
 }
-
 .site-footer__social a {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   display: grid;
   place-items: center;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
   color: #fff;
   transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
-
 .site-footer__social a:hover {
   background: #fff;
   color: #0d2147;
-  text-decoration: none;
   transform: translateY(-2px);
 }
 
 /* Services "view all" */
 .site-footer a.site-footer__view-all {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
   font-weight: 600;
-  color: #7fb2ff;
+  color: #8fb8e8;
 }
 
 /* Contact */
 .site-footer__contact li {
   display: flex;
   align-items: flex-start;
-  gap: 0.6rem;
+  gap: 0.75rem;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.95rem;
+  line-height: 1.55;
 }
-
-.site-footer__contact svg {
+.site-footer__icon {
   flex-shrink: 0;
-  margin-top: 3px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: rgba(91, 143, 214, 0.14);
+  border: 1px solid rgba(143, 184, 232, 0.2);
+  color: #8fb8e8;
+}
+.site-footer__contact li > :last-child {
+  padding-top: 5px;
 }
 
-/* Map */
+/* Map, dark-tinted to match the theme */
 .site-footer__map {
   margin-top: 1.25rem;
   border-radius: 12px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  aspect-ratio: 4 / 3;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  height: 210px;
+  background: #0d2147;
 }
-
 .site-footer__map iframe {
   display: block;
   width: 100%;
   height: 100%;
   border: 0;
+  filter: invert(0.9) hue-rotate(185deg) saturate(0.6) brightness(0.95) contrast(0.9);
+}
+.site-footer a.site-footer__directions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #8fb8e8;
 }
 
 /* Bottom bar */
 .site-footer__bottom {
   margin-top: 3.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 1rem 2rem;
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.55);
 }
-
 .site-footer__legal ul {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem 1.5rem;
 }
-
 .site-footer__legal a {
-  font-size: 0.9rem;
-}
-
-.site-footer__top {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: none;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: #fff;
-  padding: 0.45rem 0.9rem;
-  border-radius: 999px;
-  cursor: pointer;
-  font: inherit;
   font-size: 0.85rem;
-  transition: background 0.2s ease, color 0.2s ease;
+  color: rgba(255, 255, 255, 0.55);
 }
-
+.site-footer__top {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #fff;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
 .site-footer__top:hover {
   background: #fff;
   color: #0d2147;
+  transform: translateY(-2px);
 }
 
 /* Responsive */
 @media (max-width: 1024px) {
   .site-footer__grid {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-  .site-footer__brand {
-    grid-column: 1 / -1;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem 2rem;
   }
 }
-
 @media (max-width: 640px) {
+  .site-footer {
+    padding-top: 3.5rem;
+  }
   .site-footer__grid {
-    grid-template-columns: 1fr 1fr;
     gap: 2.25rem 1.5rem;
+  }
+  .site-footer__brand,
+  .site-footer__contact-col {
+    grid-column: 1 / -1;
   }
   .site-footer__bottom {
     flex-direction: column;
@@ -299,6 +360,10 @@ export function Footer() {
           <div className="site-footer__brand">
             <Logo />
             <p>{company.description}</p>
+            <span className="site-footer__badge">
+              <Globe size={14} aria-hidden="true" />
+              {company.tagline}
+            </span>
 
             {company.social.length > 0 && (
               <ul className="site-footer__social" aria-label="Social media">
@@ -337,7 +402,7 @@ export function Footer() {
           {/* Services */}
           <div>
             <h2>Services</h2>
-            <ul>
+            <ul className="site-footer__links">
               {footerServices.map((s) => (
                 <li key={s.id}>
                   <Link to={`/services/#${s.id}`}>{s.title}</Link>
@@ -352,24 +417,30 @@ export function Footer() {
           </div>
 
           {/* Contact */}
-          <div>
+          <div className="site-footer__contact-col">
             <h2>Get in touch</h2>
             <ul className="site-footer__contact">
               {company.email && (
                 <li>
-                  <Mail size={16} aria-hidden="true" />
+                  <span className="site-footer__icon" aria-hidden="true">
+                    <Mail size={15} />
+                  </span>
                   <a href={`mailto:${company.email}`}>{company.email}</a>
                 </li>
               )}
               {company.phone && (
                 <li>
-                  <Phone size={16} aria-hidden="true" />
+                  <span className="site-footer__icon" aria-hidden="true">
+                    <Phone size={15} />
+                  </span>
                   <a href={`tel:${company.phone.replace(/\s+/g, '')}`}>{company.phone}</a>
                 </li>
               )}
               {company.address && (
                 <li>
-                  <MapPin size={16} aria-hidden="true" />
+                  <span className="site-footer__icon" aria-hidden="true">
+                    <MapPin size={15} />
+                  </span>
                   <span>{company.address}</span>
                 </li>
               )}
@@ -384,6 +455,16 @@ export function Footer() {
                   referrerPolicy="no-referrer-when-downgrade"
                 />
               </div>
+            )}
+            {company.address && (
+              <a
+                className="site-footer__directions"
+                href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(company.address)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Get directions <ArrowUpRight size={14} aria-hidden="true" />
+              </a>
             )}
           </div>
         </div>
@@ -409,8 +490,9 @@ export function Footer() {
             className="site-footer__top"
             onClick={scrollToTop}
             aria-label="Back to top"
+            title="Back to top"
           >
-            Back to top <ArrowUp size={14} aria-hidden="true" />
+            <ArrowUp size={16} aria-hidden="true" />
           </button>
         </div>
       </div>
