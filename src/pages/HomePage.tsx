@@ -1,4 +1,4 @@
-import { ArrowRight, ArrowDown, CodeXml, Smartphone, Cpu, Palette, Lightbulb, Users, Layers, ShieldCheck } from 'lucide-react';
+import { ArrowRight,CodeXml, Smartphone, Cpu, Palette, Lightbulb, Users, Layers, ShieldCheck } from 'lucide-react';
 import type { CSSProperties } from 'react';
 import { company } from '../data/company';
 import { useContent } from '../content/ContentContext';
@@ -9,7 +9,7 @@ import { ProjectCarousel } from '../components/ui/ProjectCarousel';
 import { ProcessTimeline } from '../components/ui/ProcessTimeline';
 import { CTASection } from '../components/ui/CTASection';
 import { Reveal } from '../components/animations/Reveal';
-import { HeroGlobe } from '../components/visuals/HeroGlobe';
+import { HeroShowcase } from '../components/visuals/HeroShowcase';
 
 const capabilities = [
   { icon: CodeXml, label: 'Web Applications & Platforms' },
@@ -66,12 +66,12 @@ export default function HomePage() {
                 <Button to="/contact/" icon={<ArrowRight size={18} />}>
                   Start a Project
                 </Button>
-                <Button to="/portfolio/" variant="ghost" icon={<ArrowRight size={16} />}>
+                <Button to="/services/website-development/" variant="outline">
                   Explore Our Work
                 </Button>
               </div>
             </div>
-            <HeroGlobe />
+            <HeroShowcase projects={projects} />
           </div>
 
           <ul className="capabilities enter" style={delay(320)} aria-label="Core capabilities">
@@ -84,10 +84,6 @@ export default function HomePage() {
               </li>
             ))}
           </ul>
-          <a href="#services" className="scroll-cue" aria-label="Scroll to services">
-            Scroll down
-            <ArrowDown size={14} aria-hidden="true" />
-          </a>
         </div>
       </section>
 

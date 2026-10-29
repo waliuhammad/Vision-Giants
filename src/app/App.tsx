@@ -27,8 +27,7 @@ export function App({ content }: { content: SiteContent }) {
   return (
     <ContentProvider initial={content}>
       <LazyMotion features={loadFeatures} strict>
-        {/* Animations always play, even when the OS asks for reduced motion (site owner preference). */}
-        <MotionConfig reducedMotion="never">
+        <MotionConfig reducedMotion="user">
           <a href="#main" className="skip-link">
             Skip to content
           </a>

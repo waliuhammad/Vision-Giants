@@ -1,7 +1,7 @@
 import { useId, type CSSProperties, type ReactNode } from 'react';
 
 /* ------------------------------------------------------------------
-   Isometric helpers: a coherent family of glass/neon illustrations
+   Isometric helpers: a coherent family of light, line-led illustrations
    ------------------------------------------------------------------ */
 const C = Math.cos(Math.PI / 6);
 const iso = (x: number, y: number, z: number) => `${((x - y) * C).toFixed(1)},${((x + y) * 0.5 - z).toFixed(1)}`;
@@ -42,39 +42,39 @@ function Defs({ ids }: { ids: Ids }) {
   return (
     <defs>
       <linearGradient id={ids.topBlue} x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stopColor="#5a8bcf" stopOpacity="0.9" />
-        <stop offset="1" stopColor="#284a80" stopOpacity="0.85" />
+        <stop offset="0" stopColor="#dbe7fd" stopOpacity="0.9" />
+        <stop offset="1" stopColor="#bcd2f7" stopOpacity="0.85" />
       </linearGradient>
       <linearGradient id={ids.topBright} x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stopColor="#a9c6ee" />
-        <stop offset="0.5" stopColor="#6b9bde" />
-        <stop offset="1" stopColor="#4a74b8" />
+        <stop offset="0" stopColor="#bcd2f7" />
+        <stop offset="0.5" stopColor="#5b8def" />
+        <stop offset="1" stopColor="#2563eb" />
       </linearGradient>
       <linearGradient id={ids.topPurple} x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stopColor="#9db9e3" stopOpacity="0.85" />
-        <stop offset="1" stopColor="#3d5f99" stopOpacity="0.85" />
+        <stop offset="0" stopColor="#e0eafc" stopOpacity="0.85" />
+        <stop offset="1" stopColor="#bcd2f7" stopOpacity="0.85" />
       </linearGradient>
       <linearGradient id={ids.left} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stopColor="#2f5591" stopOpacity="0.85" />
-        <stop offset="1" stopColor="#132a52" stopOpacity="0.9" />
+        <stop offset="0" stopColor="#c7d8fa" stopOpacity="0.85" />
+        <stop offset="1" stopColor="#ffffff" stopOpacity="0.9" />
       </linearGradient>
       <linearGradient id={ids.right} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stopColor="#1d3a69" stopOpacity="0.9" />
-        <stop offset="1" stopColor="#0e2142" stopOpacity="0.95" />
+        <stop offset="0" stopColor="#9bb8ef" stopOpacity="0.9" />
+        <stop offset="1" stopColor="#7ea2ea" stopOpacity="0.95" />
       </linearGradient>
       <linearGradient id={ids.glass} x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stopColor="#6b9bde" stopOpacity="0.32" />
-        <stop offset="1" stopColor="#4a74b8" stopOpacity="0.14" />
+        <stop offset="0" stopColor="#5b8def" stopOpacity="0.32" />
+        <stop offset="1" stopColor="#2563eb" stopOpacity="0.14" />
       </linearGradient>
       <radialGradient id={ids.glow}>
-        <stop offset="0" stopColor="#6b9bde" stopOpacity="0.65" />
-        <stop offset="0.5" stopColor="#4a74b8" stopOpacity="0.22" />
-        <stop offset="1" stopColor="#0e2142" stopOpacity="0" />
+        <stop offset="0" stopColor="#5b8def" stopOpacity="0.16" />
+        <stop offset="0.5" stopColor="#2563eb" stopOpacity="0.06" />
+        <stop offset="1" stopColor="#7ea2ea" stopOpacity="0" />
       </radialGradient>
       <linearGradient id={ids.portal} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stopColor="#e6eefa" />
-        <stop offset="0.35" stopColor="#7fb0e6" />
-        <stop offset="1" stopColor="#3f6aaa" stopOpacity="0.4" />
+        <stop offset="0" stopColor="#2563eb" />
+        <stop offset="0.35" stopColor="#5b8def" />
+        <stop offset="1" stopColor="#2563eb" stopOpacity="0.4" />
       </linearGradient>
       <filter id={ids.blur} x="-50%" y="-50%" width="200%" height="200%">
         <feGaussianBlur stdDeviation="6" />
@@ -101,7 +101,7 @@ function Box({ x = 0, y = 0, z = 0, w, d, h, ids, tone = 'blue', className, styl
       <polygon points={left} fill={glass ? `url(#${ids.glass})` : `url(#${ids.left})`} />
       <polygon points={right} fill={glass ? `url(#${ids.glass})` : `url(#${ids.right})`} opacity={glass ? 0.7 : 1} />
       <polygon points={top} fill={`url(#${topFill})`} />
-      <g fill="none" stroke="#9fbfe8" strokeOpacity={glass ? 0.75 : 0.55} strokeWidth="1" strokeLinejoin="round">
+      <g fill="none" stroke="#5b8def" strokeOpacity={glass ? 0.75 : 0.55} strokeWidth="1" strokeLinejoin="round">
         <polygon points={top} />
         <polyline points={`${iso(x, y + d, z + h)} ${iso(x, y + d, z)} ${iso(x + w, y + d, z)} ${iso(x + w, y, z)} ${iso(x + w, y, z + h)}`} />
         <line
@@ -122,7 +122,7 @@ function Glow({ cx, cy, rx, ry, ids }: { cx: number; cy: number; rx: number; ry:
 
 function Sparkles({ points }: { points: [number, number][] }) {
   return (
-    <g fill="#bfe3ff">
+    <g fill="#93b4f5">
       {points.map(([x, y], i) => (
         <circle key={i} className="twinkle" cx={x} cy={y} r={i % 3 ? 1.2 : 2} style={{ animationDelay: `${i * 0.45}s` }} />
       ))}
@@ -190,7 +190,7 @@ export function StackVisual() {
       </g>
     </g>
   );
-  const s = { fill: 'none', stroke: '#e6eefa', strokeWidth: 1.6, strokeLinecap: 'round', strokeLinejoin: 'round' } as const;
+  const s = { fill: 'none', stroke: '#2563eb', strokeWidth: 1.6, strokeLinecap: 'round', strokeLinejoin: 'round' } as const;
   return (
     <svg viewBox="-240 -210 480 400" role="img">
       <Defs ids={ids} />
@@ -201,7 +201,7 @@ export function StackVisual() {
         <Box x={-40} y={-40} z={40} w={80} d={80} h={22} ids={ids} tone="bright" />
       </g>
       {/* connection lines from core to tiles */}
-      <g stroke="#7fb0e6" strokeOpacity="0.45" strokeDasharray="3 5">
+      <g stroke="#5b8def" strokeOpacity="0.45" strokeDasharray="3 5">
         <line x1="0" y1="-60" x2="-150" y2="-120" />
         <line x1="0" y1="-60" x2="150" y2="-120" />
         <line x1="0" y1="-60" x2="-170" y2="10" />
@@ -230,32 +230,32 @@ export function NetworkVisual() {
     <svg viewBox="-230 -210 460 400" role="img">
       <Defs ids={ids} />
       <Glow cx={0} cy={0} rx={200} ry={150} ids={ids} />
-      <g stroke="#6b9bde" strokeOpacity="0.4" strokeWidth="1">
+      <g stroke="#5b8def" strokeOpacity="0.4" strokeWidth="1">
         {links.map(([a, b], i) => (
           <line key={i} x1={nodes[a]![0]} y1={nodes[a]![1]} x2={nodes[b]![0]} y2={nodes[b]![1]} />
         ))}
       </g>
       {nodes.map(([x, y], i) => (
         <g key={i}>
-          <circle cx={x} cy={y} r={i % 4 === 0 ? 7 : 4} fill="#8fb8e8" opacity="0.18" />
-          <circle className="twinkle" cx={x} cy={y} r={i % 4 === 0 ? 3 : 2} fill="#c4dbf5" style={delay(i * 0.3)} />
+          <circle cx={x} cy={y} r={i % 4 === 0 ? 7 : 4} fill="#5b8def" opacity="0.18" />
+          <circle className="twinkle" cx={x} cy={y} r={i % 4 === 0 ? 3 : 2} fill="#2563eb" style={delay(i * 0.3)} />
         </g>
       ))}
       <g className="float float--slow">
-        <rect x="-120" y="-80" width="240" height="160" rx="12" fill="#132a52" stroke="#6b9bde" strokeOpacity="0.6" />
-        <rect x="-120" y="-80" width="240" height="26" rx="12" fill="#11214a" />
-        <rect x="-120" y="-62" width="240" height="8" fill="#11214a" />
+        <rect x="-120" y="-80" width="240" height="160" rx="12" fill="#ffffff" stroke="#5b8def" strokeOpacity="0.6" />
+        <rect x="-120" y="-80" width="240" height="26" rx="12" fill="#f1f5fb" />
+        <rect x="-120" y="-62" width="240" height="8" fill="#f1f5fb" />
         <circle cx="-102" cy="-67" r="4" fill="#f87171" opacity="0.8" />
         <circle cx="-88" cy="-67" r="4" fill="#fbbf24" opacity="0.8" />
         <circle cx="-74" cy="-67" r="4" fill="#34d399" opacity="0.8" />
-        <rect x="-104" y="-40" width="90" height="10" rx="3" fill="#6b9bde" opacity="0.9" />
-        <rect x="-104" y="-22" width="130" height="6" rx="3" fill="#7f90b0" opacity="0.6" />
-        <rect x="-104" y="-10" width="110" height="6" rx="3" fill="#7f90b0" opacity="0.6" />
+        <rect x="-104" y="-40" width="90" height="10" rx="3" fill="#5b8def" opacity="0.9" />
+        <rect x="-104" y="-22" width="130" height="6" rx="3" fill="#cbd5e1" opacity="0.6" />
+        <rect x="-104" y="-10" width="110" height="6" rx="3" fill="#cbd5e1" opacity="0.6" />
         <rect x="-104" y="10" width="62" height="54" rx="6" fill={`url(#${ids.topBright})`} opacity="0.85" />
         <rect x="-34" y="10" width="62" height="54" rx="6" fill={`url(#${ids.topPurple})`} opacity="0.8" />
         <rect x="36" y="10" width="68" height="54" rx="6" fill={`url(#${ids.topBlue})`} opacity="0.8" />
-        <rect x="36" y="-40" width="68" height="36" rx="6" fill="none" stroke="#8fb8e8" strokeOpacity="0.6" />
-        <polyline points="42,-12 56,-22 70,-16 86,-32 98,-26" fill="none" stroke="#8fb8e8" strokeWidth="2" />
+        <rect x="36" y="-40" width="68" height="36" rx="6" fill="none" stroke="#5b8def" strokeOpacity="0.6" />
+        <polyline points="42,-12 56,-22 70,-16 86,-32 98,-26" fill="none" stroke="#5b8def" strokeWidth="2" />
       </g>
     </svg>
   );
@@ -268,27 +268,27 @@ export function EnvelopeVisual() {
     <svg viewBox="-230 -200 460 380" role="img">
       <Defs ids={ids} />
       <Glow cx={0} cy={60} rx={210} ry={110} ids={ids} />
-      <g stroke="#7fb0e6" strokeOpacity="0.35" fill="none">
+      <g stroke="#5b8def" strokeOpacity="0.35" fill="none">
         <path d="M-210 -120 C -120 -150, -80 -40, 0 -40" strokeDasharray="4 6" />
         <path d="M210 -140 C 120 -160, 90 -50, 20 -40" strokeDasharray="4 6" />
         <path d="M-200 120 C -120 140, -60 60, -20 40" strokeDasharray="4 6" />
       </g>
       {[[-210, -120], [210, -140], [-200, 120], [190, 110]].map(([x, y], i) => (
         <g key={i}>
-          <circle cx={x} cy={y} r="10" fill="#5b8fd6" opacity="0.18" />
-          <circle className="twinkle" cx={x} cy={y} r="3.5" fill="#c4dbf5" style={delay(i * 0.7)} />
+          <circle cx={x} cy={y} r="10" fill="#2563eb" opacity="0.18" />
+          <circle className="twinkle" cx={x} cy={y} r="3.5" fill="#2563eb" style={delay(i * 0.7)} />
         </g>
       ))}
       <g className="float" style={{ transformOrigin: 'center' }}>
         <g transform="rotate(-14)">
-          <rect x="-125" y="-80" width="250" height="160" rx="14" fill={`url(#${ids.topBlue})`} stroke="#bfe0ff" strokeOpacity="0.9" strokeWidth="1.5" />
-          <path d="M-125 -66 L0 20 L125 -66" fill="none" stroke="#cfe8ff" strokeWidth="2" strokeOpacity="0.85" />
-          <path d="M-125 80 L-30 -6 M125 80 L30 -6" stroke="#9fbfe8" strokeOpacity="0.5" />
+          <rect x="-125" y="-80" width="250" height="160" rx="14" fill={`url(#${ids.topBlue})`} stroke="#2563eb" strokeOpacity="0.9" strokeWidth="1.5" />
+          <path d="M-125 -66 L0 20 L125 -66" fill="none" stroke="#2563eb" strokeWidth="2" strokeOpacity="0.85" />
+          <path d="M-125 80 L-30 -6 M125 80 L30 -6" stroke="#5b8def" strokeOpacity="0.5" />
           <path d="M-125 -66 L0 20 L125 -66 L125 -80 L-125 -80 Z" fill={`url(#${ids.topBright})`} opacity="0.7" />
         </g>
       </g>
       <g opacity="0.7">
-        <path d="M-200 30 h60 M-210 50 h40 M150 -20 h55 M165 0 h35" stroke="#8fb8e8" strokeLinecap="round" strokeWidth="2" strokeOpacity="0.5" />
+        <path d="M-200 30 h60 M-210 50 h40 M150 -20 h55 M165 0 h35" stroke="#5b8def" strokeLinecap="round" strokeWidth="2" strokeOpacity="0.5" />
       </g>
       <Sparkles points={[[-150, -170], [140, 160], [60, -180], [-60, 160], [205, 30]]} />
     </svg>

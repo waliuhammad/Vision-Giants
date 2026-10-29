@@ -38,38 +38,11 @@ const countStyle: CSSProperties = {
   margin: 0,
   fontSize: '0.9rem',
   letterSpacing: '0.02em',
-  color: 'rgba(200, 214, 235, 0.65)',
-};
-
-const buttonBase: CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: '0.6rem',
-  whiteSpace: 'nowrap',
-  padding: '0.85rem 2rem',
-  borderRadius: '999px',
-  border: '1px solid rgba(47, 140, 255, 0.55)',
-  background: 'rgba(47, 140, 255, 0.08)',
-  color: '#ffffff',
-  fontFamily: 'inherit',
-  fontSize: '1rem',
-  fontWeight: 600,
-  lineHeight: 1,
-  cursor: 'pointer',
-  transition: 'background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease',
-};
-
-const buttonHover: CSSProperties = {
-  background: 'linear-gradient(135deg, #2f8cff, #5b6cff)',
-  borderColor: 'transparent',
-  boxShadow: '0 8px 24px rgba(47, 140, 255, 0.35)',
-  transform: 'translateY(-2px)',
+  color: 'var(--color-muted)',
 };
 
 export function ServicesGrid({ services, initialCount = 6 }: ServicesGridProps) {
   const [expanded, setExpanded] = useState(false);
-  const [hovered, setHovered] = useState(false);
   const gridRef = useRef<HTMLDivElement>(null);
   const hasMore = services.length > initialCount;
   const visibleServices = expanded ? services : services.slice(0, initialCount);
@@ -100,13 +73,9 @@ export function ServicesGrid({ services, initialCount = 6 }: ServicesGridProps) 
           <button
             type="button"
             onClick={toggle}
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-            onFocus={() => setHovered(true)}
-            onBlur={() => setHovered(false)}
             aria-expanded={expanded}
             aria-controls="services-grid"
-            style={hovered ? { ...buttonBase, ...buttonHover } : buttonBase}
+            className="btn btn--outline"
           >
             {expanded ? 'Show fewer' : 'See all services'}
             <ChevronDown

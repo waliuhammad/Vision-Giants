@@ -103,8 +103,8 @@ export function ServiceDetailPage() {
                           width: 24,
                           height: 24,
                           borderRadius: '50%',
-                          background: 'rgba(47, 140, 255, 0.15)',
-                          color: '#4da3ff',
+                          background: 'var(--color-surface-blue)',
+                          color: 'var(--color-primary)',
                         }}
                       >
                         <Check size={14} />

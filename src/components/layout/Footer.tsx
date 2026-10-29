@@ -89,11 +89,12 @@ const companyLinks = [
   { to: '/contact/', label: 'Contact Us' },
 ];
 
-const legalLinks = [
-  { to: '/privacy-policy/', label: 'Privacy Policy' },
-  { to: '/terms-of-service/', label: 'Terms of Service' },
-  { to: '/cookie-policy/', label: 'Cookie Policy' },
-];
+/**
+ * Legal pages shown in the bottom bar. Empty until the pages exist: the earlier Privacy, Terms and
+ * Cookie links pointed at routes that were never built and led to the 404 page. Add an entry here
+ * (and a route in src/app/routes.tsx) once each policy is written.
+ */
+const legalLinks: { to: string; label: string }[] = [];
 
 // Picks an icon based on the social label/URL; falls back to a globe
 function getSocialIcon(label: string, href: string): IconComponent {
@@ -109,7 +110,7 @@ function getSocialIcon(label: string, href: string): IconComponent {
 const footerStyles = `
 .site-footer {
   position: relative;
-  background: linear-gradient(180deg, #0b1d3f 0%, #091830 100%);
+  background: var(--color-ink);
   color: #fff;
   padding: 4.5rem 0 1.5rem;
 }
@@ -119,7 +120,7 @@ const footerStyles = `
   position: absolute;
   inset: 0 0 auto;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(143, 184, 232, 0.45), transparent);
+  background: linear-gradient(90deg, transparent, rgba(147, 180, 245, 0.35), transparent);
 }
 
 .site-footer__grid {
@@ -132,10 +133,9 @@ const footerStyles = `
   position: relative;
   margin: 0 0 1.4rem;
   padding-bottom: 0.75rem;
-  font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #fff;
 }
@@ -225,7 +225,7 @@ const footerStyles = `
 /* Services "view all" */
 .site-footer a.site-footer__view-all {
   font-weight: 600;
-  color: #8fb8e8;
+  color: #93b4f5;
 }
 
 /* Contact */
@@ -246,7 +246,7 @@ const footerStyles = `
   border-radius: 9px;
   background: rgba(91, 143, 214, 0.14);
   border: 1px solid rgba(143, 184, 232, 0.2);
-  color: #8fb8e8;
+  color: #93b4f5;
 }
 .site-footer__contact li > :last-child {
   padding-top: 5px;
@@ -259,7 +259,7 @@ const footerStyles = `
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.12);
   height: 210px;
-  background: #0d2147;
+  background: var(--color-ink-2);
 }
 .site-footer__map iframe {
   display: block;
@@ -275,7 +275,7 @@ const footerStyles = `
   margin-top: 0.75rem;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #8fb8e8;
+  color: #93b4f5;
 }
 
 /* Bottom bar */
@@ -475,15 +475,17 @@ export function Footer() {
             © {year} {company.legalName}. All rights reserved.
           </span>
 
-          <nav aria-label="Legal" className="site-footer__legal">
-            <ul>
-              {legalLinks.map((item) => (
-                <li key={item.to}>
-                  <Link to={item.to}>{item.label}</Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
+          {legalLinks.length > 0 && (
+            <nav aria-label="Legal" className="site-footer__legal">
+              <ul>
+                {legalLinks.map((item) => (
+                  <li key={item.to}>
+                    <Link to={item.to}>{item.label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
 
           <button
             type="button"

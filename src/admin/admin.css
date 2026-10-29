@@ -63,7 +63,7 @@
   display: inline-block;
   padding: 6px 10px;
   border-radius: var(--radius-sm);
-  background: rgba(13, 31, 62, 0.75);
+  background: var(--color-surface-2);
   border: 1px solid var(--border);
   color: var(--color-text);
   user-select: all;
@@ -372,7 +372,7 @@ button.admin-row:hover,
 .admin-status--reviewing,
 .admin-status--interview {
   border-color: rgba(91, 143, 214, 0.5);
-  color: #a9c6ee;
+  color: var(--color-primary-strong);
 }
 .admin-status--hired,
 .admin-status--published {
@@ -540,7 +540,7 @@ button.admin-row:hover,
   object-position: top center;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
-  background: #0b1a36;
+  background: var(--color-surface-2);
 }
 .admin-gallery__cover {
   position: absolute;
@@ -582,7 +582,7 @@ button.admin-row:hover,
   color: var(--color-text);
 }
 .admin-tab--active {
-  color: #fff;
+  color: var(--color-text);
   border-bottom-color: var(--color-primary);
   font-weight: 600;
 }
@@ -651,7 +651,7 @@ button.admin-row:hover,
 }
 
 .admin-code-block {
-  background: rgba(13, 31, 62, 0.75);
+  background: var(--color-surface-2);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 10px 14px;
@@ -673,7 +673,7 @@ button.admin-row:hover,
 }
 
 .admin-setup-card {
-  background: rgba(13, 31, 62, 0.75);
+  background: var(--color-surface-2);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: var(--space-3);
@@ -718,7 +718,7 @@ button.admin-row:hover,
 .admin-modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(4, 11, 24, 0.75);
+  background: rgba(11, 23, 48, 0.55);
   backdrop-filter: blur(4px);
   display: grid;
   place-items: center;
