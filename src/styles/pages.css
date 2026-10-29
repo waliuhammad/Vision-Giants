@@ -1952,7 +1952,7 @@ dialog.modal[open] {
   }
 }
 
-/* Compact project cards (service pages) */
+/* Compact project grid (service pages) */
 .portfolio-grid--compact {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-4);
@@ -1963,27 +1963,6 @@ dialog.modal[open] {
 .project-group__title {
   margin-bottom: var(--space-4);
   font-size: var(--fs-h3);
-}
-.project-card--compact .project-card__body {
-  padding: var(--space-4);
-}
-.project-card--compact .project-card__meta {
-  margin-bottom: var(--space-2);
-}
-.project-card--compact .project-card__body > p:not(.project-card__industry) {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  font-size: var(--fs-small);
-}
-.project-card--compact .project-card__actions {
-  gap: var(--space-4);
-  padding-top: var(--space-3);
-}
-.project-card--compact .project-card__action {
-  margin-top: 0;
-  font-size: var(--fs-small);
 }
 @media (max-width: 1100px) {
   .portfolio-grid--compact {
@@ -1999,11 +1978,6 @@ dialog.modal[open] {
   .portfolio-grid--compact {
     grid-template-columns: minmax(0, 1fr);
   }
-}
-.project-card--compact .project-card__industry {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 /* Featured projects marquee (homepage) */
@@ -2053,4 +2027,224 @@ dialog.modal[open] {
   .project-marquee {
     --slide-w: 250px;
   }
+}
+
+/* =========================================================
+   Showcase project card (service pages and homepage glide)
+   ========================================================= */
+.pcard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: #fff;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  transition:
+    transform var(--dur) var(--ease-out),
+    border-color var(--dur) ease,
+    box-shadow var(--dur) ease;
+}
+.pcard:hover,
+.pcard:focus-within {
+  transform: translateY(-3px);
+  border-color: #c9d9f7;
+  box-shadow: 0 18px 36px -18px rgba(37, 99, 235, 0.28), 0 2px 6px rgba(11, 23, 48, 0.04);
+}
+
+/* Screenshot in a mini browser on a soft tinted stage */
+.pcard__frame {
+  position: relative;
+  padding: 14px 14px 0;
+  background: linear-gradient(160deg, #eef4ff 0%, #f7f9fc 60%, #eef2f8 100%);
+  border-bottom: 1px solid var(--border);
+}
+.pcard__browser {
+  overflow: hidden;
+  border-radius: 9px 9px 0 0;
+  border: 1px solid #dfe6f0;
+  border-bottom: 0;
+  background: #fff;
+  box-shadow: 0 -2px 14px -6px rgba(11, 23, 48, 0.12);
+}
+.pcard__bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 20px;
+  padding: 0 8px;
+  border-bottom: 1px solid #edf1f6;
+  background: #fbfcfe;
+}
+.pcard__bar i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #d8dfe9;
+}
+.pcard__bar span {
+  margin-left: 6px;
+  overflow: hidden;
+  font-size: 0.625rem;
+  font-weight: 500;
+  color: var(--color-subtle);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pcard__shot {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--color-surface-2);
+}
+.pcard__shot img,
+.pcard__shot svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 0.6s var(--ease-out);
+}
+.pcard:hover .pcard__shot img,
+.pcard:hover .pcard__shot svg {
+  transform: scale(1.035);
+}
+.pcard__tag {
+  position: absolute;
+  left: 24px;
+  bottom: 10px;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(11, 23, 48, 0.06);
+  box-shadow: 0 2px 8px rgba(11, 23, 48, 0.1);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.pcard__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 16px 18px 16px;
+}
+.pcard__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.pcard__title {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+}
+.pcard__live {
+  position: relative;
+  z-index: 2;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  margin: -3px -4px 0 0;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  color: var(--color-muted);
+  transition:
+    color var(--dur-fast),
+    background-color var(--dur-fast),
+    border-color var(--dur-fast);
+}
+.pcard__live:hover {
+  color: #fff;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+.pcard .pcard__detail {
+  margin-top: 2px;
+  overflow: hidden;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-subtle);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pcard .pcard__summary {
+  display: -webkit-box;
+  margin: 10px 0 14px;
+  overflow: hidden;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--color-muted);
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.pcard__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+/* One row only: tags that would not fit wrap out of view instead of being cut mid-word */
+.pcard__tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  min-width: 0;
+  height: 22px;
+  overflow: hidden;
+}
+.pcard__tech li {
+  flex: none;
+  padding: 1px 7px;
+  border-radius: 5px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--border);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+.pcard__open {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.pcard__open svg {
+  transition: transform var(--dur) var(--ease-out);
+}
+.pcard:hover .pcard__open svg {
+  transform: translateX(3px);
+}
+/* The whole card opens the project */
+.pcard__open::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.pcard__open:focus-visible {
+  outline: none;
+}
+.pcard:has(.pcard__open:focus-visible) {
+  box-shadow: var(--focus-ring);
 }
