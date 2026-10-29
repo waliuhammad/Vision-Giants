@@ -9,7 +9,7 @@ const AUTOPLAY_MS = 3500;
 /**
  * Horizontally sliding row of compact project cards. Scroll-snap does the layout and swiping;
  * the arrows move one card, and it auto-advances (looping back to the start) unless the visitor
- * is hovering, focused inside it, or has a project open.
+ * is navigating it with the keyboard or has a project open.
  */
 export function ProjectCarousel({ projects, label, aside }: { projects: Project[]; label: string; aside?: ReactNode }) {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -53,9 +53,10 @@ export function ProjectCarousel({ projects, label, aside }: { projects: Project[
       role="region"
       aria-roledescription="carousel"
       aria-label={label}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
+      // Keeps sliding under the mouse; only keyboard focus (not a mouse click on an arrow) pauses it.
+      onFocus={(e) => {
+        if (e.target.matches(':focus-visible')) setPaused(true);
+      }}
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setPaused(false);
       }}
