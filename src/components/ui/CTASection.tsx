@@ -13,7 +13,7 @@ export function CTASection({
   title = 'Have a project in mind? Let’s talk.',
   text = 'Tell us what you want to build. We’ll help you shape the scope, choose the right technology and plan a clear path to launch.',
   primary = { label: 'Start a Project', to: '/contact/' },
-  secondary = { label: 'Explore Our Work', to: '/portfolio/' },
+  secondary = { label: 'Explore Our Work', to: '/services/website-development/' },
 }: CTASectionProps) {
   return (
     <section className="section section--tight" aria-labelledby="cta-title">

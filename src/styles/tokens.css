@@ -2,8 +2,8 @@
   /* Palette: premium B2B, Swiss-minimal. Navy for text, blue only for meaningful interaction. */
   --color-background: #ffffff;
   --color-surface: #ffffff;
-  --color-surface-2: #f7f9fc;
-  --color-surface-blue: #eff6ff;
+  --color-surface-2: #f6f8fc;
+  --color-surface-blue: #eaf2ff;
   --color-navy: #0b1730;
   --color-primary: #2563eb;
   --color-primary-strong: #1d4ed8;
@@ -18,14 +18,15 @@
   --color-cyan: var(--color-primary);
   --color-purple: var(--color-primary-strong);
 
-  /* Dark brand surface (footer, CTA band) */
+  /* Dark showcase surface (portfolio section) and brand surface (footer, CTA band) */
+  --color-showcase: #0b1120;
   --color-ink: #0b1730;
   --color-ink-2: #12213f;
   --color-ink-text: #e6ebf3;
   --color-ink-muted: #a3afc2;
 
   /* Borders & surfaces */
-  --border: #e5eaf1;
+  --border: #e3e9f2;
   --border-strong: #cfd8e3;
   --card-bg: #ffffff;
   --glass-bg: rgba(255, 255, 255, 0.92);
@@ -42,6 +43,8 @@
   --shadow-card-hover: 0 12px 28px -12px rgba(11, 23, 48, 0.18);
   --shadow-float: 0 24px 48px -20px rgba(11, 23, 48, 0.28);
   --glow-primary: 0 0 0 3px rgba(37, 99, 235, 0.18);
+  /* Soft blue ambient light behind key visuals */
+  --ambient-blue: radial-gradient(closest-side, rgba(37, 99, 235, 0.16), rgba(37, 99, 235, 0.05) 55%, transparent);
   --focus-ring: 0 0 0 3px rgba(37, 99, 235, 0.28);
 
   /* Typography */

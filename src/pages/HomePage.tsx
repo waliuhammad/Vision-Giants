@@ -1,11 +1,16 @@
-import { ArrowRight,CodeXml, Smartphone, Cpu, Palette, Lightbulb, Users, Layers, ShieldCheck } from 'lucide-react';
-import type { CSSProperties } from 'react';
-import { company } from '../data/company';
+import { useState, type CSSProperties } from 'react';
+import { Link } from 'react-router';
+import { ArrowRight, CodeXml, Smartphone, Cpu, Palette, Lightbulb, Users, Layers, ShieldCheck } from 'lucide-react';
+import { technologies } from '../data/technologies';
+import type { Project } from '../data/portfolio';
 import { useContent } from '../content/ContentContext';
 import { Button } from '../components/ui/Button';
 import { SectionHeading } from '../components/ui/SectionHeading';
 import { ServiceCard } from '../components/ui/ServiceCard';
 import { ProjectCarousel } from '../components/ui/ProjectCarousel';
+import { ProjectDialog } from '../components/ui/ProjectDialog';
+import { FeaturedProject } from '../components/ui/FeaturedProject';
+import { TechLogo } from '../components/visuals/TechLogos';
 import { ProcessTimeline } from '../components/ui/ProcessTimeline';
 import { CTASection } from '../components/ui/CTASection';
 import { Reveal } from '../components/animations/Reveal';
@@ -47,29 +52,42 @@ const delay = (ms: number) => ({ '--delay': `${ms}ms` }) as CSSProperties;
 
 export default function HomePage() {
   const { services, projects } = useContent();
+  const [active, setActive] = useState<Project | null>(null);
+  const [featured, ...moreProjects] = projects;
+
   return (
     <>
       <section className="hero" aria-labelledby="hero-title">
         <div className="bg-grid" aria-hidden="true" />
         <div className="container">
           <div className="hero__grid">
-            <div>
-              <p className="eyebrow enter">{company.tagline}</p>
+            <div className="hero__copy">
+              <p className="eyebrow enter">Your digital growth partner</p>
               <h1 id="hero-title" className="enter" style={delay(80)}>
-                Building <span className="text-gradient">Digital Solutions</span> That Move Businesses Forward.
+                Building <span className="text-gradient">Digital Experiences</span> That Move Businesses Forward.
               </h1>
               <p className="lead enter" style={delay(160)}>
-                We design and develop modern digital experiences, web applications and software solutions that help
-                businesses grow.
+                We design and develop high-quality websites, applications and custom software that help businesses
+                operate smarter, grow faster and compete confidently.
               </p>
               <div className="hero__actions enter" style={delay(240)}>
                 <Button to="/contact/" icon={<ArrowRight size={18} />}>
-                  Start a Project
+                  Start Your Project
                 </Button>
                 <Button to="/services/website-development/" variant="outline">
                   Explore Our Work
                 </Button>
               </div>
+              {projects.length > 0 && (
+                <ul className="hero__facts enter" style={delay(320)}>
+                  <li>
+                    <strong>{projects.length}</strong> live websites in our portfolio
+                  </li>
+                  <li>
+                    <strong>{services.length}</strong> services under one roof
+                  </li>
+                </ul>
+              )}
             </div>
             <HeroShowcase projects={projects} />
           </div>
@@ -94,6 +112,11 @@ export default function HomePage() {
             eyebrow="What we do"
             title="End-to-end digital solutions for your business"
             lead="A complete range of design and development services to help you plan, build and scale digital products."
+            aside={
+              <Link to="/services/" className="text-link section-heading__link">
+                View all services <ArrowRight size={16} aria-hidden="true" />
+              </Link>
+            }
           />
           <div className="grid grid--3">
             {services.slice(0, HOME_SERVICES_COUNT).map((s, i) => (
@@ -102,34 +125,33 @@ export default function HomePage() {
               </Reveal>
             ))}
           </div>
-
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2.5rem' }}>
-            <Button to="/services/" variant="outline" icon={<ArrowRight size={16} />}>
-              See all services
-            </Button>
-          </div>
         </div>
       </section>
 
-      {projects.length > 0 && (
-        <section className="section section--alt" aria-labelledby="work-title">
+      {featured && (
+        <section className="section showcase-band" aria-labelledby="work-title">
+          <div className="showcase-band__glow" aria-hidden="true" />
           <div className="container">
             <SectionHeading
               id="work-title"
-              eyebrow="Our work"
-              title="Featured projects"
-              lead="A selection of websites we’ve designed and built for clients in e-commerce, services, B2B and non-profit."
-            />
-            <ProjectCarousel
-              projects={projects}
-              label="Featured projects"
+              eyebrow="Selected work"
+              title="Live products built for real businesses"
+              lead="Websites and online stores we’ve designed and built for clients in e-commerce, services, B2B and non-profit."
               aside={
                 <Button to="/services/website-development/" variant="outline" icon={<ArrowRight size={16} />}>
                   View all projects
                 </Button>
               }
             />
+            <FeaturedProject project={featured} onOpen={setActive} />
+            {moreProjects.length > 0 && (
+              <div className="showcase-band__more">
+                <p className="showcase-band__more-title">More from our portfolio</p>
+                <ProjectCarousel projects={moreProjects} label="More projects" />
+              </div>
+            )}
           </div>
+          <ProjectDialog project={active} onClose={() => setActive(null)} />
         </section>
       )}
 
@@ -137,14 +159,14 @@ export default function HomePage() {
         <div className="container why">
           <SectionHeading
             id="why-title"
-            eyebrow="Why work with us"
+            eyebrow="Why Vision Giants"
             title="A partner focused on quality and clarity"
             lead="We combine product thinking with solid engineering to deliver software that works well today and stays maintainable tomorrow."
           />
           <div className="grid why-grid">
             {values.map(({ icon: Icon, title, text }, i) => (
               <Reveal key={title} delay={(i % 2) * 90}>
-                <article className="card card--interactive" style={{ height: '100%' }}>
+                <article className="card card--interactive why-card" style={{ height: '100%' }}>
                   <span className="icon-wrap" aria-hidden="true">
                     <Icon size={22} />
                   </span>
@@ -170,7 +192,36 @@ export default function HomePage() {
         </div>
       </section>
 
-      <CTASection />
+      <section className="section section--tight" aria-labelledby="tech-title">
+        <div className="container tech-strip">
+          <SectionHeading
+            id="tech-title"
+            eyebrow="Technology expertise"
+            title="A modern, well-supported stack"
+            lead="We choose proven tools for each project and keep the stack as simple as the requirements allow."
+          />
+          <ul className="tech-strip__list">
+            {technologies.map((t, i) => (
+              <Reveal as="li" key={t.id} delay={i * 70}>
+                <TechLogo id={t.id} className="tech-strip__logo" />
+                <span>
+                  <strong>{t.name}</strong>
+                  <small>{t.category}</small>
+                </span>
+              </Reveal>
+            ))}
+          </ul>
+          <Link to="/technologies/" className="text-link">
+            See how we use them <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+        </div>
+      </section>
+
+      <CTASection
+        title="Have an idea? Let’s build something great."
+        text="Tell us what you want to build. We’ll help you shape the scope, choose the right technology and plan a clear path to launch."
+        primary={{ label: 'Start Your Project', to: '/contact/' }}
+      />
     </>
   );
 }
