@@ -2055,98 +2055,51 @@ dialog.modal[open] {
   white-space: nowrap;
 }
 
-/* Featured projects carousel (homepage) */
+/* Featured projects marquee (homepage) */
 .project-carousel {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-5);
 }
 .project-carousel__controls {
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: var(--space-2);
+  justify-content: flex-start;
 }
-.project-carousel__controls > :first-child:not(.project-carousel__arrow) {
-  margin-right: auto;
+.project-marquee {
+  --slide-w: 290px;
+  --slide-gap: var(--space-4);
+  overflow: hidden;
+  padding-block: 6px 10px;
+  /* Soft fade at both edges */
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
 }
-.project-carousel__arrow {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 1px solid var(--border-strong);
-  background: var(--glass-bg);
-  color: var(--color-text);
-  cursor: pointer;
-  transition: background var(--dur-fast), border-color var(--dur-fast), opacity var(--dur-fast);
+.project-marquee__track {
+  display: flex;
+  width: max-content;
+  animation: project-marquee var(--marquee-duration, 100s) linear infinite;
+  will-change: transform;
 }
-.project-carousel__arrow:hover:not(:disabled) {
-  background: rgba(91, 143, 214, 0.2);
-  border-color: var(--color-primary);
+/* Keyboard users can stop it to reach the links; an open project pauses it too */
+.project-marquee:has(:focus-visible) .project-marquee__track,
+.project-marquee.is-paused .project-marquee__track {
+  animation-play-state: paused;
 }
-.project-carousel__arrow:disabled {
-  opacity: 0.35;
-  cursor: default;
+.project-marquee__slide {
+  flex: none;
+  width: var(--slide-w);
+  /* Spacing as padding (not gap) so the two copies are exactly half the track each */
+  padding-right: var(--slide-gap);
 }
-.project-carousel__track {
-  --per-view: 4;
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: calc((100% - (var(--per-view) - 1) * var(--space-4)) / var(--per-view));
-  gap: var(--space-4);
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  padding-bottom: 4px;
-}
-.project-carousel__track::-webkit-scrollbar {
-  display: none;
-}
-.project-carousel__slide {
-  scroll-snap-align: start;
-  min-width: 0;
-}
-@media (max-width: 1100px) {
-  .project-carousel__track {
-    --per-view: 3;
+@keyframes project-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
   }
-}
-@media (max-width: 820px) {
-  .project-carousel__track {
-    --per-view: 2;
+  to {
+    transform: translate3d(-50%, 0, 0);
   }
 }
 @media (max-width: 520px) {
-  .project-carousel__track {
-    /* One card plus a peek of the next, so it reads as swipeable */
-    grid-auto-columns: 85%;
+  .project-marquee {
+    --slide-w: 250px;
   }
-}
-/* Autoplay progress: fills over each interval, restarts on every slide */
-.project-carousel__progress {
-  height: 2px;
-  border-radius: 2px;
-  background: rgba(160, 186, 228, 0.12);
-  overflow: hidden;
-}
-.project-carousel__progress span {
-  display: block;
-  height: 100%;
-  width: 100%;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-cyan));
-  transform-origin: left;
-  animation: carousel-progress linear forwards;
-}
-@keyframes carousel-progress {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
-.project-carousel__slide .project-card {
-  transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out), border-color 0.4s var(--ease-out);
 }
