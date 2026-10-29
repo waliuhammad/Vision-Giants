@@ -20,17 +20,7 @@
 .admin__main > :not(.bg-grid) {
   position: relative;
 }
-.admin-login__head {
-  display: grid;
-  justify-items: start;
-}
-.admin-login__head .logo {
-  margin-bottom: var(--space-5);
-}
-.admin-login__head .eyebrow {
-  margin-bottom: var(--space-2);
-}
-.admin-login,
+
 .admin-message {
   width: min(100%, 460px);
   display: grid;
@@ -39,7 +29,6 @@
 .admin-message {
   width: min(100%, 560px);
 }
-.admin-login h1,
 .admin-message h1 {
   font-size: var(--fs-h3);
   margin: 0;
@@ -557,59 +546,9 @@ button.admin-row:hover,
   gap: 2px;
 }
 
-/* --- Admin Login & Auth Extensions --- */
-.admin-tabs {
-  display: flex;
-  border-bottom: 1px solid var(--border);
-  gap: 4px;
-  margin-bottom: var(--space-3);
-}
-.admin-tab {
-  flex: 1;
-  padding: 8px 10px;
-  border: none;
-  background: transparent;
-  color: var(--color-muted);
-  font-size: var(--fs-small);
-  font-weight: 500;
-  white-space: nowrap;
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  transition: all 0.15s ease;
-  text-align: center;
-}
-.admin-tab:hover {
-  color: var(--color-text);
-}
-.admin-tab--active {
-  color: var(--color-text);
-  border-bottom-color: var(--color-primary);
-  font-weight: 600;
-}
-
 .admin-form-fields {
   display: grid;
   gap: var(--space-3);
-}
-
-.field-label-text {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.field-hint {
-  font-size: 0.75rem;
-  color: var(--color-muted);
-  margin-left: auto;
-  font-weight: normal;
-}
-
-.field-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
 }
 
 .input-with-action {
@@ -637,51 +576,6 @@ button.admin-row:hover,
 }
 .action-inside-input:hover {
   color: var(--color-text);
-}
-
-.admin-link--small {
-  font-size: 0.75rem;
-}
-
-.admin-helper-text {
-  font-size: var(--fs-small);
-  color: var(--color-muted);
-  line-height: 1.5;
-  margin: 0;
-}
-
-.admin-code-block {
-  background: var(--color-surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 10px 14px;
-}
-.admin-code-block__title {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.75rem;
-  color: var(--color-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 6px;
-}
-.admin-code-block code {
-  color: var(--color-cyan);
-  font-family: var(--font-mono, monospace);
-  font-size: 0.85rem;
-}
-
-.admin-setup-card {
-  background: var(--color-surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: var(--space-3);
-}
-
-.btn--xs {
-  padding: 3px 8px;
-  font-size: 0.75rem;
 }
 
 /* Account Info & Badges in Sidebar */
@@ -763,7 +657,6 @@ button.admin-row:hover,
   margin-top: var(--space-4);
 }
 
-
 /* Portfolio page (company profile) editor */
 .admin-profile {
   display: grid;
@@ -819,5 +712,260 @@ button.admin-row:hover,
   }
   .admin-rows__row .input {
     flex-basis: 100%;
+  }
+}
+
+/* =========================================================
+   Sign-in: brand panel + form panel
+   ========================================================= */
+.admin-auth {
+  display: grid;
+  grid-template-columns: minmax(360px, 0.9fr) minmax(0, 1.1fr);
+  min-height: 100vh;
+  background: #fff;
+}
+.admin-auth__brand {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-showcase);
+  color: #fff;
+  isolation: isolate;
+}
+.admin-auth__brand::before {
+  content: '';
+  position: absolute;
+  inset: -20% -30% auto auto;
+  width: 90%;
+  height: 70%;
+  z-index: -1;
+  background: radial-gradient(closest-side, rgba(37, 99, 235, 0.45), rgba(37, 99, 235, 0.1) 60%, transparent);
+}
+.admin-auth__brand::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(160deg, #000 10%, transparent 70%);
+  -webkit-mask-image: linear-gradient(160deg, #000 10%, transparent 70%);
+}
+.admin-auth__brand-inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+  height: 100%;
+  padding: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
+}
+.admin-auth__brand .logo {
+  color: #fff;
+}
+.admin-auth__brand .logo__mark {
+  border-color: transparent;
+}
+.admin-auth__brand .logo__suffix {
+  color: #8d9ab0;
+}
+.admin-auth__intro {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.admin-auth__kicker {
+  margin-bottom: var(--space-3);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #7aa2f7;
+}
+.admin-auth__intro h2 {
+  max-width: 16ch;
+  font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.4rem);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+.admin-auth__list {
+  display: grid;
+  gap: var(--space-5);
+  margin-top: var(--space-7);
+}
+.admin-auth__list li {
+  display: flex;
+  gap: var(--space-4);
+}
+.admin-auth__list li > span {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius);
+  background: rgba(37, 99, 235, 0.18);
+  border: 1px solid rgba(122, 162, 247, 0.25);
+  color: #9cbcff;
+}
+.admin-auth__list strong {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #fff;
+}
+.admin-auth__list p {
+  margin-top: 2px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #a7b3c7;
+}
+.admin-auth__legal {
+  font-size: 0.8125rem;
+  color: #6f7c93;
+}
+
+.admin-auth__main {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.25rem, 1rem + 1.5vw, 2rem) clamp(1.25rem, 1rem + 3vw, 3.5rem);
+  background:
+    radial-gradient(60% 50% at 100% 0%, rgba(37, 99, 235, 0.06), transparent 70%),
+    #fff;
+}
+.admin-auth__top {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-4);
+}
+.admin-auth__mobile-logo {
+  display: none;
+  margin-right: auto;
+}
+.admin-auth__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--color-muted);
+}
+.admin-auth__back:hover {
+  color: var(--color-primary);
+}
+.admin-auth__panel {
+  width: min(100%, 400px);
+  margin: auto;
+  padding-block: var(--space-7);
+}
+.admin-auth__form {
+  display: grid;
+  gap: var(--space-5);
+}
+.admin-auth__form header h1 {
+  font-size: clamp(1.75rem, 1.5rem + 0.8vw, 2.125rem);
+  letter-spacing: -0.03em;
+}
+.admin-auth__form header p {
+  margin-top: var(--space-2);
+  color: var(--color-muted);
+}
+.admin-auth__label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.admin-auth__input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.admin-auth__input > svg {
+  position: absolute;
+  left: 14px;
+  color: var(--color-disabled);
+  pointer-events: none;
+  transition: color var(--dur-fast);
+}
+.admin-auth__input:focus-within > svg {
+  color: var(--color-primary);
+}
+.admin-auth__input .input {
+  min-height: 48px;
+  padding-left: 42px;
+}
+.admin-auth__input .input[type='password'],
+.admin-auth__input .input#login-password {
+  padding-right: 46px;
+}
+.admin-auth__toggle {
+  position: absolute;
+  right: 6px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--color-subtle);
+}
+.admin-auth__toggle:hover {
+  color: var(--color-text);
+  background: var(--color-surface-2);
+}
+.admin-auth__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--color-primary);
+}
+.admin-auth__link:hover {
+  color: var(--color-primary-strong);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.admin-auth__link--center {
+  justify-self: center;
+}
+.admin-auth__submit {
+  width: 100%;
+  height: 50px;
+  margin-top: var(--space-1);
+}
+.admin-auth__secure {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  margin-top: var(--space-7);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border);
+  font-size: 0.8125rem;
+  color: var(--color-subtle);
+}
+.admin-auth__secure svg {
+  flex: none;
+  color: var(--color-success);
+}
+
+@media (max-width: 900px) {
+  .admin-auth {
+    grid-template-columns: 1fr;
+  }
+  .admin-auth__brand {
+    display: none;
+  }
+  .admin-auth__mobile-logo {
+    display: block;
+  }
+  .admin-auth__top {
+    justify-content: space-between;
   }
 }
