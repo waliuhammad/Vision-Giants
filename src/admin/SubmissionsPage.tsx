@@ -270,7 +270,39 @@ function ReplyActions({ item, email, collection }: { item: Submission; email: st
   const gmail = `https://mail.google.com/mail/?${Object.entries(gmailQuery)
     .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
     .join('&')}`;
-  const mailto = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  const [appHint, setAppHint] = useState('');
+
+  // Windows drops mailto: links longer than ~2000 characters without any error, and does nothing at
+  // all when no default email app is set. So the full reply is copied to the clipboard first, the
+  // link carries the body only when it fits, and a hint appears if the browser never lost focus.
+  const openEmailApp = async () => {
+    const base = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
+    const full = `${base}&body=${encodeURIComponent(body)}`;
+    let copiedBody = false;
+    try {
+      await navigator.clipboard.writeText(body);
+      copiedBody = true;
+    } catch {
+      // Clipboard blocked; the link may still carry the body.
+    }
+    const fits = full.length <= 1900;
+    let left = false;
+    const onBlur = () => (left = true);
+    window.addEventListener('blur', onBlur, { once: true });
+    window.location.href = fits ? full : base;
+    window.setTimeout(() => {
+      window.removeEventListener('blur', onBlur);
+      if (!left) {
+        setAppHint(
+          `No email app opened on this computer. Use “Reply in Gmail” instead${copiedBody ? ' (the reply text is already copied, so you can also paste it into any email)' : ''}.`,
+        );
+      } else if (!fits) {
+        setAppHint(copiedBody ? 'The reply was too long to pre-fill, so it is copied: paste it (Ctrl+V) into the email body.' : 'The reply was too long to pre-fill. Use “Reply in Gmail” for the full template.');
+      } else {
+        setAppHint('');
+      }
+    }, 1500);
+  };
 
   const copy = async () => {
     try {
@@ -290,13 +322,18 @@ function ReplyActions({ item, email, collection }: { item: Submission; email: st
           <Mail size={15} />
         </span>
       </a>
-      <a className="btn btn--outline btn--sm" href={mailto}>
+      <button type="button" className="btn btn--outline btn--sm" onClick={openEmailApp}>
         Email app
-      </a>
+      </button>
       <button type="button" className="btn btn--outline btn--sm" onClick={copy}>
         {copied ? 'Copied' : 'Copy email'}
         <span aria-hidden="true">{copied ? <Check size={15} /> : <Copy size={15} />}</span>
       </button>
+      {appHint && (
+        <p className="muted" role="status" style={{ flexBasis: '100%', order: 1, margin: 0 }}>
+          {appHint}
+        </p>
+      )}
     </>
   );
 }
