@@ -121,7 +121,8 @@ function organizationJsonLd(): string {
   };
   if (company.email) data.email = company.email;
   if (company.phone) data.telephone = company.phone;
-  if (company.social.length) data.sameAs = company.social.map((s) => s.href);
+  const profiles = company.social.filter((s) => !s.placeholder && s.href.startsWith('http')).map((s) => s.href);
+  if (profiles.length) data.sameAs = profiles;
   return `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;
 }
 

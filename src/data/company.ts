@@ -14,7 +14,8 @@ export interface Company {
   email: string | null;
   phone: string | null;
   address: string | null;
-  social: { label: string; href: string }[];
+  /** `placeholder` links are shown but left out of search-engine data until replaced. */
+  social: { label: string; href: string; placeholder?: boolean }[];
 }
 
 export const company: Company = {
@@ -27,5 +28,12 @@ export const company: Company = {
   email: null,
   phone: null,
   address: 'Chapter 2 Plaza, near Zavia School, Gulgasht, Multan, Pakistan',
-  social: [],
+  // PLACEHOLDERS: replace each href with the real profile/number/address, then delete `placeholder: true`.
+  // WhatsApp format: https://wa.me/923001234567 (country code + number, digits only).
+  social: [
+    { label: 'WhatsApp', href: 'https://wa.me/', placeholder: true },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/', placeholder: true },
+    { label: 'Instagram', href: 'https://www.instagram.com/', placeholder: true },
+    { label: 'Email', href: 'mailto:', placeholder: true },
+  ],
 };

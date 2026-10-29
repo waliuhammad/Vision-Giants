@@ -76,6 +76,15 @@ const Twitter = createIcon(
   <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
 );
 
+const Whatsapp = createIcon(
+  <>
+    <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
+    <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" />
+  </>
+);
+
+const MailIcon: IconComponent = ({ size = 24, ...rest }) => <Mail size={size} {...rest} />;
+
 const GlobeIcon: IconComponent = ({ size = 24, ...rest }) => (
   <Globe size={size} {...rest} />
 );
@@ -99,6 +108,8 @@ const legalLinks: { to: string; label: string }[] = [];
 // Picks an icon based on the social label/URL; falls back to a globe
 function getSocialIcon(label: string, href: string): IconComponent {
   const key = `${label} ${href}`.toLowerCase();
+  if (key.includes('whatsapp') || key.includes('wa.me')) return Whatsapp;
+  if (key.includes('mailto:') || key.includes('email')) return MailIcon;
   if (key.includes('linkedin')) return Linkedin;
   if (key.includes('facebook')) return Facebook;
   if (key.includes('instagram')) return Instagram;
@@ -369,12 +380,13 @@ export function Footer() {
               <ul className="site-footer__social" aria-label="Social media">
                 {company.social.map((s) => {
                   const Icon = getSocialIcon(s.label, s.href);
+                  const external = s.href.startsWith('http');
                   return (
-                    <li key={s.href}>
+                    <li key={s.label}>
                       <a
                         href={s.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        target={external ? '_blank' : undefined}
+                        rel={external ? 'noopener noreferrer' : undefined}
                         aria-label={s.label}
                         title={s.label}
                       >

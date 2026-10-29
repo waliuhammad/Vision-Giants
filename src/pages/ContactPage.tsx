@@ -57,8 +57,8 @@ export default function ContactPage() {
           {company.social.length > 0 && (
             <ul className="tech-tags" aria-label="Social profiles" style={{ marginTop: 'var(--space-5)' }}>
               {company.social.map((s) => (
-                <li key={s.href}>
-                  <a href={s.href} target="_blank" rel="noopener noreferrer">
+                <li key={s.label}>
+                  <a href={s.href} {...(s.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
                     {s.label}
                   </a>
                 </li>
