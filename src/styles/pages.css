@@ -2124,3 +2124,29 @@ dialog.modal[open] {
     grid-auto-columns: 85%;
   }
 }
+/* Autoplay progress: fills over each interval, restarts on every slide */
+.project-carousel__progress {
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(160, 186, 228, 0.12);
+  overflow: hidden;
+}
+.project-carousel__progress span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-cyan));
+  transform-origin: left;
+  animation: carousel-progress linear forwards;
+}
+@keyframes carousel-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.project-carousel__slide .project-card {
+  transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out), border-color 0.4s var(--ease-out);
+}
