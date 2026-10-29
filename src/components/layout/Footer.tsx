@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import type { ReactElement, ReactNode } from 'react';
 import { company } from '../../data/company';
+import { footerCompanyNav } from '../../data/navigation';
 import { useContent } from '../../content/ContentContext';
 import { Logo } from './Logo';
 
@@ -90,13 +91,6 @@ const GlobeIcon: IconComponent = ({ size = 24, ...rest }) => (
 );
 
 // Update these paths to match your actual routes
-const companyLinks = [
-  { to: '/about/', label: 'About Us' },
-  { to: '/team/', label: 'Our Team' },
-  { to: '/blog/', label: 'Blog' },
-  { to: '/careers/', label: 'Careers' },
-  { to: '/contact/', label: 'Contact Us' },
-];
 
 /**
  * Legal pages shown in the bottom bar. Empty until the pages exist: the earlier Privacy, Terms and
@@ -136,8 +130,8 @@ const footerStyles = `
 
 .site-footer__grid {
   display: grid;
-  grid-template-columns: 1.5fr 0.8fr 1fr 1.4fr;
-  gap: 3rem;
+  grid-template-columns: 1.35fr 0.75fr 1fr 1.25fr;
+  gap: clamp(2rem, 1rem + 2.5vw, 3.5rem);
 }
 
 .site-footer h2 {
@@ -170,14 +164,14 @@ const footerStyles = `
 }
 
 .site-footer a {
-  color: rgba(255, 255, 255, 0.72);
-  font-size: 0.95rem;
+  color: #b8c4d8;
+  font-size: 0.9375rem;
   text-decoration: none;
   transition: color 0.2s ease;
 }
-.site-footer a:hover,
-.site-footer a:focus-visible {
-  color: #fff;
+.site-footer a:not(.btn):hover,
+.site-footer a:not(.btn):focus-visible {
+  color: #8fb4ff;
 }
 .site-footer nav[aria-label='Company'] li a,
 .site-footer__links li a {
@@ -195,20 +189,9 @@ const footerStyles = `
 .site-footer__brand p {
   margin: 1.25rem 0 1.5rem;
   max-width: 36ch;
-  color: rgba(255, 255, 255, 0.68);
-  font-size: 0.95rem;
+  color: #b8c4d8;
+  font-size: 0.9375rem;
   line-height: 1.7;
-}
-.site-footer__badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.35rem 0.8rem;
-  border-radius: 999px;
-  border: 1px solid rgba(143, 184, 232, 0.25);
-  background: rgba(91, 143, 214, 0.1);
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.8);
 }
 
 /* Social icons */
@@ -228,15 +211,16 @@ const footerStyles = `
   transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 .site-footer__social a:hover {
-  background: #fff;
-  color: #0d2147;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
   transform: translateY(-2px);
 }
 
 /* Services "view all" */
 .site-footer a.site-footer__view-all {
   font-weight: 600;
-  color: #93b4f5;
+  color: #8fb4ff;
 }
 
 /* Contact */
@@ -244,8 +228,8 @@ const footerStyles = `
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
-  color: rgba(255, 255, 255, 0.72);
-  font-size: 0.95rem;
+  color: #b8c4d8;
+  font-size: 0.9375rem;
   line-height: 1.55;
 }
 .site-footer__icon {
@@ -257,7 +241,7 @@ const footerStyles = `
   border-radius: 9px;
   background: rgba(91, 143, 214, 0.14);
   border: 1px solid rgba(143, 184, 232, 0.2);
-  color: #93b4f5;
+  color: #8fb4ff;
 }
 .site-footer__contact li > :last-child {
   padding-top: 5px;
@@ -269,7 +253,7 @@ const footerStyles = `
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  height: 210px;
+  height: 180px;
   background: var(--color-ink-2);
 }
 .site-footer__map iframe {
@@ -286,7 +270,15 @@ const footerStyles = `
   margin-top: 0.75rem;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #93b4f5;
+  color: #8fb4ff;
+}
+
+/* Primary CTA in the contact column */
+.site-footer .site-footer__cta {
+  display: flex;
+  width: fit-content;
+  margin-top: 1.25rem;
+  color: #fff;
 }
 
 /* Bottom bar */
@@ -300,7 +292,7 @@ const footerStyles = `
   justify-content: space-between;
   gap: 1rem 2rem;
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.55);
+  color: #8d9ab0;
 }
 .site-footer__legal ul {
   display: flex;
@@ -371,10 +363,6 @@ export function Footer() {
           <div className="site-footer__brand">
             <Logo />
             <p>{company.description}</p>
-            <span className="site-footer__badge">
-              <Globe size={14} aria-hidden="true" />
-              {company.tagline}
-            </span>
 
             {company.social.length > 0 && (
               <ul className="site-footer__social" aria-label="Social media">
@@ -403,7 +391,7 @@ export function Footer() {
           <nav aria-label="Company">
             <h2>Company</h2>
             <ul>
-              {companyLinks.map((item) => (
+              {footerCompanyNav.map((item) => (
                 <li key={item.to}>
                   <Link to={item.to}>{item.label}</Link>
                 </li>
@@ -413,11 +401,11 @@ export function Footer() {
 
           {/* Services */}
           <div>
-            <h2>Services</h2>
+            <h2>Our Services</h2>
             <ul className="site-footer__links">
               {footerServices.map((s) => (
                 <li key={s.id}>
-                  <Link to={`/services/#${s.id}`}>{s.title}</Link>
+                  <Link to={`/services/${s.id}/`}>{s.title}</Link>
                 </li>
               ))}
               <li>
@@ -478,6 +466,9 @@ export function Footer() {
                 Get directions <ArrowUpRight size={14} aria-hidden="true" />
               </a>
             )}
+            <Link to="/contact/" className="btn btn--primary btn--sm site-footer__cta">
+              Start a Project <ArrowRight size={16} aria-hidden="true" />
+            </Link>
           </div>
         </div>
 
