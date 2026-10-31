@@ -321,17 +321,7 @@ export default function CareersPage() {
           )}
 
           {/* View all link */}
-          {filteredPositions.length > 0 && (
-            <div className="crp-view-all">
-              <button
-                type="button"
-                className="crp-btn-outline crp-btn-outline--dark"
-                onClick={() => setDeptFilter('all')}
-              >
-                View All Openings
-              </button>
-            </div>
-          )}
+          {/* Removed "View All Openings" button as requested */}
         </div>
       </section>
 
