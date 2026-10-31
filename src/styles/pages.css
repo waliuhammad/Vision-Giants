@@ -974,7 +974,7 @@ dialog.modal[open] {
   background: var(--card-bg);
   box-shadow: var(--shadow-card);
   overflow: hidden;
-  padding: 16px;
+  padding: 12px;
   transition: transform var(--dur) var(--ease-out), border-color var(--dur) ease, box-shadow var(--dur) ease;
 }
 .team-card:hover {
@@ -985,12 +985,12 @@ dialog.modal[open] {
 .team-card__media {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1.08;
-  border-radius: 16px;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
   overflow: hidden;
   border: 1px solid var(--border);
   background: #fff;
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-3);
 }
 .team-card__image {
   width: 100%;
@@ -1020,8 +1020,8 @@ dialog.modal[open] {
   pointer-events: none;
 }
 .team-card__placeholder-icon-wrap {
-  width: 80px;
-  height: 82px;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
   background: #fff;
   border: 1px solid var(--border-strong);
@@ -1044,24 +1044,29 @@ dialog.modal[open] {
   flex: 1;
 }
 .team-card__name {
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   font-weight: 600;
   color: var(--color-text);
   margin: 0 0 4px 0;
   line-height: 1.25;
 }
 .team-card__role {
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-weight: 600;
   color: var(--color-cyan);
-  margin: 0 0 var(--space-3) 0;
+  margin: 0 0 var(--space-2) 0;
 }
 .team-card__bio {
-  font-size: 0.875rem;
+  font-size: 0.84rem;
   color: var(--color-muted);
-  line-height: 1.55;
-  margin: 0 0 var(--space-4) 0;
+  line-height: 1.5;
+  margin: 0 0 var(--space-3) 0;
   flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .team-card__socials {
   display: flex;

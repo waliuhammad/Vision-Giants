@@ -87,7 +87,7 @@ export function TeamCard({ member, headingLevel: H = 'h3', className = '' }: Tea
           <div className="team-card__placeholder" aria-label={`Photo placeholder for ${name}`}>
             <div className="team-card__placeholder-glow" />
             <div className="team-card__placeholder-icon-wrap">
-              <User size={46} className="team-card__placeholder-icon" aria-hidden="true" />
+              <User size={30} className="team-card__placeholder-icon" aria-hidden="true" />
             </div>
             <span className="team-card__placeholder-initials">{initials}</span>
           </div>
