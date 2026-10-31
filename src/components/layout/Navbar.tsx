@@ -12,6 +12,29 @@ export function Navbar() {
   const { pathname } = useLocation();
   const toggleRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const navRef = useRef<HTMLElement>(null);
+  const indicatorRef = useRef<HTMLSpanElement>(null);
+
+  // Slide the pill indicator under the active link (hidden when no main link is active).
+  useEffect(() => {
+    const nav = navRef.current;
+    const indicator = indicatorRef.current;
+    if (!nav || !indicator) return;
+    const place = () => {
+      const active = nav.querySelector<HTMLElement>('.nav__link.active');
+      if (!active) {
+        indicator.classList.remove('is-ready');
+        return;
+      }
+      indicator.style.width = `${active.offsetWidth}px`;
+      indicator.style.transform = `translateX(${active.offsetLeft}px)`;
+      indicator.classList.add('is-ready');
+    };
+    place();
+    const ro = new ResizeObserver(place);
+    ro.observe(nav);
+    return () => ro.disconnect();
+  }, [pathname]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -50,7 +73,8 @@ export function Navbar() {
       <div className="container site-header__inner">
         <Logo onClick={close} />
 
-        <nav className="nav" aria-label="Main">
+        <nav ref={navRef} className="nav" aria-label="Main">
+          <span ref={indicatorRef} className="nav__indicator" aria-hidden="true" />
           {mainNav.map((item) => (
             <NavLink key={item.to} to={item.to} className="nav__link">
               {item.label}

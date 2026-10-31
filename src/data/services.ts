@@ -172,5 +172,27 @@ export const services: Service[] = [
   },
 ];
 
+/**
+ * Card photos in public/images/services/<service id>.webp (800×500, from Unsplash, free for
+ * commercial use). Services without a photo here show their icon only.
+ */
+const servicePhotos = new Set([
+  'website-development',
+  'robotics',
+  'app-development',
+  'ecommerce',
+  'social-media-marketing',
+  'artificial-intelligence',
+  'iot',
+  'software-development',
+  'video-editing',
+  'graphic-design',
+  'seo',
+  'game-development',
+]);
+
+export const getServiceImage = (id: string): string | undefined =>
+  servicePhotos.has(id) ? `/images/services/${id}.webp` : undefined;
+
 export const getServiceById = (id: string): Service | undefined =>
   services.find((s) => s.id === id);

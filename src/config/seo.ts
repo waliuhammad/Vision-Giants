@@ -133,19 +133,22 @@ function organizationJsonLd(): string {
   return `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;
 }
 
-export function renderHeadTags(path: string): string {
-  const meta = getPageMeta(path);
+/** Head tags injected into each prerendered HTML file; takes a page path or its PageMeta. */
+export function renderHeadTags(pathOrMeta: string | PageMeta): string {
+  const meta = typeof pathOrMeta === 'string' ? getPageMeta(pathOrMeta) : pathOrMeta;
+  // The 404 page and the admin shell must not be indexed or given a canonical URL.
+  const noIndex = meta === notFoundMeta || meta === adminMeta;
   const canonical = canonicalUrl(meta.path);
   const ogImage = `${SITE_URL}/og-image.png`;
-  const orgJsonLd = organizationJsonLd();
+  const orgJsonLd = meta.path === '/' ? organizationJsonLd() : '';
 
   return [
     `<title>${escapeHtml(meta.title)}</title>`,
     `<meta name="description" content="${escapeHtml(meta.description)}">`,
-    `<link rel="canonical" href="${escapeHtml(canonical)}">`,
+    noIndex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${escapeHtml(canonical)}">`,
     `<meta property="og:type" content="website">`,
     `<meta property="og:site_name" content="${escapeHtml(company.legalName)}">`,
-    `<meta property="og:url" content="${escapeHtml(canonical)}">`,
+    noIndex ? '' : `<meta property="og:url" content="${escapeHtml(canonical)}">`,
     `<meta property="og:title" content="${escapeHtml(meta.title)}">`,
     `<meta property="og:description" content="${escapeHtml(meta.description)}">`,
     `<meta property="og:image" content="${escapeHtml(ogImage)}">`,
