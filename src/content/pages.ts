@@ -64,6 +64,13 @@ export const pageDefs: PageDef[] = [
         'We design and develop high-quality websites, applications and custom software that help businesses operate smarter, grow faster and compete confidently.',
       ),
       heading(
+        'partners',
+        'Strategic partners section (shown once a partner is added in Admin → Partners)',
+        'Partnerships',
+        'Our Strategic Partners',
+        'Building stronger partnerships through shared expertise, innovation, and technology. Together, we create meaningful opportunities and deliver greater value.',
+      ),
+      heading(
         'services',
         'Services section',
         'What we do',

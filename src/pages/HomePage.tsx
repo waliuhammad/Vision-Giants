@@ -15,6 +15,7 @@ import { CTASection } from '../components/ui/CTASection';
 import { Reveal } from '../components/animations/Reveal';
 import { HeroShowcase } from '../components/visuals/HeroShowcase';
 import { Highlight } from '../components/ui/Highlight';
+import { PartnersSection } from '../components/ui/PartnersSection';
 
 const capabilities = [
   { icon: CodeXml, label: 'Web Applications & Platforms' },
@@ -104,6 +105,8 @@ export default function HomePage() {
           </ul>
         </div>
       </section>
+
+      <PartnersSection eyebrow={t('partnersEyebrow')} title={t('partnersTitle')} lead={t('partnersLead')} />
 
       <section id="services" className="section" aria-labelledby="services-title">
         <div className="container">
