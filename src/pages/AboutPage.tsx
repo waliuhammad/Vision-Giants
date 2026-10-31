@@ -63,7 +63,7 @@ export default function AboutPage() {
       {/* 1. HERO SECTION */}
       {visibility.hero && (
         <section className="page-hero page-hero--about" aria-labelledby="about-hero-title">
-          <div className="container page-hero__inner">
+          <div className="container page-hero__grid page-hero__inner">
             <div className="page-hero__body">
               <Reveal>
                 <div className="crumb-wrap">

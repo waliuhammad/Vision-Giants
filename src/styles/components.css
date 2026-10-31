@@ -758,6 +758,30 @@
   height: auto;
   overflow: visible;
 }
+/* About page hero photo (Admin → About Us page → Hero image; defaults to /images/about/hero.webp) */
+.about-hero__custom-image-wrap {
+  position: relative;
+  width: min(100%, 540px);
+}
+.about-hero__custom-image-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 18px -18px -18px 18px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #dbe7fd 0%, rgba(37, 99, 235, 0.18) 100%);
+  z-index: 0;
+}
+.about-hero__custom-image {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  aspect-ratio: 5 / 4;
+  object-fit: cover;
+  border-radius: 24px;
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 48px -24px rgba(11, 23, 48, 0.35);
+}
 
 .breadcrumbs ol {
   display: flex;
@@ -793,6 +817,9 @@
   }
   .page-hero__visual > svg {
     width: min(78%, 320px);
+  }
+  .about-hero__custom-image-wrap::before {
+    inset: 12px -10px -12px 10px;
   }
   .page-hero h1 {
     max-width: 18ch;
