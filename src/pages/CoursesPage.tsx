@@ -12,9 +12,7 @@ import {
   MapPin,
   PlayCircle,
   Search,
-  Users,
   X,
-  ExternalLink,
 } from 'lucide-react';
 import { Link } from 'react-router';
 import { useContent } from '../content/ContentContext';
@@ -28,7 +26,7 @@ import { EnrollmentDialog } from '../components/courses/EnrollmentDialog';
 import { PortalVisual } from '../components/visuals/IsoVisuals';
 
 export default function CoursesPage() {
-  const { courses: allCourses, categories, instructors } = useContent();
+  const { courses: allCourses, categories } = useContent();
   const publishedCourses = allCourses.filter((c) => c.published !== false);
 
   // Filters state
@@ -463,67 +461,7 @@ export default function CoursesPage() {
         </div>
       </section>
 
-      {/* 5. INSTRUCTORS SECTION */}
-      {instructors.length > 0 && (
-        <section className="section section--alt" aria-labelledby="instructors-title">
-          <div className="container">
-            <SectionHeading
-              id="instructors-title"
-              eyebrow="Expert Mentors"
-              title="Learn Directly From Industry Practitioners"
-              lead="Our instructors are senior engineers and architects actively building commercial systems."
-              align="center"
-            />
-
-            <div className="grid grid--3 course-instructors-grid">
-              {instructors.map((inst, i) => (
-                <Reveal key={inst.id} delay={(i % 3) * 80}>
-                  <article className="card card--interactive course-instructor-card" style={{ height: '100%' }}>
-                    <div className="course-instructor-card__avatar-wrap">
-                      {inst.photo ? (
-                        <img src={inst.photo} alt={inst.name} className="course-instructor-card__avatar" />
-                      ) : (
-                        <div className="course-instructor-card__avatar-fallback">
-                          <Users size={32} />
-                        </div>
-                      )}
-                    </div>
-                    <h4>{inst.name}</h4>
-                    <span className="course-instructor-card__role">{inst.designation}</span>
-                    <span className="course-instructor-card__exp">{inst.experience}</span>
-                    <p className="course-instructor-card__bio">{inst.bio}</p>
-
-                    {inst.skills && inst.skills.length > 0 && (
-                      <div className="course-instructor-card__skills">
-                        {inst.skills.map((s) => (
-                          <span key={s} className="badge badge--neutral">
-                            {s}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    {inst.linkedinUrl && (
-                      <a
-                        href={inst.linkedinUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="course-instructor-card__social"
-                        aria-label={`${inst.name} LinkedIn Profile`}
-                      >
-                        <span>LinkedIn Profile</span>
-                        <ExternalLink size={13} aria-hidden="true" />
-                      </a>
-                    )}
-                  </article>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* 6. STUDENT PROJECTS & CERTIFICATES */}
+      {/* 5. STUDENT PROJECTS & CERTIFICATES */}
       <section className="section" aria-labelledby="certificates-title">
         <div className="container">
           <div className="grid grid--2 course-cert-grid" style={{ alignItems: 'center', gap: 'var(--space-7)' }}>
