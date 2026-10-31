@@ -2,12 +2,18 @@ import { useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { Link } from 'react-router';
 import { ArrowRight, ChevronDown } from 'lucide-react';
-import { getServiceIcon, type Service } from '../../data/services';
+import { getServiceIcon, getServiceImage, type Service } from '../../data/services';
 
 export function ServiceCard({ service }: { service: Service }) {
   const Icon = getServiceIcon(service.icon);
+  const image = getServiceImage(service.id);
   return (
-    <article className="card card--interactive service-card">
+    <article className={`card card--interactive service-card${image ? ' service-card--media' : ''}`}>
+      {image && (
+        <div className="service-card__media">
+          <img src={image} alt="" width={800} height={500} loading="lazy" decoding="async" />
+        </div>
+      )}
       <span className="icon-wrap" aria-hidden="true">
         <Icon size={22} />
       </span>
