@@ -246,3 +246,4 @@ export function careersPageDataFromDoc(d: Data): CareersPageData {
     ctaButtonLink: str(d.ctaButtonLink, defaultCareersPageData.ctaButtonLink),
   };
 }
+
