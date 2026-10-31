@@ -930,6 +930,32 @@ dialog.modal[open] {
   text-overflow: ellipsis;
 }
 
+/* On desktop the whole hero (title, lead and the card fan) fits in one screen: sizes follow the
+   viewport height so the fan is never pushed below the fold on short laptop screens. */
+@media (min-width: 769px) {
+  .team-hero {
+    min-height: calc(100svh - var(--header-h));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: clamp(1rem, 4vh, 3rem);
+  }
+  .team-hero__title {
+    font-size: min(var(--fs-display), 8.5vh);
+    margin-bottom: min(var(--space-4), 2vh);
+  }
+  .team-hero__lead {
+    font-size: min(var(--fs-lead), 3.2vh);
+  }
+  .team-arc-wrapper {
+    margin-top: clamp(1rem, 5vh, 4.5rem);
+    min-height: 0;
+  }
+  .team-arc-card {
+    width: clamp(96px, min(11vw, 23vh), 175px);
+  }
+}
+
 /* Team Grid Section */
 .team-grid-section {
   padding-top: var(--space-6);
