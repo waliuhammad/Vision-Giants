@@ -1360,3 +1360,52 @@ button.admin-row:hover,
   border-radius: var(--radius-sm);
   background: #fff;
 }
+
+
+/* Drag and Drop Reordering */
+.admin-drag-handle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: grab;
+  cursor: -webkit-grab;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  color: var(--color-muted);
+  user-select: none;
+  touch-action: none;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+.admin-drag-handle:hover {
+  color: var(--color-foreground);
+  background: rgba(160, 186, 228, 0.12);
+}
+.admin-drag-handle:active {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+}
+.admin-drag-handle svg {
+  flex-shrink: 0;
+}
+.admin-draggable-row {
+  transition: background-color 0.15s ease, opacity 0.15s ease;
+}
+.admin-draggable-row.is-dragging,
+.admin-draggable-card.is-dragging {
+  opacity: 0.35;
+  background: rgba(160, 186, 228, 0.15) !important;
+}
+.admin-draggable-row.is-drop-target {
+  outline: 2px dashed var(--color-primary, #6366f1);
+  outline-offset: -2px;
+  background: rgba(99, 102, 241, 0.08) !important;
+}
+.admin-draggable-card {
+  position: relative;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+.admin-draggable-card.is-drop-target {
+  border-color: var(--color-primary, #6366f1) !important;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.35);
+  background: rgba(99, 102, 241, 0.04);
+}

@@ -259,6 +259,31 @@ function applicationReply(item: Submission, sender: string) {
   return { subject, body };
 }
 
-export function replyTemplate(collection: 'inquiries' | 'applications', item: Submission, sender: string) {
-  return collection === 'inquiries' ? inquiryReply(item, sender) : applicationReply(item, sender);
+/** Subject and plain-text body for acknowledging a course enrollment. */
+function enrollmentReply(item: Submission, sender: string) {
+  const firstName = str(item.fullName || item.name).trim().split(/\s+/)[0];
+  const courseTitle = str(item.courseTitle) || 'Course Enrollment';
+  const mode = str(item.preferredMode || item.mode) || 'learning';
+
+  const subject = `Your enrollment inquiry for ${courseTitle} – ${company.name} Academy`;
+  const body = [
+    `Dear ${firstName || 'Student'},`,
+    '',
+    `Thank you for your interest in the ${courseTitle} program (${mode} mode) at ${company.name} Academy.`,
+    '',
+    'We have received your enrollment inquiry. Our academic coordinator will contact you shortly with batch schedule details, syllabus information, and fee payment instructions.',
+    '',
+    'If you have any urgent questions, please feel free to reply to this email directly.',
+    '',
+    signature(sender),
+    ...quoted(str(item.notes || item.message), item.createdAt),
+  ].join('\n');
+
+  return { subject, body };
+}
+
+export function replyTemplate(collection: 'inquiries' | 'applications' | 'enrollments', item: Submission, sender: string) {
+  if (collection === 'inquiries') return inquiryReply(item, sender);
+  if (collection === 'enrollments') return enrollmentReply(item, sender);
+  return applicationReply(item, sender);
 }

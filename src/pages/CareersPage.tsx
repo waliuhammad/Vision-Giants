@@ -2,15 +2,10 @@ import { useState, useMemo } from 'react';
 import {
   ArrowRight,
   Briefcase,
-  Building,
-  CheckCircle2,
   Clock,
   Compass,
-  FileText,
-  Filter,
   GraduationCap,
   HeartHandshake,
-  Layers,
   MapPin,
   Search,
   Sparkles,
@@ -20,7 +15,6 @@ import {
   Code,
   Laptop,
 } from 'lucide-react';
-import { Link } from 'react-router';
 import { useContent } from '../content/ContentContext';
 import {
   hiringProcessSteps,

@@ -2,6 +2,9 @@ import { getDb, isFirebaseConfigured } from '../config/firebase';
 import { defaultContent, fromDoc, type SiteContent } from './schema';
 import { pageTextsFromDoc, type PageTexts } from './pages';
 import { aboutDataFromDoc } from './about';
+import type { Service } from '../data/services';
+import type { Project } from '../data/portfolio';
+import type { Position } from '../data/careers';
 import type { ClientItem } from '../data/clients';
 import type { Course, CourseCategory, Instructor } from '../data/courses';
 
@@ -38,33 +41,33 @@ export async function loadContent(): Promise<SiteContent> {
 
   if (config.get('contentManaged') !== true) return { ...defaultContent, about, pages };
 
-  const loadPublished = async (name: 'services' | 'projects' | 'positions' | 'courses') => {
+  const loadPublished = async <T,>(name: 'services' | 'projects' | 'positions' | 'courses', fallback: T[]): Promise<T[]> => {
     try {
       const snap = await getDocs(query(collection(db, name), where('published', '==', true)));
-      if (snap.empty) return defaultContent[name];
+      if (snap.empty) return fallback;
       return snap.docs
-        .map((d) => ({ order: Number(d.get('order') ?? d.get('displayOrder')) || 0, item: fromDoc[name](d.id, d.data()) }))
+        .map((d) => ({ order: Number(d.get('order') ?? d.get('displayOrder')) || 0, item: fromDoc[name](d.id, d.data()) as T }))
         .sort((a, b) => a.order - b.order)
         .map((x) => x.item);
     } catch {
-      return defaultContent[name];
+      return fallback;
     }
   };
 
-  const loadActive = async (name: 'clients' | 'course_categories') => {
+  const loadActive = async <T,>(name: 'clients' | 'course_categories', fallback: T[]): Promise<T[]> => {
     try {
       const snap = await getDocs(query(collection(db, name), where('active', '==', true)));
-      if (snap.empty) return name === 'clients' ? defaultContent.clients : defaultContent.categories;
+      if (snap.empty) return fallback;
       return snap.docs
-        .map((d) => ({ order: Number(d.get('order')) || 0, item: fromDoc[name](d.id, d.data()) }))
+        .map((d) => ({ order: Number(d.get('order')) || 0, item: fromDoc[name](d.id, d.data()) as T }))
         .sort((a, b) => a.order - b.order)
         .map((x) => x.item);
     } catch {
-      return name === 'clients' ? defaultContent.clients : defaultContent.categories;
+      return fallback;
     }
   };
 
-  const loadInstructors = async () => {
+  const loadInstructors = async (): Promise<Instructor[]> => {
     try {
       const snap = await getDocs(collection(db, 'instructors'));
       if (snap.empty) return defaultContent.instructors;
@@ -75,13 +78,13 @@ export async function loadContent(): Promise<SiteContent> {
   };
 
   const [services, projects, positions, courses, clients, categories, instructors] = await Promise.all([
-    loadPublished('services'),
-    loadPublished('projects'),
-    loadPublished('positions'),
-    loadPublished('courses') as Promise<Course[]>,
-    loadActive('clients') as Promise<ClientItem[]>,
-    loadActive('course_categories') as Promise<CourseCategory[]>,
-    loadInstructors() as Promise<Instructor[]>,
+    loadPublished<Service>('services', defaultContent.services),
+    loadPublished<Project>('projects', defaultContent.projects),
+    loadPublished<Position>('positions', defaultContent.positions),
+    loadPublished<Course>('courses', defaultContent.courses),
+    loadActive<ClientItem>('clients', defaultContent.clients),
+    loadActive<CourseCategory>('course_categories', defaultContent.categories),
+    loadInstructors(),
   ]);
 
   return {

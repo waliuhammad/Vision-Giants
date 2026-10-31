@@ -1,10 +1,9 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import {
-  ArrowDown,
-  ArrowUp,
   CircleAlert,
   CircleCheck,
   ExternalLink,
+  GripVertical,
   LoaderCircle,
   Plus,
   Save,
@@ -39,6 +38,12 @@ export function AboutPageEditor() {
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [uploadingHero, setUploadingHero] = useState(false);
+  const [valDrag, setValDrag] = useState<number | null>(null);
+  const [valDrop, setValDrop] = useState<number | null>(null);
+  const [whyDrag, setWhyDrag] = useState<number | null>(null);
+  const [whyDrop, setWhyDrop] = useState<number | null>(null);
+  const [teamDrag, setTeamDrag] = useState<number | null>(null);
+  const [teamDrop, setTeamDrop] = useState<number | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -89,15 +94,12 @@ export function AboutPageEditor() {
     update({ valuesList: data.valuesList.filter((_, i) => i !== index) });
   };
 
-  const moveValue = (index: number, delta: -1 | 1) => {
-    if (!data) return;
-    const target = index + delta;
-    if (target < 0 || target >= data.valuesList.length) return;
+  const reorderValue = (from: number, to: number) => {
+    if (!data || from === to) return;
     const list = [...data.valuesList];
-    const temp = list[index];
-    list[index] = list[target];
-    list[target] = temp;
-    update({ valuesList: list });
+    const [moved] = list.splice(from, 1);
+    list.splice(to, 0, moved);
+    setData({ ...data, valuesList: list });
   };
 
   // ---------------- Why Choose Us Handlers ----------------
@@ -124,15 +126,12 @@ export function AboutPageEditor() {
     update({ whyList: data.whyList.filter((_, i) => i !== index) });
   };
 
-  const moveWhy = (index: number, delta: -1 | 1) => {
-    if (!data) return;
-    const target = index + delta;
-    if (target < 0 || target >= data.whyList.length) return;
+  const reorderWhy = (from: number, to: number) => {
+    if (!data || from === to) return;
     const list = [...data.whyList];
-    const temp = list[index];
-    list[index] = list[target];
-    list[target] = temp;
-    update({ whyList: list });
+    const [moved] = list.splice(from, 1);
+    list.splice(to, 0, moved);
+    setData({ ...data, whyList: list });
   };
 
   // ---------------- Team Members Handlers ----------------
@@ -182,15 +181,12 @@ export function AboutPageEditor() {
     }
   };
 
-  const moveTeamMember = (index: number, delta: -1 | 1) => {
-    if (!data) return;
-    const target = index + delta;
-    if (target < 0 || target >= data.teamMembers.length) return;
+  const reorderTeamMember = (from: number, to: number) => {
+    if (!data || from === to) return;
     const list = [...data.teamMembers];
-    const temp = list[index];
-    list[index] = list[target];
-    list[target] = temp;
-    update({ teamMembers: list });
+    const [moved] = list.splice(from, 1);
+    list.splice(to, 0, moved);
+    setData({ ...data, teamMembers: list });
   };
 
   const handleHeroImageUpload = async (file?: File) => {
@@ -526,7 +522,37 @@ export function AboutPageEditor() {
 
           <div className="admin-rows">
             {data.valuesList.map((val, i) => (
-              <div key={val.id || i} className="admin-rows__row" style={{ alignItems: 'flex-start', border: '1px solid var(--border)', padding: '12px', borderRadius: 'var(--radius-sm)', background: 'var(--color-surface-2)', width: '100%', marginBottom: '8px' }}>
+              <div
+                key={val.id || i}
+                draggable
+                onDragStart={(e) => {
+                  e.dataTransfer.effectAllowed = 'move';
+                  setValDrag(i);
+                }}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.dataTransfer.dropEffect = 'move';
+                  if (valDrop !== i) setValDrop(i);
+                }}
+                onDragEnd={() => {
+                  setValDrag(null);
+                  setValDrop(null);
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  if (valDrag !== null && valDrag !== i) {
+                    reorderValue(valDrag, i);
+                  }
+                  setValDrag(null);
+                  setValDrop(null);
+                }}
+                className={`admin-rows__row admin-draggable-row${valDrag === i ? ' is-dragging' : ''}${valDrop === i ? ' is-drop-target' : ''}`}
+                style={{ alignItems: 'flex-start', border: '1px solid var(--border)', padding: '12px', borderRadius: 'var(--radius-sm)', background: 'var(--color-surface-2)', width: '100%', marginBottom: '8px' }}
+              >
+                <div className="admin-drag-handle" title="Drag and drop to change position" style={{ marginTop: '6px' }}>
+                  <GripVertical size={16} />
+                  <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>{i + 1}</span>
+                </div>
                 <div style={{ flex: 1, display: 'grid', gap: '8px' }}>
                   <input
                     className="input"
@@ -543,13 +569,7 @@ export function AboutPageEditor() {
                   />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginLeft: '8px' }}>
-                  <button type="button" className="admin-icon-btn" onClick={() => moveValue(i, -1)} disabled={i === 0} title="Move up">
-                    <ArrowUp size={15} />
-                  </button>
-                  <button type="button" className="admin-icon-btn" onClick={() => moveValue(i, 1)} disabled={i === data.valuesList.length - 1} title="Move down">
-                    <ArrowDown size={15} />
-                  </button>
-                  <button type="button" className="admin-icon-btn" onClick={() => removeValue(i)} title="Remove value">
+                  <button type="button" className="admin-icon-btn admin-danger" onClick={() => removeValue(i)} title="Remove value">
                     <Trash2 size={15} />
                   </button>
                 </div>
@@ -633,7 +653,37 @@ export function AboutPageEditor() {
 
           <div className="admin-rows">
             {data.whyList.map((why, i) => (
-              <div key={why.id || i} className="admin-rows__row" style={{ alignItems: 'flex-start', border: '1px solid var(--border)', padding: '12px', borderRadius: 'var(--radius-sm)', background: 'var(--color-surface-2)', width: '100%', marginBottom: '8px' }}>
+              <div
+                key={why.id || i}
+                draggable
+                onDragStart={(e) => {
+                  e.dataTransfer.effectAllowed = 'move';
+                  setWhyDrag(i);
+                }}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.dataTransfer.dropEffect = 'move';
+                  if (whyDrop !== i) setWhyDrop(i);
+                }}
+                onDragEnd={() => {
+                  setWhyDrag(null);
+                  setWhyDrop(null);
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  if (whyDrag !== null && whyDrag !== i) {
+                    reorderWhy(whyDrag, i);
+                  }
+                  setWhyDrag(null);
+                  setWhyDrop(null);
+                }}
+                className={`admin-rows__row admin-draggable-row${whyDrag === i ? ' is-dragging' : ''}${whyDrop === i ? ' is-drop-target' : ''}`}
+                style={{ alignItems: 'flex-start', border: '1px solid var(--border)', padding: '12px', borderRadius: 'var(--radius-sm)', background: 'var(--color-surface-2)', width: '100%', marginBottom: '8px' }}
+              >
+                <div className="admin-drag-handle" title="Drag and drop to change position" style={{ marginTop: '6px' }}>
+                  <GripVertical size={16} />
+                  <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>{i + 1}</span>
+                </div>
                 <div style={{ flex: 1, display: 'grid', gap: '8px' }}>
                   <input
                     className="input"
@@ -650,13 +700,7 @@ export function AboutPageEditor() {
                   />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginLeft: '8px' }}>
-                  <button type="button" className="admin-icon-btn" onClick={() => moveWhy(i, -1)} disabled={i === 0} title="Move up">
-                    <ArrowUp size={15} />
-                  </button>
-                  <button type="button" className="admin-icon-btn" onClick={() => moveWhy(i, 1)} disabled={i === data.whyList.length - 1} title="Move down">
-                    <ArrowDown size={15} />
-                  </button>
-                  <button type="button" className="admin-icon-btn" onClick={() => removeWhy(i)} title="Remove pillar">
+                  <button type="button" className="admin-icon-btn admin-danger" onClick={() => removeWhy(i)} title="Remove pillar">
                     <Trash2 size={15} />
                   </button>
                 </div>
@@ -769,6 +813,29 @@ export function AboutPageEditor() {
             {data.teamMembers.map((member, i) => (
               <div
                 key={member.id || i}
+                draggable
+                onDragStart={(e) => {
+                  e.dataTransfer.effectAllowed = 'move';
+                  setTeamDrag(i);
+                }}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.dataTransfer.dropEffect = 'move';
+                  if (teamDrop !== i) setTeamDrop(i);
+                }}
+                onDragEnd={() => {
+                  setTeamDrag(null);
+                  setTeamDrop(null);
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  if (teamDrag !== null && teamDrag !== i) {
+                    reorderTeamMember(teamDrag, i);
+                  }
+                  setTeamDrag(null);
+                  setTeamDrop(null);
+                }}
+                className={`admin-draggable-card${teamDrag === i ? ' is-dragging' : ''}${teamDrop === i ? ' is-drop-target' : ''}`}
                 style={{
                   border: '1px solid var(--border)',
                   borderRadius: 'var(--radius-md)',
@@ -780,11 +847,15 @@ export function AboutPageEditor() {
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-                    <div style={{ width: '48px', height: '48px', borderRadius: '50%', overflow: 'hidden', background: 'var(--color-surface)', display: 'grid', placeItems: 'center', border: '1px solid var(--border)' }}>
+                    <div className="admin-drag-handle" title="Drag and drop to change position">
+                      <GripVertical size={16} />
+                      <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>#{i + 1}</span>
+                    </div>
+                    <div style={{ width: '44px', height: '44px', borderRadius: '50%', overflow: 'hidden', background: 'var(--color-surface)', display: 'grid', placeItems: 'center', border: '1px solid var(--border)' }}>
                       {member.image ? (
                         <img src={member.image} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       ) : (
-                        <User size={24} style={{ color: 'var(--color-muted)' }} />
+                        <User size={22} style={{ color: 'var(--color-muted)' }} />
                       )}
                     </div>
                     <div>
@@ -793,12 +864,6 @@ export function AboutPageEditor() {
                     </div>
                   </div>
                   <div style={{ display: 'flex', gap: '4px' }}>
-                    <button type="button" className="admin-icon-btn" onClick={() => moveTeamMember(i, -1)} disabled={i === 0} title="Move up">
-                      <ArrowUp size={15} />
-                    </button>
-                    <button type="button" className="admin-icon-btn" onClick={() => moveTeamMember(i, 1)} disabled={i === data.teamMembers.length - 1} title="Move down">
-                      <ArrowDown size={15} />
-                    </button>
                     <button type="button" className="admin-icon-btn admin-danger" onClick={() => removeTeamMember(i)} title="Delete member">
                       <Trash2 size={15} />
                     </button>

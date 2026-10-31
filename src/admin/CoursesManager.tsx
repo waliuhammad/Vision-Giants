@@ -1,25 +1,18 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import {
-  BookOpen,
   CircleAlert,
   CircleCheck,
   LoaderCircle,
   Plus,
-  Save,
   Trash2,
-  Upload,
   X,
-  ArrowUp,
-  ArrowDown,
+  GripVertical,
   Globe,
   MapPin,
   Layers,
   PlayCircle,
-  HelpCircle,
-  ChevronDown,
-  ChevronUp,
-} from 'lucide-react';
-import { getAdminDb, getAdminStorage } from './firebase';
+  } from 'lucide-react';
+import { getAdminDb } from './firebase';
 import {
   defaultCourses,
   defaultCourseCategories,
@@ -27,13 +20,9 @@ import {
   type Course,
   type CourseCategory,
   type Instructor,
-  type CourseModule,
-  type CourseFaq,
-  type LearningMode,
-} from '../data/courses';
+  } from '../data/courses';
 
 const firestore = () => import('firebase/firestore/lite');
-const IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/avif', 'image/gif'];
 
 export function CoursesManager() {
   const [courses, setCourses] = useState<Course[] | null>(null);
@@ -48,6 +37,8 @@ export function CoursesManager() {
   // Editing state
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
   const [isNew, setIsNew] = useState(false);
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [dropTarget, setDropTarget] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<'general' | 'modes' | 'curriculum' | 'faqs'>('general');
 
   // Text helpers for arrays
@@ -56,8 +47,7 @@ export function CoursesManager() {
   const [projectsStr, setProjectsStr] = useState('');
 
   // Uploading thumbnail
-  const [uploadingThumb, setUploadingThumb] = useState(false);
-  const [thumbError, setThumbError] = useState('');
+  
 
   useEffect(() => {
     loadAll();
@@ -192,40 +182,7 @@ export function CoursesManager() {
     }
   };
 
-  const handleThumbnailUpload = async (file: File) => {
-    if (!IMAGE_TYPES.includes(file.type)) {
-      setThumbError('Please select a valid image file (PNG, WebP, JPEG).');
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      setThumbError('Image size must be under 5MB.');
-      return;
-    }
-
-    setUploadingThumb(true);
-    setThumbError('');
-    try {
-      const [storage, { ref, uploadBytes, getDownloadURL }] = await Promise.all([
-        getAdminStorage(),
-        import('firebase/storage'),
-      ]);
-      const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-      const fileRef = ref(storage, `content/courses/${Date.now()}-${cleanName}`);
-      await uploadBytes(fileRef, file, { contentType: file.type });
-      const downloadUrl = await getDownloadURL(fileRef);
-
-      if (editingCourse) {
-        setEditingCourse({ ...editingCourse, thumbnail: downloadUrl });
-      }
-    } catch (err) {
-      console.error(err);
-      setThumbError('Upload failed. Check Storage permissions.');
-    } finally {
-      setUploadingThumb(false);
-    }
-  };
-
-  const handleOpenAdd = () => {
+    const handleOpenAdd = () => {
     setIsNew(true);
     setActiveTab('general');
     const newCourse: Course = {
@@ -347,13 +304,11 @@ export function CoursesManager() {
     }
   };
 
-  const moveItem = (index: number, direction: 'up' | 'down') => {
-    if (!courses) return;
-    const target = direction === 'up' ? index - 1 : index + 1;
-    if (target < 0 || target >= courses.length) return;
+  const handleReorder = (fromIndex: number, toIndex: number) => {
+    if (!courses || fromIndex === toIndex) return;
     const next = [...courses];
-    const [moved] = next.splice(index, 1);
-    next.splice(target, 0, moved);
+    const [moved] = next.splice(fromIndex, 1);
+    next.splice(toIndex, 0, moved);
     setCourses(next);
     handleSaveAll(next);
   };
@@ -442,7 +397,7 @@ export function CoursesManager() {
           <table className="admin-table">
             <thead>
               <tr>
-                <th style={{ width: 80 }}>Order</th>
+                <th style={{ width: 80, textAlign: 'center' }}>Position</th>
                 <th>Course Title & Category</th>
                 <th>Duration & Level</th>
                 <th>Enabled Modes</th>
@@ -453,26 +408,36 @@ export function CoursesManager() {
             <tbody>
               {courses && courses.length > 0 ? (
                 courses.map((course, idx) => (
-                  <tr key={course.id}>
-                    <td>
-                      <div className="admin-order-btns">
-                        <button
-                          type="button"
-                          className="btn-icon"
-                          disabled={idx === 0}
-                          onClick={() => moveItem(idx, 'up')}
-                        >
-                          <ArrowUp size={14} />
-                        </button>
-                        <span>{idx + 1}</span>
-                        <button
-                          type="button"
-                          className="btn-icon"
-                          disabled={idx === courses.length - 1}
-                          onClick={() => moveItem(idx, 'down')}
-                        >
-                          <ArrowDown size={14} />
-                        </button>
+                  <tr
+                    key={course.id}
+                    draggable
+                    onDragStart={(e) => {
+                      e.dataTransfer.effectAllowed = 'move';
+                      setDragIndex(idx);
+                    }}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      e.dataTransfer.dropEffect = 'move';
+                      if (dropTarget !== idx) setDropTarget(idx);
+                    }}
+                    onDragEnd={() => {
+                      setDragIndex(null);
+                      setDropTarget(null);
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      if (dragIndex !== null && dragIndex !== idx) {
+                        handleReorder(dragIndex, idx);
+                      }
+                      setDragIndex(null);
+                      setDropTarget(null);
+                    }}
+                    className={`admin-draggable-row${dragIndex === idx ? ' is-dragging' : ''}${dropTarget === idx ? ' is-drop-target' : ''}`}
+                  >
+                    <td style={{ textAlign: 'center' }}>
+                      <div className="admin-drag-handle" title="Drag and drop to change position">
+                        <GripVertical size={16} />
+                        <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{idx + 1}</span>
                       </div>
                     </td>
                     <td>

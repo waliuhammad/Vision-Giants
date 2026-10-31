@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { ArrowDown, ArrowUp, ChevronLeft, ChevronRight, CircleAlert, ExternalLink, Info, LoaderCircle, Pencil, Plus, Save, Trash2, Upload, X } from 'lucide-react';
+import { ChevronLeft, GripVertical, ChevronRight, CircleAlert, ExternalLink, Info, LoaderCircle, Pencil, Plus, Save, Trash2, Upload, X } from 'lucide-react';
 import { getAdminDb, getAdminStorage } from './firebase';
 import { builtInItems, projectsConfig, servicesConfig, positionsConfig, type ContentConfig, type FieldDef } from './contentConfig';
 
@@ -93,25 +93,28 @@ export function ContentPage({ config }: { config: ContentConfig }) {
     }
   };
 
-  /** Swaps the order of two neighbouring items. */
-  const move = async (index: number, delta: -1 | 1) => {
-    if (!items) return;
-    const a = items[index];
-    const b = items[index + delta];
-    if (!a || !b) return;
-    // Items imported or created at the same position get distinct orders first.
-    const [orderA, orderB] = a.order === b.order ? [b.order + delta, a.order] : [b.order, a.order];
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [dropTarget, setDropTarget] = useState<number | null>(null);
+
+  /** Drag and drop reordering */
+  const reorder = async (fromIndex: number, toIndex: number) => {
+    if (!items || fromIndex === toIndex) return;
+    const next = [...items];
+    const [moved] = next.splice(fromIndex, 1);
+    next.splice(toIndex, 0, moved);
+    setItems(next);
     setBusy(true);
     try {
       const [db, { doc, writeBatch }] = await Promise.all([getAdminDb(), firestore()]);
       const batch = writeBatch(db);
-      batch.update(doc(db, config.collection, a.id), { order: orderA });
-      batch.update(doc(db, config.collection, b.id), { order: orderB });
+      next.forEach((item, index) => {
+        batch.update(doc(db, config.collection, item.id), { order: (index + 1) * 10 });
+      });
       await batch.commit();
       await load();
     } catch (err) {
       console.error(err);
-      setError('Could not reorder.');
+      setError('Could not update order.');
     } finally {
       setBusy(false);
     }
@@ -178,7 +181,6 @@ export function ContentPage({ config }: { config: ContentConfig }) {
                     <strong>{label(item)}</strong>
                     <span className="muted">{config.sublabel(item)}</span>
                   </span>
-                  <span className="admin-status">Built-in</span>
                 </li>
               ))}
               {builtInItems(config.collection).length === 0 && <li className="admin-empty">No built-in {config.title.toLowerCase()}.</li>}
@@ -190,7 +192,37 @@ export function ContentPage({ config }: { config: ContentConfig }) {
           {managed && items !== null && (
             <ul>
               {items.map((item, i) => (
-                <li key={item.id} className="admin-row admin-row--static" aria-current={editing !== 'new' && editing?.id === item.id}>
+                <li
+                  key={item.id}
+                  draggable={!busy}
+                  onDragStart={(e) => {
+                    e.dataTransfer.effectAllowed = 'move';
+                    setDragIndex(i);
+                  }}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    if (dropTarget !== i) setDropTarget(i);
+                  }}
+                  onDragEnd={() => {
+                    setDragIndex(null);
+                    setDropTarget(null);
+                  }}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    if (dragIndex !== null && dragIndex !== i) {
+                      reorder(dragIndex, i);
+                    }
+                    setDragIndex(null);
+                    setDropTarget(null);
+                  }}
+                  className={`admin-row admin-row--static admin-draggable-row${dragIndex === i ? ' is-dragging' : ''}${dropTarget === i ? ' is-drop-target' : ''}`}
+                  aria-current={editing !== 'new' && editing?.id === item.id}
+                >
+                  <span className="admin-drag-handle" title="Drag and drop to change position">
+                    <GripVertical size={16} />
+                    <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>{i + 1}</span>
+                  </span>
                   <span className="admin-row__main">
                     <strong>{label(item)}</strong>
                     <span className="muted">{config.sublabel(item)}</span>
@@ -199,12 +231,6 @@ export function ContentPage({ config }: { config: ContentConfig }) {
                     <span className={`admin-status admin-status--${item.published ? 'published' : 'draft'}`}>
                       {item.published ? 'Published' : 'Hidden'}
                     </span>
-                    <button type="button" className="admin-icon-btn" onClick={() => move(i, -1)} disabled={busy || i === 0} aria-label={`Move ${label(item)} up`}>
-                      <ArrowUp size={16} />
-                    </button>
-                    <button type="button" className="admin-icon-btn" onClick={() => move(i, 1)} disabled={busy || i === items.length - 1} aria-label={`Move ${label(item)} down`}>
-                      <ArrowDown size={16} />
-                    </button>
                     <button type="button" className="admin-icon-btn" onClick={() => setEditing(item)} aria-label={`Edit ${label(item)}`}>
                       <Pencil size={16} />
                     </button>

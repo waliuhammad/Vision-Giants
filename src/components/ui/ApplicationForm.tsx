@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Send, LoaderCircle, CircleCheck, CircleAlert, Info, Upload, FileText, Check } from 'lucide-react';
+import { Send, LoaderCircle, CircleCheck, CircleAlert } from 'lucide-react';
 import { company } from '../../data/company';
 import type { Position } from '../../data/careers';
 import { errorCode, isFirebaseConfigured, submitApplication } from '../../config/firebase';

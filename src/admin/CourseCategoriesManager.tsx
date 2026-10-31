@@ -1,15 +1,12 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import {
-  Tag,
   CircleAlert,
   CircleCheck,
   LoaderCircle,
   Plus,
-  Save,
   Trash2,
   X,
-  ArrowUp,
-  ArrowDown,
+  GripVertical,
 } from 'lucide-react';
 import { getAdminDb } from './firebase';
 import { defaultCourseCategories, type CourseCategory } from '../data/courses';
@@ -26,6 +23,8 @@ export function CourseCategoriesManager() {
   // Editing state
   const [editingCategory, setEditingCategory] = useState<CourseCategory | null>(null);
   const [isNew, setIsNew] = useState(false);
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [dropTarget, setDropTarget] = useState<number | null>(null);
 
   useEffect(() => {
     loadCategories();
@@ -146,13 +145,11 @@ export function CourseCategoriesManager() {
     }
   };
 
-  const moveItem = (index: number, direction: 'up' | 'down') => {
-    if (!categories) return;
-    const target = direction === 'up' ? index - 1 : index + 1;
-    if (target < 0 || target >= categories.length) return;
+  const handleReorder = (fromIndex: number, toIndex: number) => {
+    if (!categories || fromIndex === toIndex) return;
     const next = [...categories];
-    const [moved] = next.splice(index, 1);
-    next.splice(target, 0, moved);
+    const [moved] = next.splice(fromIndex, 1);
+    next.splice(toIndex, 0, moved);
     setCategories(next);
     handleSaveAll(next);
   };
@@ -201,7 +198,7 @@ export function CourseCategoriesManager() {
           <table className="admin-table">
             <thead>
               <tr>
-                <th style={{ width: 80 }}>Order</th>
+                <th style={{ width: 80, textAlign: 'center' }}>Position</th>
                 <th>Category Name</th>
                 <th>Slug</th>
                 <th>Description</th>
@@ -212,26 +209,36 @@ export function CourseCategoriesManager() {
             <tbody>
               {categories && categories.length > 0 ? (
                 categories.map((c, idx) => (
-                  <tr key={c.id}>
-                    <td>
-                      <div className="admin-order-btns">
-                        <button
-                          type="button"
-                          className="btn-icon"
-                          disabled={idx === 0}
-                          onClick={() => moveItem(idx, 'up')}
-                        >
-                          <ArrowUp size={14} />
-                        </button>
-                        <span>{idx + 1}</span>
-                        <button
-                          type="button"
-                          className="btn-icon"
-                          disabled={idx === categories.length - 1}
-                          onClick={() => moveItem(idx, 'down')}
-                        >
-                          <ArrowDown size={14} />
-                        </button>
+                  <tr
+                    key={c.id}
+                    draggable
+                    onDragStart={(e) => {
+                      e.dataTransfer.effectAllowed = 'move';
+                      setDragIndex(idx);
+                    }}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      e.dataTransfer.dropEffect = 'move';
+                      if (dropTarget !== idx) setDropTarget(idx);
+                    }}
+                    onDragEnd={() => {
+                      setDragIndex(null);
+                      setDropTarget(null);
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      if (dragIndex !== null && dragIndex !== idx) {
+                        handleReorder(dragIndex, idx);
+                      }
+                      setDragIndex(null);
+                      setDropTarget(null);
+                    }}
+                    className={`admin-draggable-row${dragIndex === idx ? ' is-dragging' : ''}${dropTarget === idx ? ' is-drop-target' : ''}`}
+                  >
+                    <td style={{ textAlign: 'center' }}>
+                      <div className="admin-drag-handle" title="Drag and drop to change position">
+                        <GripVertical size={16} />
+                        <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{idx + 1}</span>
                       </div>
                     </td>
                     <td>

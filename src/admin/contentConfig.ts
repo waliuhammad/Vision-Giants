@@ -97,5 +97,9 @@ export const positionsConfig: ContentConfig = {
 };
 
 /** Built-in items for a collection, as imported into Firestore. */
-export const builtInItems = (collection: ContentCollection) =>
-  defaultContent[collection] as unknown as ({ id: string } & Record<string, unknown>)[];
+export const builtInItems = (collection: ContentCollection) => {
+  if (collection === 'course_categories') {
+    return defaultContent.categories as unknown as ({ id: string } & Record<string, unknown>)[];
+  }
+  return defaultContent[collection] as unknown as ({ id: string } & Record<string, unknown>)[];
+};
