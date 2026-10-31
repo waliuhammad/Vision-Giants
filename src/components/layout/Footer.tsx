@@ -232,7 +232,7 @@ const footerStyles = `
 /* Contact */
 .site-footer__contact li {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.75rem;
   color: #b8c4d8;
   font-size: 0.9375rem;
@@ -248,9 +248,6 @@ const footerStyles = `
   background: rgba(91, 143, 214, 0.14);
   border: 1px solid rgba(143, 184, 232, 0.2);
   color: #8fb4ff;
-}
-.site-footer__contact li > :last-child {
-  padding-top: 5px;
 }
 
 /* Map, dark-tinted to match the theme */
