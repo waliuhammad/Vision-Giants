@@ -140,22 +140,22 @@ export function CareersManager() {
     setPageContent((prev) => ({ ...prev, ...patch }));
   };
 
-  const updateStat = (index: number, patch: { value?: string; label?: string }) => {
-    const next = [...pageContent.stats];
+  const updateWhyCard = (index: number, patch: { title?: string; description?: string }) => {
+    const next = [...pageContent.whyCards];
     next[index] = { ...next[index], ...patch };
-    updatePageContent({ stats: next });
+    updatePageContent({ whyCards: next });
   };
 
-  const updateTrack = (index: number, patch: { title?: string; description?: string }) => {
-    const next = [...pageContent.tracks];
-    next[index] = { ...next[index], ...patch };
-    updatePageContent({ tracks: next });
+  const updatePerk = (index: number, label: string) => {
+    const next = [...pageContent.perksList];
+    next[index] = { ...next[index], label };
+    updatePageContent({ perksList: next });
   };
 
-  const updateChecklist = (index: number, text: string) => {
-    const next = [...pageContent.whyChecklist];
-    next[index] = text;
-    updatePageContent({ whyChecklist: next });
+  const updateCulturePhoto = (index: number, url: string) => {
+    const next = [...pageContent.culturePhotos] as [string, string, string, string];
+    next[index] = url;
+    updatePageContent({ culturePhotos: next });
   };
 
   // ---------------- Testimonials Handlers ----------------
@@ -528,16 +528,25 @@ export function CareersManager() {
             <h2 style={{ fontSize: '1.2rem', marginBottom: '16px' }}>1. Hero Section</h2>
             <div className="grid grid--2">
               <div className="field">
-                <label>Dash Eyebrow</label>
+                <label>Badge Pill Text (e.g. WE ARE HIRING)</label>
                 <input
                   type="text"
                   className="input"
-                  value={pageContent.heroEyebrow}
-                  onChange={(e) => updatePageContent({ heroEyebrow: e.target.value })}
+                  value={pageContent.heroBadgeText}
+                  onChange={(e) => updatePageContent({ heroBadgeText: e.target.value })}
                 />
               </div>
               <div className="field">
-                <label>Title Line 1 (Dark Text)</label>
+                <label>Hero Background Image URL</label>
+                <input
+                  type="text"
+                  className="input"
+                  value={pageContent.heroImage}
+                  onChange={(e) => updatePageContent({ heroImage: e.target.value })}
+                />
+              </div>
+              <div className="field">
+                <label>Title Line 1</label>
                 <input
                   type="text"
                   className="input"
@@ -546,21 +555,12 @@ export function CareersManager() {
                 />
               </div>
               <div className="field">
-                <label>Title Line 2 (Colored Accent Text)</label>
+                <label>Title Line 2 (Accent Blue)</label>
                 <input
                   type="text"
                   className="input"
                   value={pageContent.heroTitleLine2}
                   onChange={(e) => updatePageContent({ heroTitleLine2: e.target.value })}
-                />
-              </div>
-              <div className="field">
-                <label>Hero Portrait Image URL</label>
-                <input
-                  type="text"
-                  className="input"
-                  value={pageContent.heroImage}
-                  onChange={(e) => updatePageContent({ heroImage: e.target.value })}
                 />
               </div>
             </div>
@@ -577,21 +577,39 @@ export function CareersManager() {
 
             <div className="grid grid--2" style={{ marginTop: '12px' }}>
               <div className="field">
-                <label>Floating Badge Years (e.g. 10+)</label>
+                <label>Primary CTA Text</label>
                 <input
                   type="text"
                   className="input"
-                  value={pageContent.heroExperienceBadgeYears}
-                  onChange={(e) => updatePageContent({ heroExperienceBadgeYears: e.target.value })}
+                  value={pageContent.heroPrimaryCtaText}
+                  onChange={(e) => updatePageContent({ heroPrimaryCtaText: e.target.value })}
                 />
               </div>
               <div className="field">
-                <label>Floating Badge Label</label>
+                <label>Primary CTA Link</label>
                 <input
                   type="text"
                   className="input"
-                  value={pageContent.heroExperienceBadgeText}
-                  onChange={(e) => updatePageContent({ heroExperienceBadgeText: e.target.value })}
+                  value={pageContent.heroPrimaryCtaLink}
+                  onChange={(e) => updatePageContent({ heroPrimaryCtaLink: e.target.value })}
+                />
+              </div>
+              <div className="field">
+                <label>Secondary CTA Text</label>
+                <input
+                  type="text"
+                  className="input"
+                  value={pageContent.heroSecondaryCtaText}
+                  onChange={(e) => updatePageContent({ heroSecondaryCtaText: e.target.value })}
+                />
+              </div>
+              <div className="field">
+                <label>Secondary CTA Link</label>
+                <input
+                  type="text"
+                  className="input"
+                  value={pageContent.heroSecondaryCtaLink}
+                  onChange={(e) => updatePageContent({ heroSecondaryCtaLink: e.target.value })}
                 />
               </div>
               <div className="field">
@@ -615,96 +633,9 @@ export function CareersManager() {
             </div>
           </div>
 
-          {/* 2. Key Stats Ribbon (4 Metrics) */}
+          {/* 2. Why Work With Us Section (5 Cards) */}
           <div className="card" style={{ padding: '24px' }}>
-            <h2 style={{ fontSize: '1.2rem', marginBottom: '16px' }}>2. Full-Width Navy Stats Ribbon</h2>
-            <div className="grid grid--4">
-              {pageContent.stats.map((stat, idx) => (
-                <div key={idx} style={{ background: 'var(--color-surface-2)', padding: '14px', borderRadius: 'var(--radius-sm)' }}>
-                  <span style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--color-muted)', display: 'block', marginBottom: 6 }}>
-                    METRIC #{idx + 1} ({stat.icon.toUpperCase()})
-                  </span>
-                  <div className="field">
-                    <label style={{ fontSize: '0.8rem' }}>Number / Stat</label>
-                    <input
-                      type="text"
-                      className="input"
-                      value={stat.value}
-                      onChange={(e) => updateStat(idx, { value: e.target.value })}
-                    />
-                  </div>
-                  <div className="field" style={{ marginTop: 8 }}>
-                    <label style={{ fontSize: '0.8rem' }}>Label</label>
-                    <input
-                      type="text"
-                      className="input"
-                      value={stat.label}
-                      onChange={(e) => updateStat(idx, { label: e.target.value })}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* 3. Top Career Tracks */}
-          <div className="card" style={{ padding: '24px' }}>
-            <h2 style={{ fontSize: '1.2rem', marginBottom: '16px' }}>3. Top Career Tracks Cards (5 Cards)</h2>
-            <div className="grid grid--2">
-              <div className="field">
-                <label>Section Eyebrow</label>
-                <input
-                  type="text"
-                  className="input"
-                  value={pageContent.tracksEyebrow}
-                  onChange={(e) => updatePageContent({ tracksEyebrow: e.target.value })}
-                />
-              </div>
-              <div className="field">
-                <label>Section Title</label>
-                <input
-                  type="text"
-                  className="input"
-                  value={pageContent.tracksHeading}
-                  onChange={(e) => updatePageContent({ tracksHeading: e.target.value })}
-                />
-              </div>
-            </div>
-
-            <div style={{ display: 'grid', gap: '12px', marginTop: '16px' }}>
-              {pageContent.tracks.map((track, idx) => (
-                <div
-                  key={track.id}
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '200px 1fr',
-                    gap: '12px',
-                    alignItems: 'center',
-                    background: 'var(--color-surface-2)',
-                    padding: '12px',
-                    borderRadius: 'var(--radius-sm)',
-                  }}
-                >
-                  <input
-                    type="text"
-                    className="input"
-                    value={track.title}
-                    onChange={(e) => updateTrack(idx, { title: e.target.value })}
-                  />
-                  <input
-                    type="text"
-                    className="input"
-                    value={track.description}
-                    onChange={(e) => updateTrack(idx, { description: e.target.value })}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* 4. Why Work With Us Section */}
-          <div className="card" style={{ padding: '24px' }}>
-            <h2 style={{ fontSize: '1.2rem', marginBottom: '16px' }}>4. “We Don’t Just Hire, We Build Futures” Section</h2>
+            <h2 style={{ fontSize: '1.2rem', marginBottom: '16px' }}>2. “Why Work With Us” Section (5 Value Cards)</h2>
             <div className="grid grid--2">
               <div className="field">
                 <label>Section Eyebrow</label>
@@ -724,57 +655,178 @@ export function CareersManager() {
                   onChange={(e) => updatePageContent({ whyHeading: e.target.value })}
                 />
               </div>
-              <div className="field">
-                <label>Left Image URL</label>
-                <input
-                  type="text"
-                  className="input"
-                  value={pageContent.whyImage}
-                  onChange={(e) => updatePageContent({ whyImage: e.target.value })}
-                />
-              </div>
-              <div className="field">
-                <label>Floating Amber Badge Text</label>
-                <input
-                  type="text"
-                  className="input"
-                  value={pageContent.whyBadge}
-                  onChange={(e) => updatePageContent({ whyBadge: e.target.value })}
-                />
-              </div>
             </div>
-
             <div className="field" style={{ marginTop: '12px' }}>
-              <label>Description Paragraph</label>
+              <label>Section Subtitle / Description</label>
               <textarea
                 className="input"
-                rows={3}
+                rows={2}
                 value={pageContent.whyDescription}
                 onChange={(e) => updatePageContent({ whyDescription: e.target.value })}
               />
             </div>
 
-            <h4 style={{ fontSize: '0.95rem', marginTop: '16px', marginBottom: '8px' }}>Checklist Points (4 Items)</h4>
-            <div style={{ display: 'grid', gap: '8px' }}>
-              {pageContent.whyChecklist.map((item, idx) => (
-                <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--color-primary)', width: 24 }}>
-                    #{idx + 1}
-                  </span>
+            <h4 style={{ fontSize: '0.95rem', marginTop: '16px', marginBottom: '10px' }}>Value Cards (5 Cards)</h4>
+            <div style={{ display: 'grid', gap: '10px' }}>
+              {pageContent.whyCards.map((card, idx) => (
+                <div
+                  key={card.id}
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '180px 1fr',
+                    gap: '12px',
+                    alignItems: 'center',
+                    background: 'var(--color-surface-2)',
+                    padding: '12px',
+                    borderRadius: 'var(--radius-sm)',
+                  }}
+                >
                   <input
                     type="text"
                     className="input"
-                    value={item}
-                    onChange={(e) => updateChecklist(idx, e.target.value)}
+                    value={card.title}
+                    placeholder="Card Title"
+                    onChange={(e) => updateWhyCard(idx, { title: e.target.value })}
+                  />
+                  <input
+                    type="text"
+                    className="input"
+                    value={card.description}
+                    placeholder="Card Description"
+                    onChange={(e) => updateWhyCard(idx, { description: e.target.value })}
                   />
                 </div>
               ))}
             </div>
           </div>
 
-          {/* 5. Bottom Call to Action Banner */}
+          {/* 3. Open Positions Section Info */}
           <div className="card" style={{ padding: '24px' }}>
-            <h2 style={{ fontSize: '1.2rem', marginBottom: '16px' }}>5. Bottom Call to Action Ribbon</h2>
+            <h2 style={{ fontSize: '1.2rem', marginBottom: '16px' }}>3. Open Positions Header</h2>
+            <div className="grid grid--2">
+              <div className="field">
+                <label>Section Eyebrow</label>
+                <input
+                  type="text"
+                  className="input"
+                  value={pageContent.positionsEyebrow}
+                  onChange={(e) => updatePageContent({ positionsEyebrow: e.target.value })}
+                />
+              </div>
+              <div className="field">
+                <label>Section Heading</label>
+                <input
+                  type="text"
+                  className="input"
+                  value={pageContent.positionsHeading}
+                  onChange={(e) => updatePageContent({ positionsHeading: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="field" style={{ marginTop: '12px' }}>
+              <label>Section Lead Subtitle</label>
+              <input
+                type="text"
+                className="input"
+                value={pageContent.positionsLead}
+                onChange={(e) => updatePageContent({ positionsLead: e.target.value })}
+              />
+            </div>
+            <p className="muted" style={{ fontSize: '0.85rem', marginTop: '8px' }}>
+              Note: Actual job postings are managed in the <strong>Job Openings</strong> tab with full drag & drop reordering.
+            </p>
+          </div>
+
+          {/* 4. Our Culture (2x2 Bento Photos + Content) */}
+          <div className="card" style={{ padding: '24px' }}>
+            <h2 style={{ fontSize: '1.2rem', marginBottom: '16px' }}>4. Our Culture (Bento Grid & Content)</h2>
+            <div className="grid grid--2">
+              <div className="field">
+                <label>Section Eyebrow</label>
+                <input
+                  type="text"
+                  className="input"
+                  value={pageContent.cultureEyebrow}
+                  onChange={(e) => updatePageContent({ cultureEyebrow: e.target.value })}
+                />
+              </div>
+              <div className="field">
+                <label>Section Heading</label>
+                <input
+                  type="text"
+                  className="input"
+                  value={pageContent.cultureHeading}
+                  onChange={(e) => updatePageContent({ cultureHeading: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="field" style={{ marginTop: '12px' }}>
+              <label>Culture Description</label>
+              <textarea
+                className="input"
+                rows={2}
+                value={pageContent.cultureDescription}
+                onChange={(e) => updatePageContent({ cultureDescription: e.target.value })}
+              />
+            </div>
+            <h4 style={{ fontSize: '0.95rem', marginTop: '16px', marginBottom: '10px' }}>4 Bento Gallery Image URLs</h4>
+            <div className="grid grid--2">
+              {pageContent.culturePhotos.map((photo, idx) => (
+                <div key={idx} className="field">
+                  <label style={{ fontSize: '0.82rem' }}>Photo #{idx + 1}</label>
+                  <input
+                    type="text"
+                    className="input"
+                    value={photo}
+                    onChange={(e) => updateCulturePhoto(idx, e.target.value)}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 5. Benefits & Perks Ribbon (6 Items) */}
+          <div className="card" style={{ padding: '24px' }}>
+            <h2 style={{ fontSize: '1.2rem', marginBottom: '16px' }}>5. Benefits & Perks (Dark Navy Ribbon)</h2>
+            <div className="grid grid--2">
+              <div className="field">
+                <label>Section Eyebrow</label>
+                <input
+                  type="text"
+                  className="input"
+                  value={pageContent.perksEyebrow}
+                  onChange={(e) => updatePageContent({ perksEyebrow: e.target.value })}
+                />
+              </div>
+              <div className="field">
+                <label>Section Heading</label>
+                <input
+                  type="text"
+                  className="input"
+                  value={pageContent.perksHeading}
+                  onChange={(e) => updatePageContent({ perksHeading: e.target.value })}
+                />
+              </div>
+            </div>
+            <h4 style={{ fontSize: '0.95rem', marginTop: '16px', marginBottom: '10px' }}>6 Perks Labels</h4>
+            <div className="grid grid--3">
+              {pageContent.perksList.map((perk, idx) => (
+                <div key={perk.id} className="field">
+                  <label style={{ fontSize: '0.8rem', textTransform: 'capitalize' }}>Perk #{idx + 1} ({perk.icon})</label>
+                  <input
+                    type="text"
+                    className="input"
+                    value={perk.label}
+                    onChange={(e) => updatePerk(idx, e.target.value)}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 6. Bottom Call to Action Banner */}
+          <div className="card" style={{ padding: '24px' }}>
+            <h2 style={{ fontSize: '1.2rem', marginBottom: '16px' }}>6. Bottom Call to Action ("Don't See the Right Fit?")</h2>
             <div className="grid grid--2">
               <div className="field">
                 <label>CTA Title</label>
