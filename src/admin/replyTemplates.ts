@@ -259,6 +259,31 @@ function applicationReply(item: Submission, sender: string) {
   return { subject, body };
 }
 
-export function replyTemplate(collection: 'inquiries' | 'applications', item: Submission, sender: string) {
+/** Subject and plain-text body for replying to a course enrollment request. */
+function enrollmentReply(item: Submission, sender: string) {
+  const firstName = (str(item.fullName) || str(item.name)).split(/\s+/)[0];
+  const course = str(item.courseTitle) || 'our course';
+  const mode = str(item.learningMode);
+  const batch = str(item.preferredBatch);
+
+  const subject = `Your enrollment request: ${course} – ${company.name}`;
+  const body = [
+    `Dear ${firstName || 'Student'},`,
+    '',
+    `Thank you for your interest in ${course} at ${company.name}. We have received your enrollment request${mode ? ` for the ${mode} mode` : ''}${batch ? ` (preferred batch: ${batch})` : ''}.`,
+    '',
+    'Our admissions team will confirm the next available batch, schedule and fee details with you shortly. If you have any questions in the meantime, simply reply to this email.',
+    '',
+    'We look forward to having you with us.',
+    '',
+    signature(sender),
+    ...quoted(str(item.message), item.createdAt),
+  ].join('\n');
+
+  return { subject, body };
+}
+
+export function replyTemplate(collection: 'inquiries' | 'applications' | 'enrollments', item: Submission, sender: string) {
+  if (collection === 'enrollments') return enrollmentReply(item, sender);
   return collection === 'inquiries' ? inquiryReply(item, sender) : applicationReply(item, sender);
 }

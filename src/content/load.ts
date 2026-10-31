@@ -4,6 +4,9 @@ import { pageTextsFromDoc, type PageTexts } from './pages';
 import { aboutDataFromDoc } from './about';
 import type { ClientItem } from '../data/clients';
 import type { Course, CourseCategory, Instructor } from '../data/courses';
+import type { Service } from '../data/services';
+import type { Project } from '../data/portfolio';
+import type { Position } from '../data/careers';
 
 /**
  * Loads published content from Firestore. Returns the built-in defaults when Firebase isn't
@@ -75,9 +78,9 @@ export async function loadContent(): Promise<SiteContent> {
   };
 
   const [services, projects, positions, courses, clients, categories, instructors] = await Promise.all([
-    loadPublished('services'),
-    loadPublished('projects'),
-    loadPublished('positions'),
+    loadPublished('services') as Promise<Service[]>,
+    loadPublished('projects') as Promise<Project[]>,
+    loadPublished('positions') as Promise<Position[]>,
     loadPublished('courses') as Promise<Course[]>,
     loadActive('clients') as Promise<ClientItem[]>,
     loadActive('course_categories') as Promise<CourseCategory[]>,

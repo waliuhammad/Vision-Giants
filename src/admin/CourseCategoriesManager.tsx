@@ -1,11 +1,9 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import {
-  Tag,
   CircleAlert,
   CircleCheck,
   LoaderCircle,
   Plus,
-  Save,
   Trash2,
   X,
   ArrowUp,

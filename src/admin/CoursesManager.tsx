@@ -1,13 +1,10 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import {
-  BookOpen,
   CircleAlert,
   CircleCheck,
   LoaderCircle,
   Plus,
-  Save,
   Trash2,
-  Upload,
   X,
   ArrowUp,
   ArrowDown,
@@ -15,9 +12,6 @@ import {
   MapPin,
   Layers,
   PlayCircle,
-  HelpCircle,
-  ChevronDown,
-  ChevronUp,
 } from 'lucide-react';
 import { getAdminDb, getAdminStorage } from './firebase';
 import {
@@ -27,9 +21,6 @@ import {
   type Course,
   type CourseCategory,
   type Instructor,
-  type CourseModule,
-  type CourseFaq,
-  type LearningMode,
 } from '../data/courses';
 
 const firestore = () => import('firebase/firestore/lite');
@@ -56,8 +47,9 @@ export function CoursesManager() {
   const [projectsStr, setProjectsStr] = useState('');
 
   // Uploading thumbnail
-  const [uploadingThumb, setUploadingThumb] = useState(false);
-  const [thumbError, setThumbError] = useState('');
+  // Not shown in the form yet (see handleThumbnailUpload).
+  const [, setUploadingThumb] = useState(false);
+  const [, setThumbError] = useState('');
 
   useEffect(() => {
     loadAll();
@@ -192,6 +184,8 @@ export function CoursesManager() {
     }
   };
 
+  // Not wired into the form yet: it needs a Cloud Storage bucket, which the Spark plan doesn't have.
+  // @ts-expect-error unused until the thumbnail field is added
   const handleThumbnailUpload = async (file: File) => {
     if (!IMAGE_TYPES.includes(file.type)) {
       setThumbError('Please select a valid image file (PNG, WebP, JPEG).');

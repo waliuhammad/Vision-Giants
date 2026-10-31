@@ -1,17 +1,13 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import {
-  Briefcase,
   CircleAlert,
   CircleCheck,
   LoaderCircle,
   Plus,
-  Save,
   Trash2,
   X,
   ArrowUp,
   ArrowDown,
-  Clock,
-  MapPin,
 } from 'lucide-react';
 import { getAdminDb } from './firebase';
 import { defaultPositions, type Position, type EmploymentType, type WorkArrangement } from '../data/careers';

@@ -1,28 +1,23 @@
 import { useState } from 'react';
 import { useParams, Link, Navigate } from 'react-router';
 import {
-  ArrowLeft,
   ArrowRight,
   BookOpen,
-  Calendar,
   CheckCircle,
   Clock,
-  Compass,
-  FileCheck,
   Globe,
   GraduationCap,
-  HelpCircle,
   Layers,
   MapPin,
   PlayCircle,
   Users,
-  Video,
   ChevronDown,
   ChevronUp,
   ExternalLink,
+  Code,
 } from 'lucide-react';
 import { useContent } from '../content/ContentContext';
-import type { Course, LearningMode } from '../data/courses';
+import type { LearningMode } from '../data/courses';
 import { Button } from '../components/ui/Button';
 import { SectionHeading } from '../components/ui/SectionHeading';
 import { Reveal } from '../components/animations/Reveal';

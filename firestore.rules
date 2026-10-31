@@ -251,6 +251,31 @@ service cloud.firestore {
       allow create, update, delete: if isAdmin();
     }
 
+    // Strategic partners (Admin → Partners, shown on the Home page). Visitors can read active
+    // partners only; the site queries `where active == true`. Limits match src/content/partners.ts.
+    // The logo is a small data: URL stored on the document (the Spark plan has no Storage bucket).
+    function isPartner(d) {
+      return d.keys().hasOnly(['name', 'logo', 'type', 'description', 'details', 'url', 'order', 'active', 'createdAt', 'updatedAt'])
+          && text(d.name, 1, 120)
+          && d.logo is string && d.logo.size() <= 400000
+          && d.logo.split(',')[0] in ['data:image/png;base64', 'data:image/jpeg;base64', 'data:image/webp;base64']
+          && text(d.type, 1, 60)
+          && text(d.description, 0, 300)
+          && text(d.details, 0, 2000)
+          && (d.url == '' || (d.url.size() <= 500 && d.url.matches('^https?://([A-Za-z0-9-]+[.])+[A-Za-z][A-Za-z0-9-]*[A-Za-z0-9](:[0-9]+)?([/?#].*)?$')))
+          && d.order is number
+          && d.active is bool
+          && d.createdAt is timestamp
+          && d.updatedAt == request.time;
+    }
+
+    match /partners/{id} {
+      allow read: if resource.data.active == true || isAdmin();
+      allow create: if isAdmin() && isPartner(request.resource.data) && request.resource.data.createdAt == request.time;
+      allow update: if isAdmin() && isPartner(request.resource.data) && request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if isAdmin();
+    }
+
     // `config/public` tells the website whether to use Firestore content or its built-in defaults.
     match /config/public {
       allow read: if true;

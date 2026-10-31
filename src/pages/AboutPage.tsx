@@ -19,7 +19,6 @@ import {
   Wrench,
   type LucideIcon,
 } from 'lucide-react';
-import { Link } from 'react-router';
 import { useContent } from '../content/ContentContext';
 import { Button } from '../components/ui/Button';
 import { SectionHeading } from '../components/ui/SectionHeading';

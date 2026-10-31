@@ -2,11 +2,9 @@ import { useState, useMemo } from 'react';
 import {
   ArrowRight,
   BookOpen,
-  Calendar,
   CheckCircle,
   Clock,
   Code,
-  Compass,
   FileCheck,
   Globe,
   GraduationCap,
@@ -14,9 +12,7 @@ import {
   MapPin,
   PlayCircle,
   Search,
-  Sparkles,
   Users,
-  Video,
   X,
   ExternalLink,
 } from 'lucide-react';

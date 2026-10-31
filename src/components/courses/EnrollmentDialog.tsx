@@ -5,11 +5,6 @@ import {
   LoaderCircle,
   CircleCheck,
   CircleAlert,
-  GraduationCap,
-  Globe,
-  MapPin,
-  Laptop,
-  BookOpen,
 } from 'lucide-react';
 import { isFirebaseConfigured, submitEnrollment } from '../../config/firebase';
 import type { Course, LearningMode } from '../../data/courses';
