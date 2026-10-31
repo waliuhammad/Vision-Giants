@@ -19,7 +19,6 @@ export interface AboutSectionVisibility {
   whoWeAre: boolean;
   missionVision: boolean;
   values: boolean;
-  expertise: boolean;
   whyChooseUs: boolean;
   team: boolean;
   cta: boolean;
@@ -52,11 +51,6 @@ export interface AboutPageData {
   valuesHeading: string;
   valuesLead?: string;
   valuesList: AboutCoreValue[];
-
-  // 5. Expertise
-  expertiseEyebrow: string;
-  expertiseHeading: string;
-  expertiseLead?: string;
 
   // 6. Why Choose Us
   whyEyebrow: string;
@@ -154,12 +148,6 @@ export const defaultAboutData: AboutPageData = {
     },
   ],
 
-  // 5. Expertise
-  expertiseEyebrow: 'Our Expertise',
-  expertiseHeading: 'Proven Technical Competence Across the Entire Digital Lifecycle',
-  expertiseLead:
-    'We provide comprehensive software engineering services backed by hands-on industry experience and modern architectural patterns.',
-
   // 6. Why Choose Us
   whyEyebrow: 'Why Choose Us',
   whyHeading: 'A Software Engineering Partner You Can Count On',
@@ -221,7 +209,6 @@ export const defaultAboutData: AboutPageData = {
     whoWeAre: true,
     missionVision: true,
     values: true,
-    expertise: true,
     whyChooseUs: true,
     team: true,
     cta: true,
@@ -312,10 +299,6 @@ export function aboutDataFromDoc(data: Record<string, unknown>): AboutPageData {
     valuesLead: str(data.valuesLead) || defaultAboutData.valuesLead,
     valuesList: valuesList.length > 0 ? valuesList : defaultAboutData.valuesList,
 
-    expertiseEyebrow: str(data.expertiseEyebrow) || defaultAboutData.expertiseEyebrow,
-    expertiseHeading: str(data.expertiseHeading) || defaultAboutData.expertiseHeading,
-    expertiseLead: str(data.expertiseLead) || defaultAboutData.expertiseLead,
-
     whyEyebrow: str(data.whyEyebrow) || defaultAboutData.whyEyebrow,
     whyHeading: str(data.whyHeading) || defaultAboutData.whyHeading,
     whyLead: str(data.whyLead) || defaultAboutData.whyLead,
@@ -336,7 +319,6 @@ export function aboutDataFromDoc(data: Record<string, unknown>): AboutPageData {
       whoWeAre: bool(vis.whoWeAre, true),
       missionVision: bool(vis.missionVision, true),
       values: bool(vis.values, true),
-      expertise: bool(vis.expertise, true),
       whyChooseUs: bool(vis.whyChooseUs, true),
       team: bool(vis.team, true),
       cta: bool(vis.cta, true),

@@ -252,7 +252,7 @@ export function AboutPageEditor() {
           <p className="eyebrow">Website Content</p>
           <h1>About Us Page Management</h1>
           <p className="muted">
-            Customize all 8 sections of the About Us page, manage team member profiles, upload images, and toggle section visibility.
+            Customize all 7 sections of the About Us page, manage team member profiles, upload images, and toggle section visibility.
           </p>
         </div>
         <div className="admin-actions">
@@ -558,52 +558,11 @@ export function AboutPageEditor() {
           </div>
         </section>
 
-        {/* 5. Our Expertise */}
-        <section className="card admin-profile__section">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h2>5. Our Expertise (Services Showcase)</h2>
-            <span className={`admin-status admin-status--${data.visibility.expertise ? 'published' : 'draft'}`}>
-              {data.visibility.expertise ? 'Visible' : 'Hidden'}
-            </span>
-          </div>
-          <p className="muted">
-            The Expertise section automatically pulls live services from your Services Catalog. You can edit the introductory headings here.
-          </p>
-          <div className="field">
-            <label htmlFor="exp-eyebrow">Eyebrow</label>
-            <input
-              id="exp-eyebrow"
-              className="input"
-              value={data.expertiseEyebrow}
-              onChange={(e) => update({ expertiseEyebrow: e.target.value })}
-            />
-          </div>
-          <div className="field">
-            <label htmlFor="exp-heading">Heading</label>
-            <input
-              id="exp-heading"
-              className="input"
-              value={data.expertiseHeading}
-              onChange={(e) => update({ expertiseHeading: e.target.value })}
-            />
-          </div>
-          <div className="field">
-            <label htmlFor="exp-lead">Lead Description</label>
-            <textarea
-              id="exp-lead"
-              className="input"
-              rows={2}
-              value={data.expertiseLead || ''}
-              onChange={(e) => update({ expertiseLead: e.target.value })}
-            />
-          </div>
-        </section>
-
-        {/* 6. Why Choose Us */}
+        {/* 5. Why Choose Us */}
         <section className="card admin-profile__section">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
-              <h2>6. Why Choose Us</h2>
+              <h2>5. Why Choose Us</h2>
               <p className="muted" style={{ margin: '4px 0 0' }}>Client value propositions and differentiators.</p>
             </div>
             <button type="button" className="btn btn--outline btn--sm" onClick={addWhy}>
@@ -665,11 +624,11 @@ export function AboutPageEditor() {
           </div>
         </section>
 
-        {/* 7. Team Members CRUD */}
+        {/* 6. Team Members CRUD */}
         <section className="card admin-profile__section">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
-              <h2>7. Our Team Members</h2>
+              <h2>6. Our Team Members</h2>
               <p className="muted" style={{ margin: '4px 0 0' }}>Manage the team profiles, photos, bios, and social links.</p>
             </div>
             <button type="button" className="btn btn--outline btn--sm" onClick={addTeamMember}>
@@ -820,10 +779,10 @@ export function AboutPageEditor() {
           </div>
         </section>
 
-        {/* 8. Final Call to Action */}
+        {/* 7. Final Call to Action */}
         <section className="card admin-profile__section">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h2>8. Final Call to Action</h2>
+            <h2>7. Final Call to Action</h2>
             <span className={`admin-status admin-status--${data.visibility.cta ? 'published' : 'draft'}`}>
               {data.visibility.cta ? 'Visible' : 'Hidden'}
             </span>

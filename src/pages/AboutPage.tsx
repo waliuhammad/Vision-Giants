@@ -21,7 +21,6 @@ import { Link } from 'react-router';
 import { useContent } from '../content/ContentContext';
 import { Button } from '../components/ui/Button';
 import { SectionHeading } from '../components/ui/SectionHeading';
-import { ServiceCard } from '../components/ui/ServiceCard';
 import { TeamCard } from '../components/ui/TeamCard';
 import { Reveal } from '../components/animations/Reveal';
 import { CubeVisual } from '../components/visuals/IsoVisuals';
@@ -51,7 +50,7 @@ function getIcon(name?: string, fallback: LucideIcon = Star): LucideIcon {
 }
 
 export default function AboutPage() {
-  const { about, services } = useContent();
+  const { about } = useContent();
   const { visibility } = about;
 
   return (
@@ -213,35 +212,9 @@ export default function AboutPage() {
         </section>
       )}
 
-      {/* 5. OUR EXPERTISE */}
-      {visibility.expertise && (
-        <section className="section section--alt" aria-labelledby="expertise-title">
-          <div className="container">
-            <SectionHeading
-              id="expertise-title"
-              eyebrow={about.expertiseEyebrow}
-              title={about.expertiseHeading}
-              lead={about.expertiseLead}
-              aside={
-                <Button to="/services/" variant="outline" icon={<ArrowRight size={16} />}>
-                  All Services
-                </Button>
-              }
-            />
-            <div className="grid grid--3">
-              {services.slice(0, 6).map((service, i) => (
-                <Reveal key={service.id} delay={(i % 3) * 80}>
-                  <ServiceCard service={service} />
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* 6. WHY CHOOSE US */}
+      {/* 5. WHY CHOOSE US */}
       {visibility.whyChooseUs && (
-        <section className="section" aria-labelledby="why-title">
+        <section className="section section--alt" aria-labelledby="why-title">
           <div className="container">
             <SectionHeading
               id="why-title"
@@ -270,9 +243,9 @@ export default function AboutPage() {
         </section>
       )}
 
-      {/* 7. OUR TEAM */}
+      {/* 6. OUR TEAM */}
       {visibility.team && about.teamMembers.length > 0 && (
-        <section className="section section--alt" aria-labelledby="team-title">
+        <section className="section" aria-labelledby="team-title">
           <div className="container">
             <SectionHeading
               id="team-title"
@@ -296,7 +269,7 @@ export default function AboutPage() {
         </section>
       )}
 
-      {/* 8. FINAL CALL TO ACTION */}
+      {/* 7. FINAL CALL TO ACTION */}
       {visibility.cta && (
         <section className="section section--tight" aria-labelledby="cta-title">
           <div className="container">
