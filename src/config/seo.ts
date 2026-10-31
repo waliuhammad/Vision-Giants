@@ -25,12 +25,6 @@ export const pages: PageMeta[] = [
       'End-to-end digital services: web development, mobile applications, custom software, e-commerce, UI/UX design and cloud integrations.',
   },
   {
-    path: '/portfolio/',
-    title: `Portfolio | Company Profile | ${company.name}`,
-    description:
-      'Our company profile: who we are, what we do, our mission and vision, certifications and honours.',
-  },
-  {
     path: '/about/',
     title: `About Us | Our Mission, Values & Process | ${company.name}`,
     description:

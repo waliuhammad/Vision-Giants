@@ -6,10 +6,10 @@ import { LoginPage } from './LoginPage';
 import { AdminLayout } from './AdminLayout';
 import { SubmissionsPage } from './SubmissionsPage';
 import { ContentPage } from './ContentPage';
-import { ProfilePage } from './ProfilePage';
+import { AboutPageEditor } from './AboutPageEditor';
 import { SitePagesList, SitePageEditor } from './SitePages';
 import { inquiriesConfig, applicationsConfig } from './submissionsConfig';
-import { projectsConfig, servicesConfig, positionsConfig } from './contentConfig';
+import { servicesConfig, positionsConfig } from './contentConfig';
 import './admin.css';
 
 export default function AdminApp() {
@@ -60,10 +60,9 @@ function AuthGate() {
         <Route index element={<Navigate to="inquiries" replace />} />
         <Route path="inquiries" element={<SubmissionsPage key="inquiries" config={inquiriesConfig} />} />
         <Route path="applications" element={<SubmissionsPage key="applications" config={applicationsConfig} />} />
+        <Route path="about-page" element={<AboutPageEditor />} />
         <Route path="pages" element={<SitePagesList />} />
         <Route path="pages/:id" element={<SitePageEditor />} />
-        <Route path="portfolio-page" element={<ProfilePage />} />
-        <Route path="projects" element={<ContentPage key="projects" config={projectsConfig} />} />
         <Route path="services" element={<ContentPage key="services" config={servicesConfig} />} />
         <Route path="positions" element={<ContentPage key="positions" config={positionsConfig} />} />
         <Route path="*" element={<Navigate to="/admin/inquiries" replace />} />

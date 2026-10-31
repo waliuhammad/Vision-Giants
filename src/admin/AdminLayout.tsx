@@ -4,9 +4,8 @@ import type { User } from 'firebase/auth';
 import {
   Inbox,
   FileUser,
-  FolderKanban,
-  BookUser,
   FileText,
+  UserCheck,
   Layers,
   Briefcase,
   LogOut,
@@ -35,9 +34,8 @@ const nav = [
   {
     group: 'Website content',
     items: [
+      { to: '/admin/about-page', label: 'About Us page', icon: UserCheck },
       { to: '/admin/pages', label: 'Site pages', icon: FileText },
-      { to: '/admin/portfolio-page', label: 'Portfolio page', icon: BookUser },
-      { to: '/admin/projects', label: 'Projects', icon: FolderKanban },
       { to: '/admin/services', label: 'Services', icon: Layers },
       { to: '/admin/positions', label: 'Open positions', icon: Briefcase },
     ],

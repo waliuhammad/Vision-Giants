@@ -1,8 +1,7 @@
-import { Routes, Route } from 'react-router';
+import { Routes, Route, Navigate } from 'react-router';
 import HomePage from '../pages/HomePage';
 import ServicesPage from '../pages/ServicesPage';
 import ServiceDetailPage from '../pages/ServiceDetailPage';
-import PortfolioPage from '../pages/PortfolioPage';
 import AboutPage from '../pages/AboutPage';
 import TechnologiesPage from '../pages/TechnologiesPage';
 import TeamPage from '../pages/TeamPage';
@@ -20,7 +19,9 @@ export function AppRoutes() {
       <Route path="/" element={<HomePage />} />
       <Route path="/services" element={<ServicesPage />} />
       <Route path="/services/:slug" element={<ServiceDetailPage />} />
-      <Route path="/portfolio" element={<PortfolioPage />} />
+      {/* Permanent client-side redirect for old /portfolio URLs */}
+      <Route path="/portfolio" element={<Navigate to="/" replace />} />
+      <Route path="/portfolio/*" element={<Navigate to="/" replace />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/team" element={<TeamPage />} />
       <Route path="/blog" element={<BlogPage />} />

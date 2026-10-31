@@ -98,44 +98,6 @@ export const pageDefs: PageDef[] = [
     ],
   },
   {
-    id: 'about',
-    title: 'About',
-    path: '/about/',
-    sections: [
-      hero(
-        'About us',
-        'Turning Ideas into Exceptional Digital Products.',
-        'We are a team of developers, designers and problem-solvers focused on building digital products that create real value for the businesses and people who use them.',
-      ),
-      {
-        title: 'Who we are section',
-        fields: [
-          { key: 'introEyebrow', label: 'Small label', default: 'Who we are' },
-          { key: 'introTitle', label: 'Heading', default: 'Design and engineering under one roof' },
-        ],
-      },
-      {
-        title: 'Values section',
-        fields: [
-          { key: 'valuesEyebrow', label: 'Small label', default: 'Our values' },
-          { key: 'valuesTitle', label: 'Heading', default: 'What guides our work' },
-        ],
-      },
-      heading('approach', 'Approach section', 'Our approach', 'How we think about building software', 'Principles that shape every project, whatever its size.'),
-      heading(
-        'process',
-        'Process section',
-        'Our process',
-        'A simple, transparent process',
-        'We follow a clear process to turn your ideas into successful digital products.',
-      ),
-      cta(
-        'Let’s build something meaningful together.',
-        'Tell us what you want to build. We’ll help you shape the scope, choose the right technology and plan a clear path to launch.',
-      ),
-    ],
-  },
-  {
     id: 'services',
     title: 'Services',
     path: '/services/',

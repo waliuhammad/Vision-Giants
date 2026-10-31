@@ -1,6 +1,7 @@
 import { getDb, isFirebaseConfigured } from '../config/firebase';
-import { defaultContent, fromDoc, profileFromDoc, type ContentCollection, type SiteContent } from './schema';
+import { defaultContent, fromDoc, type ContentCollection, type SiteContent } from './schema';
 import { pageTextsFromDoc, type PageTexts } from './pages';
+import { aboutDataFromDoc } from './about';
 
 /**
  * Loads published content from Firestore. Returns the built-in defaults when Firebase isn't
@@ -16,21 +17,24 @@ export async function loadContent(): Promise<SiteContent> {
     import('firebase/firestore/lite'),
   ]);
 
-  // Page text (the `pages` collection, including the Portfolio profile) is saved independently of
-  // the collections, so it's loaded either way. A failed read keeps the built-in text rather than
-  // breaking the build.
+  // Page text (the `pages` collection) is loaded independently of the collections.
   const [config, pageDocs] = await Promise.all([
     getDoc(doc(db, 'config', 'public')),
     getDocs(collection(db, 'pages'))
       .then((snap) => snap.docs)
       .catch(() => []),
   ]);
-  const portfolio = pageDocs.find((d) => d.id === 'portfolio');
-  const profile = portfolio ? profileFromDoc(portfolio.data()) : defaultContent.profile;
+
+  const aboutDoc = pageDocs.find((d) => d.id === 'about');
+  const about = aboutDoc ? aboutDataFromDoc(aboutDoc.data()) : defaultContent.about;
+
   const pages: PageTexts = Object.fromEntries(
-    pageDocs.filter((d) => d.id !== 'portfolio').map((d) => [d.id, pageTextsFromDoc(d.id, d.data())]),
+    pageDocs
+      .filter((d) => d.id !== 'portfolio')
+      .map((d) => [d.id, pageTextsFromDoc(d.id, d.data())]),
   );
-  if (config.get('contentManaged') !== true) return { ...defaultContent, profile, pages };
+
+  if (config.get('contentManaged') !== true) return { ...defaultContent, about, pages };
 
   const load = async <K extends ContentCollection>(name: K): Promise<SiteContent[K]> => {
     const snap = await getDocs(query(collection(db, name), where('published', '==', true)));
@@ -40,5 +44,5 @@ export async function loadContent(): Promise<SiteContent> {
       .map((x) => x.item) as SiteContent[K];
   };
   const [services, projects, positions] = await Promise.all([load('services'), load('projects'), load('positions')]);
-  return { services, projects, positions, profile, pages };
+  return { services, projects, positions, about, pages };
 }

@@ -17,10 +17,21 @@ export function SitePagesList() {
         </div>
       </header>
       <p className="muted admin-pages__intro">
-        Edit the headings and intro text on each page. Lists such as projects, services and open positions are edited in
-        their own sections, and the Portfolio page has its own editor.
+        Edit the headings and intro text on each page. Services and open positions are edited in their own sections, and the About Us page has its dedicated editor with team member management.
       </p>
       <ul className="admin-pages">
+        <li>
+          <Link to="/admin/about-page" className="card admin-pages__item" style={{ borderLeft: '3px solid var(--color-primary)' }}>
+            <span className="icon-wrap" aria-hidden="true">
+              <FileText size={18} />
+            </span>
+            <span className="admin-pages__text">
+              <strong>About Us (Full Management)</strong>
+              <small>/about/ · Hero, Who We Are, Mission & Vision, Core Values, Why Choose Us, Team CRUD & CTA</small>
+            </span>
+            <ChevronRight size={18} aria-hidden="true" />
+          </Link>
+        </li>
         {pageDefs.map((p) => (
           <li key={p.id}>
             <Link to={`/admin/pages/${p.id}`} className="card admin-pages__item">
@@ -37,18 +48,6 @@ export function SitePagesList() {
             </Link>
           </li>
         ))}
-        <li>
-          <Link to="/admin/portfolio-page" className="card admin-pages__item">
-            <span className="icon-wrap" aria-hidden="true">
-              <FileText size={18} />
-            </span>
-            <span className="admin-pages__text">
-              <strong>Portfolio</strong>
-              <small>/portfolio/ · company profile, certifications and honours</small>
-            </span>
-            <ChevronRight size={18} aria-hidden="true" />
-          </Link>
-        </li>
       </ul>
     </div>
   );

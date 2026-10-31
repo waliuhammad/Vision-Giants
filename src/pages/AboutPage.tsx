@@ -1,148 +1,324 @@
-import { ArrowRight, Lightbulb, Users, ShieldCheck, TrendingUp, Target, Eye, Search, Repeat, Wrench, MessageSquare } from 'lucide-react';
-import { company } from '../data/company';
-import { PageHero } from '../components/ui/PageHero';
+import {
+  ArrowRight,
+  Award,
+  CheckCircle,
+  Clock,
+  Code,
+  Cpu,
+  HeartHandshake,
+  Lightbulb,
+  MessageSquare,
+  ShieldCheck,
+  Star,
+  Target,
+  Eye,
+  TrendingUp,
+  Users,
+  Wrench,
+  type LucideIcon,
+} from 'lucide-react';
+import { Link } from 'react-router';
+import { useContent } from '../content/ContentContext';
 import { Button } from '../components/ui/Button';
 import { SectionHeading } from '../components/ui/SectionHeading';
-import { ProcessTimeline } from '../components/ui/ProcessTimeline';
-import { CTASection } from '../components/ui/CTASection';
+import { ServiceCard } from '../components/ui/ServiceCard';
+import { TeamCard } from '../components/ui/TeamCard';
 import { Reveal } from '../components/animations/Reveal';
 import { CubeVisual } from '../components/visuals/IsoVisuals';
-import { usePageText } from '../content/ContentContext';
+import { Highlight } from '../components/ui/Highlight';
 
-const values = [
-  { icon: Lightbulb, title: 'Innovation', text: 'We explore new technologies and ideas, and adopt them when they genuinely serve the product.' },
-  { icon: Users, title: 'Collaboration', text: 'We work closely with clients at every step, treating your goals as our own.' },
-  { icon: ShieldCheck, title: 'Quality', text: 'We build products that are reliable, accessible, secure and maintainable.' },
-  { icon: TrendingUp, title: 'Growth', text: 'We keep learning as a team and build software that helps our clients grow.' },
-];
+const iconMap: Record<string, LucideIcon> = {
+  lightbulb: Lightbulb,
+  'shield-check': ShieldCheck,
+  'check-circle': CheckCircle,
+  users: Users,
+  'heart-handshake': HeartHandshake,
+  'trending-up': TrendingUp,
+  code: Code,
+  award: Award,
+  cpu: Cpu,
+  'message-square': MessageSquare,
+  clock: Clock,
+  wrench: Wrench,
+  star: Star,
+  target: Target,
+  eye: Eye,
+};
 
-const approach = [
-  { icon: Search, title: 'Start with the problem', text: 'We understand the business need and the people we are building for before choosing solutions.' },
-  { icon: Repeat, title: 'Build in iterations', text: 'Small, frequent releases let us validate decisions early and adapt quickly.' },
-  { icon: Wrench, title: 'Engineer for the long term', text: 'Clear structure, documentation and testing keep products maintainable as they grow.' },
-  { icon: MessageSquare, title: 'Communicate openly', text: 'Regular updates and honest conversations about scope, risks and trade-offs.' },
-];
+function getIcon(name?: string, fallback: LucideIcon = Star): LucideIcon {
+  if (!name) return fallback;
+  return iconMap[name.toLowerCase()] ?? fallback;
+}
 
 export default function AboutPage() {
-  const t = usePageText('about');
+  const { about, services } = useContent();
+  const { visibility } = about;
+
   return (
     <>
-      <PageHero
-        crumb="About"
-        eyebrow={t('heroEyebrow')}
-        title={t('heroTitle')}
-        lead={t('heroLead')}
-        actions={
-          <Button to="/contact/" icon={<ArrowRight size={18} />}>
-            Work With Us
-          </Button>
-        }
-        visual={<CubeVisual />}
-      />
+      {/* 1. HERO SECTION */}
+      {visibility.hero && (
+        <section className="page-hero about-hero" aria-labelledby="about-hero-title">
+          <div className="bg-grid" aria-hidden="true" />
+          <div className="container">
+            <nav className="breadcrumbs enter" aria-label="Breadcrumb">
+              <ol>
+                <li>
+                  <Link to="/">Home</Link>
+                </li>
+                <li aria-current="page">About</li>
+              </ol>
+            </nav>
 
-      <section className="section section--tight" aria-labelledby="intro-title">
-        <div className="container intro-grid">
-          <Reveal>
-            <p className="eyebrow">{t('introEyebrow')}</p>
-            <h2 id="intro-title">{t('introTitle')}</h2>
-            <div className="prose" style={{ marginTop: 'var(--space-5)' }}>
-              <p>
-                {company.name} is a software house that helps businesses turn ideas into dependable digital products.
-                We bring strategy, design and development together so that what gets built is useful, usable and
-                technically sound.
-              </p>
-              <p>
-                Whether you need a new web application, a mobile app or custom software for your team, we work
-                alongside you from discovery to launch, and we care about the details that make products feel right.
-              </p>
+            <div className="page-hero__grid">
+              <div className="page-hero__copy enter">
+                <p className="eyebrow">{about.heroEyebrow}</p>
+                <h1 id="about-hero-title">
+                  <Highlight text={about.heroHeadline} />
+                </h1>
+                <p className="lead">{about.heroDescription}</p>
+                <div className="page-hero__actions">
+                  <Button to={about.heroCtaLink} icon={<ArrowRight size={18} />}>
+                    {about.heroCtaText}
+                  </Button>
+                  <Button to="/services/" variant="outline">
+                    Explore Services
+                  </Button>
+                </div>
+              </div>
+
+              <div className="page-hero__visual enter" aria-hidden="true">
+                {about.heroImage ? (
+                  <div className="about-hero__custom-image-wrap">
+                    <img
+                      src={about.heroImage}
+                      alt={about.heroImageAlt || 'Vision Giants team'}
+                      className="about-hero__custom-image"
+                    />
+                  </div>
+                ) : (
+                  <CubeVisual />
+                )}
+              </div>
             </div>
-          </Reveal>
-          <div className="grid">
-            <Reveal delay={80}>
-              <article className="card feature">
-                <span className="icon-wrap" aria-hidden="true">
-                  <Target size={22} />
-                </span>
-                <div>
-                  <h3>Our mission</h3>
-                  <p>To help businesses grow with well-crafted software that solves real problems and is a pleasure to use.</p>
-                </div>
-              </article>
-            </Reveal>
-            <Reveal delay={160}>
-              <article className="card feature">
-                <span className="icon-wrap" aria-hidden="true">
-                  <Eye size={22} />
-                </span>
-                <div>
-                  <h3>Our vision</h3>
-                  <p>To be a trusted technology partner known for thoughtful engineering, clear communication and lasting quality.</p>
-                </div>
-              </article>
-            </Reveal>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      <section className="section section--alt" aria-labelledby="values-title">
-        <div className="container">
-          <SectionHeading id="values-title" eyebrow={t('valuesEyebrow')} title={t('valuesTitle')} align="center" />
-          <div className="grid grid--4">
-            {values.map(({ icon: Icon, title, text }, i) => (
-              <Reveal key={title} delay={i * 80}>
-                <article className="card card--interactive" style={{ height: '100%' }}>
-                  <span className="icon-wrap" aria-hidden="true">
-                    <Icon size={22} />
-                  </span>
-                  <h3>{title}</h3>
-                  <p>{text}</p>
-                </article>
+      {/* 2. WHO WE ARE */}
+      {visibility.whoWeAre && (
+        <section className="section section--tight" aria-labelledby="who-title">
+          <div className="container">
+            <div className="intro-grid">
+              <Reveal>
+                <p className="eyebrow">{about.whoWeAreEyebrow}</p>
+                <h2 id="who-title">
+                  <Highlight text={about.whoWeAreHeading} />
+                </h2>
+                <div className="prose" style={{ marginTop: 'var(--space-4)' }}>
+                  {about.whoWeAreText.split('\n\n').map((paragraph, idx) => (
+                    <p key={idx}>{paragraph}</p>
+                  ))}
+                </div>
               </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      <section className="section" aria-labelledby="approach-title">
-        <div className="container">
-          <SectionHeading
-            id="approach-title"
-            eyebrow={t('approachEyebrow')}
-            title={t('approachTitle')}
-            lead={t('approachLead')}
-          />
-          <div className="grid grid--2">
-            {approach.map(({ icon: Icon, title, text }, i) => (
-              <Reveal key={title} delay={(i % 2) * 80}>
-                <article className="card feature" style={{ height: '100%' }}>
+              <Reveal delay={120}>
+                <div className="card about-highlights-card">
+                  <h3 className="about-highlights-card__title">How We Deliver Value</h3>
+                  <ul className="about-highlights-list">
+                    {(about.whoWeAreBullets || []).map((bullet, idx) => (
+                      <li key={idx} className="about-highlights-list__item">
+                        <span className="icon-wrap" aria-hidden="true">
+                          <CheckCircle size={18} />
+                        </span>
+                        <span>{bullet}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </Reveal>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 3. MISSION & VISION */}
+      {visibility.missionVision && (
+        <section className="section section--alt" aria-labelledby="mission-vision-title">
+          <div className="container">
+            <SectionHeading
+              id="mission-vision-title"
+              eyebrow="Purpose & Direction"
+              title="Driven by Purpose, Guided by Vision"
+              lead="Our compass for client success and sustainable engineering excellence."
+              align="center"
+            />
+            <div className="grid grid--2 about-mission-grid">
+              <Reveal delay={80}>
+                <article className="card feature about-mission-card">
                   <span className="icon-wrap" aria-hidden="true">
-                    <Icon size={22} />
+                    <Target size={26} />
                   </span>
                   <div>
-                    <h3>{title}</h3>
-                    <p>{text}</p>
+                    <h3 className="about-mission-card__heading">{about.missionHeading}</h3>
+                    <p className="about-mission-card__text">{about.missionText}</p>
                   </div>
                 </article>
               </Reveal>
-            ))}
+
+              <Reveal delay={160}>
+                <article className="card feature about-mission-card">
+                  <span className="icon-wrap" aria-hidden="true">
+                    <Eye size={26} />
+                  </span>
+                  <div>
+                    <h3 className="about-mission-card__heading">{about.visionHeading}</h3>
+                    <p className="about-mission-card__text">{about.visionText}</p>
+                  </div>
+                </article>
+              </Reveal>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      <section className="section section--alt" aria-labelledby="process-title">
-        <div className="container">
-          <SectionHeading
-            id="process-title"
-            eyebrow={t('processEyebrow')}
-            title={t('processTitle')}
-            lead={t('processLead')}
-            align="center"
-          />
-          <ProcessTimeline />
-        </div>
-      </section>
+      {/* 4. OUR CORE VALUES */}
+      {visibility.values && (
+        <section className="section" aria-labelledby="values-title">
+          <div className="container">
+            <SectionHeading
+              id="values-title"
+              eyebrow={about.valuesEyebrow}
+              title={about.valuesHeading}
+              lead={about.valuesLead}
+              align="center"
+            />
+            <div className="grid grid--3">
+              {about.valuesList.map((val, i) => {
+                const Icon = getIcon(val.icon, Star);
+                return (
+                  <Reveal key={val.id || val.title} delay={(i % 3) * 80}>
+                    <article className="card card--interactive about-value-card" style={{ height: '100%' }}>
+                      <span className="icon-wrap" aria-hidden="true">
+                        <Icon size={22} />
+                      </span>
+                      <h3>{val.title}</h3>
+                      <p>{val.description}</p>
+                    </article>
+                  </Reveal>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
 
-      <CTASection title={t('ctaTitle')} text={t('ctaText')} />
+      {/* 5. OUR EXPERTISE */}
+      {visibility.expertise && (
+        <section className="section section--alt" aria-labelledby="expertise-title">
+          <div className="container">
+            <SectionHeading
+              id="expertise-title"
+              eyebrow={about.expertiseEyebrow}
+              title={about.expertiseHeading}
+              lead={about.expertiseLead}
+              aside={
+                <Button to="/services/" variant="outline" icon={<ArrowRight size={16} />}>
+                  All Services
+                </Button>
+              }
+            />
+            <div className="grid grid--3">
+              {services.slice(0, 6).map((service, i) => (
+                <Reveal key={service.id} delay={(i % 3) * 80}>
+                  <ServiceCard service={service} />
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 6. WHY CHOOSE US */}
+      {visibility.whyChooseUs && (
+        <section className="section" aria-labelledby="why-title">
+          <div className="container">
+            <SectionHeading
+              id="why-title"
+              eyebrow={about.whyEyebrow}
+              title={about.whyHeading}
+              lead={about.whyLead}
+              align="center"
+            />
+            <div className="grid grid--3">
+              {about.whyList.map((reason, i) => {
+                const Icon = getIcon(reason.icon, CheckCircle);
+                return (
+                  <Reveal key={reason.id || reason.title} delay={(i % 3) * 80}>
+                    <article className="card card--interactive about-why-card" style={{ height: '100%' }}>
+                      <span className="icon-wrap" aria-hidden="true">
+                        <Icon size={22} />
+                      </span>
+                      <h3>{reason.title}</h3>
+                      <p>{reason.description}</p>
+                    </article>
+                  </Reveal>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 7. OUR TEAM */}
+      {visibility.team && about.teamMembers.length > 0 && (
+        <section className="section section--alt" aria-labelledby="team-title">
+          <div className="container">
+            <SectionHeading
+              id="team-title"
+              eyebrow={about.teamEyebrow}
+              title={about.teamHeading}
+              lead={about.teamLead}
+              aside={
+                <Button to="/team/" variant="outline" icon={<ArrowRight size={16} />}>
+                  Meet Full Team
+                </Button>
+              }
+            />
+            <div className="grid grid--4">
+              {about.teamMembers.slice(0, 8).map((member, i) => (
+                <Reveal key={member.id || member.name} delay={(i % 4) * 80}>
+                  <TeamCard member={member} />
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 8. FINAL CALL TO ACTION */}
+      {visibility.cta && (
+        <section className="section section--tight" aria-labelledby="cta-title">
+          <div className="container">
+            <Reveal className="cta">
+              <div>
+                <h2 id="cta-title">
+                  <Highlight text={about.ctaHeading} />
+                </h2>
+                <p>{about.ctaDescription}</p>
+              </div>
+              <div className="cta__actions">
+                <Button to={about.ctaButtonLink} icon={<ArrowRight size={18} />}>
+                  {about.ctaButtonText}
+                </Button>
+                <Button to="/services/" variant="outline">
+                  Our Services
+                </Button>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+      )}
     </>
   );
 }

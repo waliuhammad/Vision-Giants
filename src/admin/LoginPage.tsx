@@ -24,8 +24,8 @@ type Mode = 'signin' | 'reset';
 /** What the dashboard manages, shown beside the form. */
 const highlights = [
   { icon: Inbox, title: 'Inquiries & applications', text: 'Review project inquiries and job applications in one place.' },
-  { icon: FolderKanban, title: 'Projects, services & roles', text: 'Publish and reorder the content shown on the website.' },
-  { icon: LayoutTemplate, title: 'Portfolio page', text: 'Edit the company profile, certifications and honours.' },
+  { icon: FolderKanban, title: 'Services & career positions', text: 'Publish and reorder the services and jobs shown on the website.' },
+  { icon: LayoutTemplate, title: 'About Us page & site pages', text: 'Manage team members, core values, mission, vision, and site copy.' },
 ];
 
 /**

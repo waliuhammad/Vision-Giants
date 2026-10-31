@@ -2,21 +2,27 @@ import { services, serviceIcons, type Service, type ServiceIconName } from '../d
 import { projects, categoryLabels, previewKinds, type Project, type ProjectCategory, type PreviewKind } from '../data/portfolio';
 import { openPositions, type Position } from '../data/careers';
 import type { PageTexts } from './pages';
-import { defaultProfile, type CompanyProfile, type ProfileAward, type ProfileFact } from '../data/profile';
+import { defaultAboutData, type AboutPageData } from './about';
 
 /** Content that can be managed from the admin dashboard. */
 export interface SiteContent {
   services: Service[];
   projects: Project[];
   positions: Position[];
-  /** Company profile on the Portfolio page (a single document, not a collection). */
-  profile: CompanyProfile;
+  /** Dedicated About Us page data model with full section management & team CRUD. */
+  about: AboutPageData;
   /** Edited page text from Admin → Site pages; missing fields use the defaults in ./pages.ts. */
   pages: PageTexts;
 }
 
 /** Built-in content from src/data, used until content is imported into Firestore. */
-export const defaultContent: SiteContent = { services, projects, positions: openPositions, profile: defaultProfile, pages: {} };
+export const defaultContent: SiteContent = {
+  services,
+  projects,
+  positions: openPositions,
+  about: defaultAboutData,
+  pages: {},
+};
 
 export type ContentCollection = 'services' | 'projects' | 'positions';
 
@@ -64,30 +70,3 @@ export const fromDoc = {
     ...(str(d.description) ? { description: str(d.description) } : {}),
   }),
 } satisfies { [K in ContentCollection]: (id: string, d: Data) => SiteContent[K][number] };
-
-const records = (v: unknown): Data[] =>
-  Array.isArray(v) ? v.filter((x): x is Data => typeof x === 'object' && x !== null) : [];
-
-const awards = (v: unknown): ProfileAward[] =>
-  records(v)
-    .map((a) => ({ title: str(a.title), issuer: str(a.issuer), year: str(a.year), ...(a.placeholder === true ? { placeholder: true } : {}) }))
-    .filter((a) => a.title);
-
-/** Converts the `pages/portfolio` document; missing text fields fall back to the built-in profile. */
-export function profileFromDoc(d: Data): CompanyProfile {
-  const text = (key: keyof CompanyProfile) => str(d[key]) || (defaultProfile[key] as string);
-  return {
-    bio: text('bio'),
-    introTitle: text('introTitle'),
-    introText: text('introText'),
-    facts: records(d.facts)
-      .map((f): ProfileFact => ({ label: str(f.label), value: str(f.value) }))
-      .filter((f) => f.label && f.value),
-    whoWeAre: text('whoWeAre'),
-    whatWeDo: text('whatWeDo'),
-    mission: text('mission'),
-    vision: text('vision'),
-    certifications: awards(d.certifications),
-    honours: awards(d.honours),
-  };
-}
