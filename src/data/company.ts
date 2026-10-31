@@ -12,7 +12,7 @@ export interface Company {
   tagline: string;
   description: string;
   email: string | null;
-  /** Contact numbers as displayed, in local format (e.g. 0308 0058600). Empty to hide. */
+  /** Contact numbers as displayed, with country code (e.g. +92 308 0058600). Empty to hide. */
   phones: string[];
   address: string | null;
   /** `placeholder` links are shown but left out of search-engine data until replaced. */
@@ -27,7 +27,7 @@ export const company: Company = {
   description:
     'We design and develop web applications, mobile apps and custom software that help businesses work better and grow.',
   email: null,
-  phones: ['0308 0058600', '0317 6572690'],
+  phones: ['+92 308 0058600', '+92 317 6572690'],
   address: 'Vision Giants, Near Zavia School, Gulgasht, Multan, Pakistan',
   // WhatsApp format: https://wa.me/923001234567 (country code + number, digits only).
   social: [
@@ -38,7 +38,7 @@ export const company: Company = {
   ],
 };
 
-/** tel: link for a Pakistani number in local format: "0308 0058600" -> "tel:+923080058600". */
+/** tel: link for a number with or without the leading 0: "+92 308 0058600" -> "tel:+923080058600". */
 export const telHref = (phone: string) => {
   const digits = phone.replace(/\D/g, '');
   return `tel:${digits.startsWith('0') ? `+92${digits.slice(1)}` : `+${digits}`}`;
