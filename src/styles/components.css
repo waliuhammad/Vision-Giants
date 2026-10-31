@@ -3374,7 +3374,8 @@ select.input {
 
 /* ── 3. OPEN POSITIONS ── */
 .crp-positions-section {
-  padding: var(--space-10) 0;
+  padding: var(--space-10) 0 var(--space-10);
+  margin-bottom: var(--space-4);
   background: var(--color-surface-2);
 }
 
@@ -3544,7 +3545,7 @@ select.input {
 
 /* ── 4. OUR CULTURE ── */
 .crp-culture-section {
-  padding: var(--space-10) 0;
+  padding: clamp(var(--space-8), 6vw, var(--space-10)) 0;
   background: var(--color-background);
 }
 
