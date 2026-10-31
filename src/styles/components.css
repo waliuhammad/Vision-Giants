@@ -4428,12 +4428,13 @@ select.input {
   background-color: #070e1c;
   color: #ffffff;
   overflow: hidden;
-  /* Fit within a single view without scrolling on desktop */
-  min-height: calc(100vh - 72px);
-  max-height: 920px;
+  /* Exactly 100vh full screen view */
+  min-height: 100vh;
+  height: 100vh;
   display: flex;
   align-items: center;
-  padding: var(--space-4) 0;
+  padding-top: calc(var(--header-h) + 8px);
+  padding-bottom: 24px;
   box-sizing: border-box;
 }
 
