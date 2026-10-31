@@ -60,7 +60,7 @@ export function HeroParticles() {
           const size = Math.max(0.5, 1.5 * depth);
           // Crests are brighter than troughs, distant dots fade out.
           const alpha = Math.min(0.5, (0.14 + (y + 40) / 160) * fade * 0.8);
-          ctx.fillStyle = `rgba(37, 99, 235, ${alpha.toFixed(3)})`;
+          ctx.fillStyle = `rgba(44, 67, 119, ${alpha.toFixed(3)})`;
           ctx.beginPath();
           ctx.arc(sx, sy, size, 0, Math.PI * 2);
           ctx.fill();

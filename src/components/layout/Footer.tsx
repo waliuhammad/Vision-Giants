@@ -177,7 +177,7 @@ const footerStyles = `
 }
 .site-footer a:not(.btn):hover,
 .site-footer a:not(.btn):focus-visible {
-  color: #8fb4ff;
+  color: #a9bce6;
 }
 .site-footer nav[aria-label='Company'] li a,
 .site-footer__links li a {
@@ -226,7 +226,7 @@ const footerStyles = `
 /* Services "view all" */
 .site-footer a.site-footer__view-all {
   font-weight: 600;
-  color: #8fb4ff;
+  color: #a9bce6;
 }
 
 /* Contact */
@@ -245,9 +245,9 @@ const footerStyles = `
   width: 32px;
   height: 32px;
   border-radius: 9px;
-  background: rgba(91, 143, 214, 0.14);
-  border: 1px solid rgba(143, 184, 232, 0.2);
-  color: #8fb4ff;
+  background: rgba(111, 134, 184, 0.14);
+  border: 1px solid rgba(169, 188, 230, 0.2);
+  color: #a9bce6;
 }
 
 /* Map, dark-tinted to match the theme */
@@ -273,7 +273,7 @@ const footerStyles = `
   margin-top: 0.75rem;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #8fb4ff;
+  color: #a9bce6;
 }
 
 /* Bottom bar */

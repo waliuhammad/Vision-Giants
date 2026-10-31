@@ -85,12 +85,12 @@ function Dashboard({ g }: G) {
 }
 
 function Store() {
-  const colors = ['#1e293b', '#5b8fd6', '#0f172a', '#6366f1'];
+  const colors = ['#1e293b', '#6f86b8', '#0f172a', '#6366f1'];
   return (
     <Window light>
       <rect x="40" y="50" width="60" height="8" rx="4" fill="#1e293b" />
       <rect x="250" y="48" width="110" height="14" rx="7" fill="#dbe4f3" />
-      <rect x="40" y="70" width="320" height="50" rx="8" fill="#5b8fd6" />
+      <rect x="40" y="70" width="320" height="50" rx="8" fill="#6f86b8" />
       <rect x="54" y="82" width="110" height="9" rx="4" fill="#fff" />
       <rect x="54" y="98" width="70" height="7" rx="3.5" fill="#cfe0ff" />
       <rect x="290" y="88" width="56" height="16" rx="8" fill="#fff" />
@@ -104,7 +104,7 @@ function Store() {
             <circle cx={77 + i * 82} cy="163" r="15" fill={colors[i]} />
           )}
           <rect x={50 + i * 82} y="196" width="44" height="6" rx="3" fill="#334155" />
-          <rect x={50 + i * 82} y="208" width="26" height="6" rx="3" fill="#5b8fd6" />
+          <rect x={50 + i * 82} y="208" width="26" height="6" rx="3" fill="#6f86b8" />
         </g>
       ))}
     </Window>
@@ -210,7 +210,7 @@ function Booking() {
             width="22"
             height="20"
             rx="4"
-            fill={active ? '#5b8fd6' : booked ? '#2b2468' : '#132857'}
+            fill={active ? '#6f86b8' : booked ? '#2b2468' : '#132857'}
             stroke={active ? '#7fb2ff' : 'none'}
           />
         );
@@ -218,7 +218,7 @@ function Booking() {
       <rect x="264" y="72" width="96" height="154" rx="6" fill="#0f2150" />
       {[0, 1, 2, 3].map((i) => (
         <g key={i}>
-          <rect x="272" y={84 + i * 34} width="80" height="26" rx="5" fill={i === 1 ? '#5b8fd6' : '#132857'} />
+          <rect x="272" y={84 + i * 34} width="80" height="26" rx="5" fill={i === 1 ? '#6f86b8' : '#132857'} />
           <rect x="280" y={94 + i * 34} width="38" height="6" rx="3" fill={i === 1 ? '#fff' : text} />
         </g>
       ))}
@@ -231,7 +231,7 @@ function Learning({ g }: G) {
     <Window>
       <rect x="44" y="56" width="208" height="120" rx="8" fill={`url(#${g('accent')})`} opacity="0.85" />
       <circle cx="148" cy="116" r="20" fill="#fff" opacity="0.92" />
-      <path d="M142 106 L158 116 L142 126Z" fill="#5b8fd6" />
+      <path d="M142 106 L158 116 L142 126Z" fill="#6f86b8" />
       <rect x="44" y="186" width="208" height="5" rx="2.5" fill="#1f3570" />
       <rect x="44" y="186" width="120" height="5" rx="2.5" fill="#8fb8e8" />
       <rect x="44" y="202" width="130" height="8" rx="4" fill="#cfe0ff" />
