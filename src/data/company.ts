@@ -28,7 +28,7 @@ export const company: Company = {
     'We design and develop web applications, mobile apps and custom software that help businesses work better and grow.',
   email: null,
   phones: ['0308 0058600', '0317 6572690'],
-  address: 'Chapter 2 Plaza, near Zavia School, Gulgasht, Multan, Pakistan',
+  address: 'Vision Giants, Near Zavia School, Gulgasht, Multan, Pakistan',
   // WhatsApp format: https://wa.me/923001234567 (country code + number, digits only).
   social: [
     { label: 'LinkedIn', href: 'https://www.linkedin.com/company/vision-giants/' },
