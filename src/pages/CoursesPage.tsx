@@ -1,33 +1,63 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   ArrowRight,
+  Award,
   BookOpen,
-  CheckCircle,
+  Building2,
+  Calendar,
+  CheckCircle2,
   Clock,
+  Cloud,
   Code,
-  FileCheck,
-  Globe,
-  GraduationCap,
-  Layers,
-  MapPin,
-  PlayCircle,
+  Palette,
+  Play,
   Search,
+  Sparkles,
+  Smartphone,
+  Trophy,
+  Users,
   X,
 } from 'lucide-react';
 import { Link } from 'react-router';
 import { useContent } from '../content/ContentContext';
 import type { Course, LearningMode } from '../data/courses';
-import { PageHero } from '../components/ui/PageHero';
+import {
+  defaultCoursesPageData,
+  coursesPageDataFromDoc,
+  type CoursesPageData,
+  type CourseTopProgram,
+} from '../content/coursesPageData';
 import { Button } from '../components/ui/Button';
-import { SectionHeading } from '../components/ui/SectionHeading';
 import { Reveal } from '../components/animations/Reveal';
-import { Highlight } from '../components/ui/Highlight';
 import { EnrollmentDialog } from '../components/courses/EnrollmentDialog';
-import { PortalVisual } from '../components/visuals/IsoVisuals';
+import { getDb, isFirebaseConfigured } from '../config/firebase';
+
+const firestore = () => import('firebase/firestore/lite');
 
 export default function CoursesPage() {
   const { courses: allCourses, categories } = useContent();
   const publishedCourses = allCourses.filter((c) => c.published !== false);
+
+  // Dynamic Courses Page content (loaded from Firestore pages/courses or default)
+  const [pageData, setPageData] = useState<CoursesPageData>(defaultCoursesPageData);
+
+  useEffect(() => {
+    if (!isFirebaseConfigured) return;
+    (async () => {
+      try {
+        const [db, { doc, getDoc }] = await Promise.all([getDb(), firestore()]);
+        const snap = await getDoc(doc(db, 'pages', 'courses'));
+        if (snap.exists()) {
+          setPageData(coursesPageDataFromDoc(snap.data()));
+        }
+      } catch (err) {
+        console.warn('Could not load custom courses page content; using defaults', err);
+      }
+    })();
+  }, []);
+
+  // Video modal state
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
 
   // Filters state
   const [search, setSearch] = useState('');
@@ -77,217 +107,288 @@ export default function CoursesPage() {
     setEnrollModalOpen(true);
   };
 
+  const getProgramIcon = (iconName: CourseTopProgram['icon']) => {
+    switch (iconName) {
+      case 'code':
+        return <Code size={22} />;
+      case 'smartphone':
+        return <Smartphone size={22} />;
+      case 'palette':
+        return <Palette size={22} />;
+      case 'cloud':
+        return <Cloud size={22} />;
+      case 'sparkles':
+        return <Sparkles size={22} />;
+      case 'book':
+      default:
+        return <BookOpen size={22} />;
+    }
+  };
+
+  const getStatIcon = (icon: string) => {
+    switch (icon) {
+      case 'trophy':
+        return <Trophy size={28} className="courses-stat-item__icon" />;
+      case 'book':
+        return <BookOpen size={28} className="courses-stat-item__icon" />;
+      case 'building':
+        return <Building2 size={28} className="courses-stat-item__icon" />;
+      case 'users':
+      default:
+        return <Users size={28} className="courses-stat-item__icon" />;
+    }
+  };
+
   return (
     <>
-      {/* 1. HERO SECTION */}
-      <PageHero
-        crumb="Training Academy"
-        eyebrow="Vision Giants Academy"
-        title="Learn. Build. Grow. Your Future Starts Here."
-        lead="Develop in-demand technology skills through practical training, expert guidance, and real-world projects. Join our learning programs online or at our physical training center."
-        actions={
-          <div className="page-hero__actions">
-            <Button href="#courses" icon={<ArrowRight size={18} />}>
-              Explore Courses
-            </Button>
-            <Button variant="outline" onClick={() => openEnroll()}>
-              Enroll Now
-            </Button>
-          </div>
-        }
-        visual={<PortalVisual />}
-      />
-
-      {/* 2. LEARNING MODES SECTION */}
-      <section className="section" aria-labelledby="modes-title">
+      {/* ====================================================================
+          1. HERO SECTION (MATCHING REFERENCE IMAGE 100%)
+          ==================================================================== */}
+      <section className="courses-hero-section" aria-labelledby="courses-hero-title">
         <div className="container">
-          <SectionHeading
-            id="modes-title"
-            eyebrow="Flexible Learning Paths"
-            title="Four Formats Designed Around Your Schedule"
-            lead="Choose the learning method that fits your location, lifestyle, and career goals. We offer both physical campus immersion and global live online classes."
-            align="center"
-          />
+          <div className="courses-hero-grid">
+            {/* Left Content Column */}
+            <div>
+              <Reveal delay={40}>
+                <span className="courses-dash-eyebrow">{pageData.heroEyebrow}</span>
+              </Reveal>
 
-          <div className="grid grid--4 course-modes-grid">
-            {/* Mode A: Online Learning */}
-            <Reveal delay={60}>
-              <article className="card card--interactive course-mode-card">
-                <span className="icon-wrap" aria-hidden="true">
-                  <Globe size={24} />
-                </span>
-                <span className="badge badge--primary">Global Reach</span>
-                <h3>Online Learning</h3>
-                <p>
-                  Learn from anywhere through live online classes, instructor guidance, interactive sessions, and
-                  practical assignments.
-                </p>
-                <ul className="course-mode-card__list">
-                  <li>
-                    <CheckCircle size={15} /> Live Online Classes
-                  </li>
-                  <li>
-                    <CheckCircle size={15} /> Real-Time Instructor Interaction
-                  </li>
-                  <li>
-                    <CheckCircle size={15} /> Online Resources & Recordings
-                  </li>
-                  <li>
-                    <CheckCircle size={15} /> Remote Peer Group Collaboration
-                  </li>
-                </ul>
-                <button
-                  type="button"
-                  className="btn btn--outline btn--sm"
-                  onClick={() => {
-                    setSelectedMode('online');
-                    document.getElementById('courses')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  View Online Courses
-                </button>
-              </article>
-            </Reveal>
+              <Reveal delay={80}>
+                <h1 id="courses-hero-title" className="courses-hero-title">
+                  {pageData.heroTitleLine1}
+                  <span>{pageData.heroTitleLine2}</span>
+                </h1>
+              </Reveal>
 
-            {/* Mode B: Onsite Learning */}
-            <Reveal delay={120}>
-              <article className="card card--interactive course-mode-card">
-                <span className="icon-wrap" aria-hidden="true">
-                  <MapPin size={24} />
-                </span>
-                <span className="badge badge--secondary">Physical Campus</span>
-                <h3>Onsite Learning</h3>
-                <p>
-                  Learn in a professional classroom environment with face-to-face instructor support, practical
-                  computer labs, and collaborative learning.
-                </p>
-                <ul className="course-mode-card__list">
-                  <li>
-                    <CheckCircle size={15} /> Physical Innovation Campus
-                  </li>
-                  <li>
-                    <CheckCircle size={15} /> Direct 1-on-1 Instructor Support
-                  </li>
-                  <li>
-                    <CheckCircle size={15} /> Practical High-Spec Computer Labs
-                  </li>
-                  <li>
-                    <CheckCircle size={15} /> In-Person Professional Networking
-                  </li>
-                </ul>
-                <button
-                  type="button"
-                  className="btn btn--outline btn--sm"
-                  onClick={() => {
-                    setSelectedMode('onsite');
-                    document.getElementById('courses')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  View Onsite Courses
-                </button>
-              </article>
-            </Reveal>
+              <Reveal delay={120}>
+                <p className="courses-hero-lead">{pageData.heroDescription}</p>
+              </Reveal>
 
-            {/* Mode C: Hybrid Learning */}
-            <Reveal delay={180}>
-              <article className="card card--interactive course-mode-card">
-                <span className="icon-wrap" aria-hidden="true">
-                  <Layers size={24} />
-                </span>
-                <span className="badge badge--neutral">Best of Both</span>
-                <h3>Hybrid Learning</h3>
-                <p>
-                  Enjoy the flexibility of combining online classes with physical classroom sessions for practical lab experiments.
-                </p>
-                <ul className="course-mode-card__list">
-                  <li>
-                    <CheckCircle size={15} /> Weekday Live Online Sessions
-                  </li>
-                  <li>
-                    <CheckCircle size={15} /> Weekend Onsite Campus Labs
-                  </li>
-                  <li>
-                    <CheckCircle size={15} /> Flexible Schedule for Working Pros
-                  </li>
-                  <li>
-                    <CheckCircle size={15} /> Hands-on Capstone Projects
-                  </li>
-                </ul>
-                <button
-                  type="button"
-                  className="btn btn--outline btn--sm"
-                  onClick={() => {
-                    setSelectedMode('hybrid');
-                    document.getElementById('courses')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  View Hybrid Courses
-                </button>
-              </article>
-            </Reveal>
+              <Reveal delay={160}>
+                <div className="courses-hero-actions">
+                  <Button
+                    href="#courses-catalog"
+                    icon={<ArrowRight size={18} />}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      document.getElementById('courses-catalog')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >
+                    {pageData.heroPrimaryCtaText}
+                  </Button>
 
-            {/* Mode D: Self-Paced Learning */}
-            <Reveal delay={240}>
-              <article className="card card--interactive course-mode-card">
-                <span className="icon-wrap" aria-hidden="true">
-                  <PlayCircle size={24} />
-                </span>
-                <span className="badge badge--neutral">Anytime</span>
-                <h3>Self-Paced Learning</h3>
-                <p>
-                  Learn at your own speed through recorded lectures, detailed walkthroughs, and digital learning materials.
-                </p>
-                <ul className="course-mode-card__list">
-                  <li>
-                    <CheckCircle size={15} /> Complete Recorded Lessons
-                  </li>
-                  <li>
-                    <CheckCircle size={15} /> 100% Flexible Study Schedule
-                  </li>
-                  <li>
-                    <CheckCircle size={15} /> Downloadable Learning Materials
-                  </li>
-                  <li>
-                    <CheckCircle size={15} /> Automated Self-Assessment
-                  </li>
-                </ul>
-                <button
-                  type="button"
-                  className="btn btn--outline btn--sm"
-                  onClick={() => {
-                    setSelectedMode('selfPaced');
-                    document.getElementById('courses')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  View Self-Paced
-                </button>
-              </article>
-            </Reveal>
+                  <button
+                    type="button"
+                    className="btn--watch"
+                    onClick={() => setVideoModalOpen(true)}
+                  >
+                    <Play size={16} fill="currentColor" />
+                    <span>{pageData.heroSecondaryCtaText}</span>
+                  </button>
+                </div>
+              </Reveal>
+
+              <Reveal delay={200}>
+                <div className="courses-social-proof">
+                  <div className="courses-avatar-stack" aria-hidden="true">
+                    <img
+                      src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+                      alt="Student Alumni"
+                    />
+                    <img
+                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80"
+                      alt="Student Alumni"
+                    />
+                    <img
+                      src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=120&q=80"
+                      alt="Student Alumni"
+                    />
+                  </div>
+                  <span className="courses-social-proof__text">{pageData.heroSocialProofText}</span>
+                </div>
+              </Reveal>
+            </div>
+
+            {/* Right Portrait & Floating 20+ Badge */}
+            <div className="courses-hero-image-wrap">
+              <Reveal delay={140}>
+                <img
+                  src={pageData.heroImage}
+                  alt="Student at Vision Giants Academy"
+                  className="courses-hero-portrait"
+                />
+                <div className="courses-floating-badge" aria-label="Years of Excellence">
+                  <span className="courses-floating-badge__number">
+                    {pageData.heroExperienceBadgeYears}
+                  </span>
+                  <span className="courses-floating-badge__label">
+                    <Award size={14} className="courses-floating-badge__icon" />
+                    {pageData.heroExperienceBadgeText}
+                  </span>
+                </div>
+              </Reveal>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 3. COURSE CATEGORIES */}
-      <section className="section section--alt" aria-labelledby="categories-title">
+      {/* ====================================================================
+          2. STATS RIBBON (NAVY BLUE 4 COLUMNS WITH DIVIDERS)
+          ==================================================================== */}
+      <section className="courses-stats-ribbon" aria-label="Key Academy Metrics">
         <div className="container">
-          <SectionHeading
-            id="categories-title"
-            eyebrow="Specialization Tracks"
-            title="Explore Popular Technology Fields"
-            lead="From full-stack development to mobile engineering and user experience design."
-            align="center"
-          />
+          <div className="courses-stats-grid">
+            {pageData.stats.map((st, idx) => (
+              <div key={idx} className="courses-stat-item">
+                {getStatIcon(st.icon)}
+                <div className="courses-stat-item__content">
+                  <span className="courses-stat-item__value">{st.value}</span>
+                  <span className="courses-stat-item__label">{st.label}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-          <div className="course-categories-pills">
+      {/* ====================================================================
+          3. TOP COURSES / PROGRAMS (5 CLEAN CARDS IN A ROW)
+          ==================================================================== */}
+      <section className="courses-programs-section" aria-labelledby="programs-section-title">
+        <div className="container">
+          <div className="courses-section-head">
+            <div>
+              <span className="courses-dash-eyebrow">{pageData.programsEyebrow}</span>
+              <h2 id="programs-section-title" className="courses-section-head__title">
+                {pageData.programsHeading}
+              </h2>
+            </div>
+            <a
+              href="#courses-catalog"
+              className="courses-section-head__link"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('courses-catalog')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              {pageData.programsViewAllText}
+            </a>
+          </div>
+
+          <div className="courses-programs-grid">
+            {pageData.programs.map((prog, i) => (
+              <Reveal key={prog.id} delay={i * 60}>
+                <a
+                  href="#courses-catalog"
+                  className="courses-program-card"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    // If matches category, select it
+                    const match = categories.find((c) =>
+                      prog.title.toLowerCase().includes(c.name.toLowerCase()) ||
+                      c.name.toLowerCase().includes(prog.title.toLowerCase())
+                    );
+                    if (match) setSelectedCategory(match.name);
+                    document.getElementById('courses-catalog')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  <div
+                    className="courses-program-card__icon-wrap"
+                    style={{
+                      background: `${prog.accentColor}14`,
+                      color: prog.accentColor,
+                    }}
+                  >
+                    {getProgramIcon(prog.icon)}
+                  </div>
+                  <h3 className="courses-program-card__title">{prog.title}</h3>
+                  <p className="courses-program-card__desc">{prog.description}</p>
+                  <span className="courses-program-card__link" style={{ color: prog.accentColor }}>
+                    Learn More →
+                  </span>
+                </a>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ====================================================================
+          4. WHY CHOOSE US (SPLIT SECTION WITH FLOATING 100% BADGE)
+          ==================================================================== */}
+      <section className="courses-why-section" aria-labelledby="why-section-title">
+        <div className="container">
+          <div className="courses-why-grid">
+            {/* Left Photo & Floating Badge */}
+            <div className="courses-why-image-wrap">
+              <Reveal delay={80}>
+                <img
+                  src={pageData.whyImage}
+                  alt="Students learning in tech classroom"
+                  className="courses-why-image"
+                />
+                <div className="courses-why-badge">
+                  <Trophy size={20} />
+                  <span>{pageData.whyBadge}</span>
+                </div>
+              </Reveal>
+            </div>
+
+            {/* Right Content & Checklist */}
+            <div>
+              <Reveal delay={60}>
+                <span className="courses-dash-eyebrow">{pageData.whyEyebrow}</span>
+                <h2 id="why-section-title" className="courses-why-title">
+                  {pageData.whyHeading}
+                </h2>
+                <p className="courses-why-desc">{pageData.whyDescription}</p>
+
+                <ul className="courses-checklist">
+                  {pageData.whyChecklist.map((item, idx) => (
+                    <li key={idx} className="courses-checklist__item">
+                      <CheckCircle2 size={18} className="courses-checklist__icon" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <Button href={pageData.whyCtaLink} variant="primary">
+                  {pageData.whyCtaText}
+                </Button>
+              </Reveal>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ====================================================================
+          5. COMPLETE INTERACTIVE COURSE CATALOG & FILTERS
+          ==================================================================== */}
+      <section id="courses-catalog" className="section" aria-labelledby="catalog-title">
+        <div className="container">
+          <div style={{ textAlign: 'center', maxWidth: 680, margin: '0 auto var(--space-6)' }}>
+            <span className="courses-dash-eyebrow">{pageData.catalogEyebrow}</span>
+            <h2 id="catalog-title" className="courses-section-head__title" style={{ marginTop: 8 }}>
+              {pageData.catalogHeading}
+            </h2>
+            <p className="courses-hero-lead" style={{ margin: '8px auto 0' }}>
+              {pageData.catalogLead}
+            </p>
+          </div>
+
+          {/* Category filter pills */}
+          <div className="course-categories-pills" style={{ marginBottom: 'var(--space-5)' }}>
             <button
               type="button"
               className={`course-cat-pill${selectedCategory === 'all' ? ' is-active' : ''}`}
               onClick={() => setSelectedCategory('all')}
             >
-              All Categories ({publishedCourses.length})
+              All Courses ({publishedCourses.length})
             </button>
             {categories.filter((c) => c.active !== false).map((cat) => {
-              const count = publishedCourses.filter((p) => p.category.toLowerCase() === cat.name.toLowerCase()).length;
+              const count = publishedCourses.filter(
+                (p) => p.category.toLowerCase() === cat.name.toLowerCase()
+              ).length;
               return (
                 <button
                   key={cat.id}
@@ -300,26 +401,14 @@ export default function CoursesPage() {
               );
             })}
           </div>
-        </div>
-      </section>
 
-      {/* 4. COURSE CATALOG & FILTERS */}
-      <section id="courses" className="section" aria-labelledby="catalog-title">
-        <div className="container">
-          <SectionHeading
-            id="catalog-title"
-            eyebrow="Academy Catalog"
-            title="Available Courses & Bootcamps"
-            lead="Curated, practical programs taught by veteran software engineers and architects."
-          />
-
-          {/* Catalog Filter Controls */}
+          {/* Search and Filters Bar */}
           <div className="course-filters card">
             <div className="course-filters__search">
               <Search size={18} className="course-filters__icon" aria-hidden="true" />
               <input
                 type="text"
-                placeholder="Search courses by keyword, technology, or topic..."
+                placeholder="Search courses by title, keywords, or topics..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="course-filters__input"
@@ -461,147 +550,158 @@ export default function CoursesPage() {
         </div>
       </section>
 
-      {/* 5. STUDENT PROJECTS & CERTIFICATES */}
-      <section className="section" aria-labelledby="certificates-title">
+      {/* ====================================================================
+          6. STUDENT SUCCESS STORIES (WHAT OUR STUDENTS SAY)
+          ==================================================================== */}
+      <section className="courses-testimonials-section" aria-labelledby="testimonials-section-title">
         <div className="container">
-          <div className="grid grid--2 course-cert-grid" style={{ alignItems: 'center', gap: 'var(--space-7)' }}>
-            <div>
-              <SectionHeading
-                id="certificates-title"
-                eyebrow="Industry Verification"
-                title="Verified Credentials & Portfolio-Ready Code"
-              />
-              <p className="lead">
-                Every graduate leaves with more than a certificate: you build production repositories, deploy live apps,
-                and receive a digitally verifiable graduation credential recognized by tech employers.
-              </p>
-              <ul className="course-cert-bullets">
-                <li>
-                  <FileCheck size={18} className="course-cert-bullet-icon" />
-                  <span>
-                    <strong>Verified Certificate of Completion</strong> with a unique verification URL for LinkedIn and resumes.
-                  </span>
-                </li>
-                <li>
-                  <Code size={18} className="course-cert-bullet-icon" />
-                  <span>
-                    <strong>Public GitHub Capstone Portfolio</strong> featuring multi-tier apps with live deployed URLs.
-                  </span>
-                </li>
-                <li>
-                  <GraduationCap size={18} className="course-cert-bullet-icon" />
-                  <span>
-                    <strong>Direct Interview Placements</strong> for top graduates at Vision Giants and partner software houses.
-                  </span>
-                </li>
-              </ul>
-              <div style={{ marginTop: 'var(--space-5)' }}>
-                <Button onClick={() => openEnroll()}>Apply for Next Batch</Button>
+          <div style={{ textAlign: 'center', marginBottom: 'var(--space-6)' }}>
+            <span className="courses-dash-eyebrow">{pageData.testimonialsEyebrow}</span>
+            <h2 id="testimonials-section-title" className="courses-section-head__title" style={{ marginTop: 6 }}>
+              {pageData.testimonialsHeading}
+            </h2>
+          </div>
+
+          <div className="courses-testimonials-grid">
+            {pageData.testimonials.map((t, idx) => (
+              <Reveal key={t.id} delay={idx * 80}>
+                <article className="courses-testimonial-card">
+                  <img src={t.photo} alt={t.name} className="courses-testimonial-card__avatar" />
+                  <div className="courses-testimonial-card__content">
+                    <p className="courses-testimonial-card__quote">“{t.quote}”</p>
+                    <span className="courses-testimonial-card__name">{t.name}</span>
+                    <span className="courses-testimonial-card__outcome">{t.outcome}</span>
+                  </div>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ====================================================================
+          7. BOOK A FREE DEMO CLASS CTA RIBBON
+          ==================================================================== */}
+      <section className="courses-cta-ribbon-section" aria-label="Book Demo Class">
+        <div className="container">
+          <div className="courses-cta-ribbon">
+            <div className="courses-cta-ribbon__left">
+              <div className="courses-cta-ribbon__icon-wrap">
+                <Calendar size={28} />
+              </div>
+              <div>
+                <h3 className="courses-cta-ribbon__title">{pageData.demoCtaHeading}</h3>
+                <p className="courses-cta-ribbon__desc">{pageData.demoCtaDescription}</p>
               </div>
             </div>
 
-            <div className="course-cert-card-col">
-              <Reveal delay={100}>
-                <div className="card feature course-cert-card">
-                  <span className="icon-wrap" aria-hidden="true">
-                    <FileCheck size={26} />
-                  </span>
-                  <h3>Vision Giants Academy Certification</h3>
-                  <p>
-                    Awarded upon completing all hands-on modules, meeting milestone deadlines, and successfully defending
-                    your graduation capstone project in front of our technical review board.
-                  </p>
-                  <div className="course-cert-badge-row">
-                    <span className="badge badge--primary">Verifiable QR Code</span>
-                    <span className="badge badge--secondary">LinkedIn Addable</span>
-                    <span className="badge badge--neutral">Lifetime Alumni Access</span>
-                  </div>
-                </div>
-              </Reveal>
-            </div>
+            <button
+              type="button"
+              className="btn--amber"
+              onClick={() => openEnroll()}
+            >
+              {pageData.demoCtaButtonText}
+            </button>
           </div>
         </div>
       </section>
 
-      {/* 7. STUDENT TESTIMONIALS */}
-      <section className="section section--alt" aria-labelledby="student-feedback-title">
-        <div className="container">
-          <SectionHeading
-            id="student-feedback-title"
-            eyebrow="Student Feedback"
-            title="Stories From Our Tech Academy Graduates"
-            lead="See how our practical curriculum helped learners transition into engineering careers."
-            align="center"
-          />
+      {/* ====================================================================
+          VIDEO WALKTHROUGH MODAL
+          ==================================================================== */}
+      {videoModalOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="modal-backdrop"
+          onClick={() => setVideoModalOpen(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(11, 23, 48, 0.85)',
+            zIndex: 1000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 'var(--space-4)',
+          }}
+        >
+          <div
+            className="card"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              maxWidth: 720,
+              width: '100%',
+              background: '#0b1730',
+              color: '#ffffff',
+              padding: 'var(--space-5)',
+              position: 'relative',
+              borderRadius: 'var(--radius-lg)',
+              boxShadow: 'var(--shadow-float)',
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setVideoModalOpen(false)}
+              style={{
+                position: 'absolute',
+                top: 16,
+                right: 16,
+                background: 'rgba(255, 255, 255, 0.1)',
+                border: 'none',
+                color: '#ffffff',
+                borderRadius: '50%',
+                width: 36,
+                height: 36,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              aria-label="Close video"
+            >
+              <X size={20} />
+            </button>
 
-          <div className="grid grid--3 course-feedback-grid">
-            <Reveal delay={60}>
-              <blockquote className="card course-feedback-card">
-                <p>
-                  “The project-first approach made all the difference. Instead of theoretical syntax slides, we were
-                  pushing code to GitHub and deploying to cloud containers every week.”
-                </p>
-                <footer>
-                  <strong>Full Stack Graduate</strong>
-                  <span className="muted">Now Junior Engineer at SaaS Startup</span>
-                </footer>
-              </blockquote>
-            </Reveal>
+            <h3 style={{ color: '#ffffff', marginBottom: 'var(--space-3)' }}>
+              Vision Giants Academy Experience
+            </h3>
+            <p style={{ color: 'rgba(255, 255, 255, 0.75)', marginBottom: 'var(--space-4)', fontSize: '0.95rem' }}>
+              Get an insider preview of our live project workflows, modern coding lab facilities, and personalized mentorship methodology.
+            </p>
 
-            <Reveal delay={120}>
-              <blockquote className="card course-feedback-card">
-                <p>
-                  “The hybrid mode gave me the best of both worlds: I could study online after work, and spend Saturdays
-                  at the campus lab getting direct debugging help from the lead instructor.”
-                </p>
-                <footer>
-                  <strong>Mobile App Graduate</strong>
-                  <span className="muted">Published 2 Apps on Play Store</span>
-                </footer>
-              </blockquote>
-            </Reveal>
-
-            <Reveal delay={180}>
-              <blockquote className="card course-feedback-card">
-                <p>
-                  “The UI/UX design mentorship helped me build a real Behance case study that landed me my first remote
-                  design contract within three weeks of graduation.”
-                </p>
-                <footer>
-                  <strong>UI/UX Design Graduate</strong>
-                  <span className="muted">Product Design Freelancer</span>
-                </footer>
-              </blockquote>
-            </Reveal>
+            <div
+              style={{
+                position: 'relative',
+                paddingBottom: '56.25%',
+                height: 0,
+                borderRadius: 'var(--radius-md)',
+                overflow: 'hidden',
+                background: '#000',
+              }}
+            >
+              <iframe
+                src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1"
+                title="Vision Giants Academy Walkthrough"
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  border: 0,
+                }}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
           </div>
         </div>
-      </section>
+      )}
 
-      {/* 8. FINAL CALL TO ACTION */}
-      <section className="section section--tight" aria-labelledby="courses-cta-title">
-        <div className="container">
-          <Reveal className="cta">
-            <div>
-              <h2 id="courses-cta-title">
-                <Highlight text="Start Learning Today. Build Your Future Tomorrow." />
-              </h2>
-              <p>
-                Choose your preferred learning path and develop the skills needed to succeed in the technology industry.
-              </p>
-            </div>
-            <div className="cta__actions">
-              <Button href="#courses" icon={<ArrowRight size={18} />}>
-                Explore Our Courses
-              </Button>
-              <Button variant="outline" onClick={() => openEnroll()}>
-                Enroll in a Course
-              </Button>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ENROLLMENT DIALOG */}
+      {/* ====================================================================
+          ENROLLMENT DIALOG
+          ==================================================================== */}
       {enrollModalOpen && (
         <EnrollmentDialog
           course={enrollModalCourse}
@@ -613,4 +713,3 @@ export default function CoursesPage() {
     </>
   );
 }
-
