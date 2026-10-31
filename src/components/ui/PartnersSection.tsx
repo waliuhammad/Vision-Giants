@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
-import { loadActivePartners, type Partner } from '../../content/partners';
+import { loadActivePartners, samplePartners, type Partner } from '../../content/partners';
 import { SectionHeading } from './SectionHeading';
 import { Reveal } from '../animations/Reveal';
 
@@ -46,7 +46,8 @@ export function PartnerCard({ partner }: { partner: Partner }) {
 
 /**
  * Home page partners section. Partners are read from Firestore in the browser, so changes made in
- * Admin → Partners appear on the next page load; nothing is shown until at least one active partner exists.
+ * Admin → Partners appear on the next page load. Until at least one active partner exists, the
+ * built-in sample partners are shown instead.
  */
 export function PartnersSection({ title, lead, eyebrow }: { title: string; lead: string; eyebrow?: string }) {
   const [partners, setPartners] = useState<Partner[]>([]);
@@ -54,8 +55,11 @@ export function PartnersSection({ title, lead, eyebrow }: { title: string; lead:
   useEffect(() => {
     let cancelled = false;
     loadActivePartners()
-      .then((list) => !cancelled && setPartners(list))
-      .catch((err) => console.warn('Could not load partners', err));
+      .then((list) => !cancelled && setPartners(list.length ? list : samplePartners))
+      .catch((err) => {
+        console.warn('Could not load partners', err);
+        if (!cancelled) setPartners(samplePartners);
+      });
     return () => {
       cancelled = true;
     };

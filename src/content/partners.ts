@@ -65,6 +65,40 @@ export function partnerFromDoc(id: string, d: Record<string, unknown>): Partner 
   };
 }
 
+/** Placeholder logo: coloured mark, name and a "SAMPLE PARTNER" line, as an SVG data: URL. */
+const sampleLogo = (mark: string, label: string, color: string) =>
+  `data:image/svg+xml,${encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="520" height="140" viewBox="0 0 520 140">` +
+      `<rect x="10" y="20" width="100" height="100" rx="26" fill="${color}"/>` +
+      `<text x="60" y="73" fill="#fff" font-family="Inter,Segoe UI,system-ui,sans-serif" font-size="58" font-weight="700" text-anchor="middle" dominant-baseline="central">${mark}</text>` +
+      `<text x="132" y="72" fill="#0b1730" font-family="Inter,Segoe UI,system-ui,sans-serif" font-size="44" font-weight="700">${label}</text>` +
+      `<text x="134" y="108" fill="#6b7789" font-family="Inter,Segoe UI,system-ui,sans-serif" font-size="26" font-weight="500" letter-spacing="1">SAMPLE PARTNER</text>` +
+      `</svg>`,
+  )}`;
+
+const sample = (id: string, name: string, type: string, mark: string, label: string, color: string, description: string, order: number): Partner => ({
+  id,
+  name,
+  logo: sampleLogo(mark, label, color),
+  type,
+  description,
+  details: 'This is a sample entry that shows how partners appear here. It disappears automatically once a real partner is added in Admin → Partners.',
+  url: '',
+  order,
+  active: true,
+});
+
+/**
+ * Shown on the Home page only while the database has no active partners, so the section can be
+ * seen before real partners are added. Names start with "Sample" so they are clearly placeholders.
+ */
+export const samplePartners: Partner[] = [
+  sample('sample-technology', 'Sample Technology Partner', 'Technology Partner', 'T', 'Technology', '#2563eb', 'Cloud infrastructure and platform services that power the applications we build for our clients.', 10),
+  sample('sample-training', 'Sample Training Institute', 'Training Partner', 'A', 'Training', '#0f9d76', 'Certified courses and workshops that keep our engineers current with modern tools and practices.', 20),
+  sample('sample-business', 'Sample Business Group', 'Business Partner', 'B', 'Business', '#c2410c', 'Joint go-to-market work bringing digital solutions to retail and distribution businesses.', 30),
+  sample('sample-development', 'Sample Development Studio', 'Development Partner', 'D', 'Development', '#7c3aed', 'Shared delivery capacity for large projects, from UI/UX design through to quality assurance.', 40),
+];
+
 export const byOrder = (a: Partner, b: Partner) => a.order - b.order || a.name.localeCompare(b.name);
 
 /** Active partners for the public site, in display order. Inactive ones are never readable publicly. */
