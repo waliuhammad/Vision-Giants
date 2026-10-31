@@ -1,6 +1,20 @@
-import { useState, type CSSProperties } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
-import { ArrowRight, CodeXml, Smartphone, Cpu, Palette, Lightbulb, Users, Layers, ShieldCheck } from 'lucide-react';
+import {
+  ArrowRight,
+  Code,
+  Smartphone,
+  Palette,
+  Cloud,
+  Cpu,
+  Headphones,
+  Zap,
+  Users,
+  Lightbulb,
+  Layers,
+  ShieldCheck,
+  CheckCircle2,
+} from 'lucide-react';
 import { technologies } from '../data/technologies';
 import type { Project } from '../data/portfolio';
 import { useContent, usePageText } from '../content/ContentContext';
@@ -13,17 +27,14 @@ import { FeaturedProject } from '../components/ui/FeaturedProject';
 import { TechLogo } from '../components/visuals/TechLogos';
 import { CTASection } from '../components/ui/CTASection';
 import { Reveal } from '../components/animations/Reveal';
-import { HeroShowcase } from '../components/visuals/HeroShowcase';
-import { HeroParticles } from '../components/visuals/HeroParticles';
-import { Highlight } from '../components/ui/Highlight';
-import { PartnersSection } from '../components/ui/PartnersSection';
+import {
+  defaultHomePageHeroData,
+  homePageHeroDataFromDoc,
+  type HomePageHeroData,
+} from '../content/homeHeroData';
+import { getDb, isFirebaseConfigured } from '../config/firebase';
 
-const capabilities = [
-  { icon: CodeXml, label: 'Web Applications & Platforms' },
-  { icon: Smartphone, label: 'Mobile Apps & Solutions' },
-  { icon: Cpu, label: 'Custom Software & Integrations' },
-  { icon: Palette, label: 'UI/UX & Product Design' },
-];
+const firestore = () => import('firebase/firestore/lite');
 
 const values = [
   {
@@ -50,7 +61,41 @@ const values = [
 
 const HOME_SERVICES_COUNT = 6;
 
-const delay = (ms: number) => ({ '--delay': `${ms}ms` }) as CSSProperties;
+function CapIcon({ name }: { name: string }) {
+  switch (name) {
+    case 'code':
+      return <Code size={20} />;
+    case 'zap':
+      return <Zap size={20} />;
+    case 'headset':
+      return <Headphones size={20} />;
+    case 'smartphone':
+      return <Smartphone size={20} />;
+    case 'palette':
+      return <Palette size={20} />;
+    case 'cloud':
+      return <Cloud size={20} />;
+    case 'cpu':
+      return <Cpu size={20} />;
+    default:
+      return <CheckCircle2 size={20} />;
+  }
+}
+
+function MenuIcon({ name }: { name: string }) {
+  switch (name) {
+    case 'code':
+      return <Code size={18} />;
+    case 'smartphone':
+      return <Smartphone size={18} />;
+    case 'palette':
+      return <Palette size={18} />;
+    case 'cloud':
+      return <Cloud size={18} />;
+    default:
+      return <Code size={18} />;
+  }
+}
 
 export default function HomePage() {
   const t = usePageText('home');
@@ -58,57 +103,144 @@ export default function HomePage() {
   const [active, setActive] = useState<Project | null>(null);
   const [featured, ...moreProjects] = projects;
 
+  const [heroData, setHeroData] = useState<HomePageHeroData>(defaultHomePageHeroData);
+
+  useEffect(() => {
+    if (!isFirebaseConfigured) return;
+    (async () => {
+      try {
+        const [db, { doc, getDoc }] = await Promise.all([getDb(), firestore()]);
+        const snap = await getDoc(doc(db, 'pages', 'home-hero'));
+        if (snap.exists()) {
+          setHeroData(homePageHeroDataFromDoc(snap.data()));
+        }
+      } catch (err) {
+        console.warn('Could not load custom home hero content; using defaults', err);
+      }
+    })();
+  }, []);
+
   return (
     <>
-      <section className="hero" aria-labelledby="hero-title">
-        <HeroParticles />
-        <div className="container">
-          <div className="hero__grid">
-            <div className="hero__copy">
-              <p className="eyebrow enter">{t('heroEyebrow')}</p>
-              <h1 id="hero-title" className="enter" style={delay(80)}>
-                <Highlight text={t('heroTitle')} />
-              </h1>
-              <p className="lead enter" style={delay(160)}>
-                {t('heroLead')}
-              </p>
-              <div className="hero__actions enter" style={delay(240)}>
-                <Button to="/contact/" icon={<ArrowRight size={18} />}>
-                  Start Your Project
-                </Button>
-                <Button to="/services/website-development/" variant="outline">
-                  Explore Our Work
-                </Button>
-              </div>
-              {projects.length > 0 && (
-                <ul className="hero__facts enter" style={delay(320)}>
-                  <li>
-                    <strong>{projects.length}</strong> live websites in our portfolio
-                  </li>
-                  <li>
-                    <strong>{services.length}</strong> services under one roof
-                  </li>
-                </ul>
-              )}
-            </div>
-            <HeroShowcase projects={projects} />
-          </div>
+      {/* ═══════════════════════════════════════════════════════════════
+          HERO SECTION — EXACT MATCH TO REFERENCE IMAGE
+         ═══════════════════════════════════════════════════════════════ */}
+      <section className="hph-section" aria-labelledby="home-hero-title">
+        {/* Background Image with Deep Blue Glow & Gradient */}
+        <div
+          className="hph-bg"
+          style={{ backgroundImage: `url(${heroData.backgroundImage})` }}
+          aria-hidden="true"
+        />
+        <div className="hph-overlay" aria-hidden="true" />
 
-          <ul className="capabilities enter" style={delay(320)} aria-label="Core capabilities">
-            {capabilities.map(({ icon: Icon, label }) => (
-              <li key={label}>
-                <span className="icon-wrap" aria-hidden="true">
-                  <Icon size={19} />
-                </span>
-                {label}
-              </li>
-            ))}
-          </ul>
+        <div className="container hph-container">
+          <div className="hph-grid">
+            {/* Left Content Column */}
+            <div className="hph-copy">
+              <Reveal>
+                <div className="hph-badge-pill">
+                  <span>{heroData.badgeText}</span>
+                </div>
+              </Reveal>
+
+              <Reveal delay={80}>
+                <h1 id="home-hero-title" className="hph-title">
+                  {heroData.titleLine1}
+                  <span className="hph-title-accent">{heroData.titleLine2}</span>
+                </h1>
+              </Reveal>
+
+              <Reveal delay={140}>
+                <p className="hph-lead">{heroData.lead}</p>
+              </Reveal>
+
+              <Reveal delay={200}>
+                <div className="hph-actions">
+                  <Link to={heroData.primaryCtaLink} className="hph-btn-primary">
+                    <span>{heroData.primaryCtaText}</span>
+                    <ArrowRight size={17} />
+                  </Link>
+                  <Link to={heroData.secondaryCtaLink} className="hph-btn-glass">
+                    <span>{heroData.secondaryCtaText}</span>
+                  </Link>
+                </div>
+              </Reveal>
+
+              {/* 3 Pill Badges at bottom left */}
+              <Reveal delay={260}>
+                <div className="hph-capabilities">
+                  {heroData.capabilities.map((cap) => (
+                    <div key={cap.id} className="hph-cap-item">
+                      <div className="hph-cap-icon-box">
+                        <CapIcon name={cap.icon} />
+                      </div>
+                      <div className="hph-cap-text">
+                        <strong>{cap.title}</strong>
+                        {cap.subtitle && <span>{cap.subtitle}</span>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Reveal>
+            </div>
+
+            {/* Right Column: Holographic Glass Cards & Developer Badge */}
+            <div className="hph-visual">
+              {/* Floating Holographic Services Menu */}
+              <Reveal delay={120}>
+                <div className="hph-holo-panel">
+                  {heroData.menuItems.map((item, idx) => (
+                    <div key={idx} className="hph-holo-row">
+                      <div className="hph-holo-icon">
+                        <MenuIcon name={item.icon} />
+                      </div>
+                      <span className="hph-holo-label">{item.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </Reveal>
+
+              {/* 50+ Expert Developers Badge */}
+              <Reveal delay={220}>
+                <div className="hph-expert-card">
+                  <div className="hph-expert-icon">
+                    <Users size={28} />
+                  </div>
+                  <div className="hph-expert-info">
+                    <strong>{heroData.expertBadgeCount}</strong>
+                    <span>{heroData.expertBadgeLabel}</span>
+                  </div>
+                </div>
+              </Reveal>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Brands Ribbon / Trusted Worldwide */}
+        <div className="hph-trust-ribbon">
+          <div className="container">
+            <div className="hph-trust-head">
+              <span className="hph-trust-line" />
+              <span className="hph-trust-title">{heroData.trustHeading}</span>
+              <span className="hph-trust-line" />
+            </div>
+
+            <div className="hph-brands-row">
+              {heroData.trustBrands.map((brand, i) => (
+                <div key={i} className="hph-brand-item">
+                  <div className="hph-brand-logo-mark" aria-hidden="true" />
+                  <span className="hph-brand-text">{brand}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
-      <PartnersSection eyebrow={t('partnersEyebrow')} title={t('partnersTitle')} lead={t('partnersLead')} />
-
+      {/* ═══════════════════════════════════════════════════════════════
+          SERVICES SECTION
+         ═══════════════════════════════════════════════════════════════ */}
       <section id="services" className="section" aria-labelledby="services-title">
         <div className="container">
           <SectionHeading
@@ -132,6 +264,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ═══════════════════════════════════════════════════════════════
+          SHOWCASE / PORTFOLIO
+         ═══════════════════════════════════════════════════════════════ */}
       {featured && (
         <section className="section showcase-band" aria-labelledby="work-title">
           <div className="showcase-band__glow" aria-hidden="true" />
@@ -159,6 +294,9 @@ export default function HomePage() {
         </section>
       )}
 
+      {/* ═══════════════════════════════════════════════════════════════
+          WHY VISION GIANTS
+         ═══════════════════════════════════════════════════════════════ */}
       <section className="section" aria-labelledby="why-title">
         <div className="container why">
           <SectionHeading
@@ -183,6 +321,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ═══════════════════════════════════════════════════════════════
+          TECHNOLOGY STRIP
+         ═══════════════════════════════════════════════════════════════ */}
       <section className="section section--alt" aria-labelledby="tech-title">
         <div className="container tech-strip">
           <SectionHeading

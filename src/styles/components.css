@@ -4418,3 +4418,396 @@ select.input {
     font-size: 0.9rem;
   }
 }
+
+/* ==========================================================================
+   HOMEPAGE HERO SECTION — MODERN TECH & IT SOFTWARE REDESIGN
+   ========================================================================== */
+
+.hph-section {
+  position: relative;
+  background-color: #060d1d;
+  color: #ffffff;
+  overflow: hidden;
+  padding-top: calc(var(--space-8) + 20px);
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hph-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center right;
+  opacity: 0.38;
+  mix-blend-mode: luminosity;
+  pointer-events: none;
+}
+
+.hph-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 75% 40%, rgba(20, 36, 74, 0.4) 0%, rgba(6, 13, 29, 0.95) 75%),
+              linear-gradient(90deg, #060d1d 0%, rgba(6, 13, 29, 0.92) 50%, rgba(6, 13, 29, 0.45) 100%);
+  pointer-events: none;
+}
+
+.hph-container {
+  position: relative;
+  z-index: 2;
+}
+
+.hph-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  align-items: center;
+  gap: var(--space-8);
+  min-height: 520px;
+}
+
+/* 1. Left Copy */
+.hph-copy {
+  display: flex;
+  flex-direction: column;
+}
+
+.hph-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(37, 99, 235, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  border-radius: 9999px;
+  padding: 6px 18px;
+  margin-bottom: var(--space-4);
+  width: fit-content;
+}
+
+.hph-badge-pill span {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #60a5fa;
+  text-transform: uppercase;
+}
+
+.hph-title {
+  font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+  font-weight: 800;
+  line-height: 1.14;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin-bottom: var(--space-4);
+}
+
+.hph-title-accent {
+  display: block;
+  color: #2563eb;
+  color: #3b82f6;
+  background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hph-lead {
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.78);
+  max-width: 540px;
+  margin-bottom: var(--space-6);
+}
+
+/* Actions */
+.hph-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+}
+
+.hph-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #2563eb;
+  color: #ffffff;
+  padding: 12px 26px;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.5);
+  transition: all 0.2s ease;
+}
+
+.hph-btn-primary:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px -5px rgba(37, 99, 235, 0.6);
+  color: #ffffff;
+}
+
+.hph-btn-glass {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+  padding: 12px 24px;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.hph-btn-glass:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.6);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* Capabilities (3 bottom items) */
+.hph-capabilities {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-6);
+  padding-top: var(--space-4);
+}
+
+.hph-cap-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hph-cap-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(37, 99, 235, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: #60a5fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.hph-cap-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.hph-cap-text strong {
+  font-size: 0.88rem;
+  color: #ffffff;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.hph-cap-text span {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* 2. Right Visual Elements */
+.hph-visual {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-6);
+  padding-right: var(--space-4);
+}
+
+/* Holographic Panel */
+.hph-holo-panel {
+  background: rgba(11, 23, 48, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(59, 130, 246, 0.35);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 280px;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(37, 99, 235, 0.15);
+}
+
+.hph-holo-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.hph-holo-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: rgba(37, 99, 235, 0.2);
+  border: 1px solid rgba(96, 165, 250, 0.4);
+  color: #93c5fd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.hph-holo-label {
+  font-size: 0.94rem;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+/* Developer Stat Card */
+.hph-expert-card {
+  background: rgba(11, 23, 48, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(59, 130, 246, 0.3);
+  border-radius: var(--radius-md);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 260px;
+  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.6);
+}
+
+.hph-expert-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(37, 99, 235, 0.2);
+  color: #60a5fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.hph-expert-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.hph-expert-info strong {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.1;
+}
+
+.hph-expert-info span {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+/* 3. Trusted Worldwide Ribbon */
+.hph-trust-ribbon {
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hph-trust-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.hph-trust-line {
+  flex: 1;
+  max-width: 140px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.hph-trust-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+}
+
+.hph-brands-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+}
+
+.hph-brand-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0.75;
+  transition: opacity 0.2s ease;
+}
+
+.hph-brand-item:hover {
+  opacity: 1;
+}
+
+.hph-brand-logo-mark {
+  width: 22px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.85);
+  mask: radial-gradient(circle, #fff 60%, transparent 65%);
+  -webkit-mask: radial-gradient(circle, #fff 60%, transparent 65%);
+  border-radius: 4px;
+}
+
+.hph-brand-text {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .hph-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-7);
+  }
+
+  .hph-visual {
+    align-items: center;
+    padding-right: 0;
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .hph-visual {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hph-holo-panel,
+  .hph-expert-card {
+    width: 100%;
+  }
+
+  .hph-capabilities {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+
+  .hph-brands-row {
+    justify-content: center;
+    gap: var(--space-4);
+  }
+}
