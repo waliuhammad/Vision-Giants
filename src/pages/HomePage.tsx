@@ -14,6 +14,7 @@ import { TechLogo } from '../components/visuals/TechLogos';
 import { CTASection } from '../components/ui/CTASection';
 import { Reveal } from '../components/animations/Reveal';
 import { HeroShowcase } from '../components/visuals/HeroShowcase';
+import { HeroParticles } from '../components/visuals/HeroParticles';
 import { Highlight } from '../components/ui/Highlight';
 import { PartnersSection } from '../components/ui/PartnersSection';
 
@@ -60,7 +61,7 @@ export default function HomePage() {
   return (
     <>
       <section className="hero" aria-labelledby="hero-title">
-        <div className="bg-grid" aria-hidden="true" />
+        <HeroParticles />
         <div className="container">
           <div className="hero__grid">
             <div className="hero__copy">

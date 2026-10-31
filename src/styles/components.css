@@ -182,6 +182,112 @@
   }
 }
 
+/* ---------- Floating glass header ----------
+   The header itself is transparent; the bar is a rounded, frosted panel inset from the edges.
+   The main links sit in a soft pill track with a white indicator that slides to the active page. */
+.site-header,
+.site-header.is-scrolled,
+.site-header.is-open {
+  background: transparent;
+  border-bottom: 0;
+  box-shadow: none;
+}
+.site-header {
+  display: flex;
+  align-items: center;
+}
+.site-header__inner.container {
+  width: calc(100% - 2 * var(--gutter));
+  max-width: calc(var(--container) + 24px);
+  height: 58px;
+  padding-inline: 12px 8px;
+  border-radius: 18px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6);
+  backdrop-filter: blur(16px) saturate(1.6);
+  box-shadow:
+    0 1px 2px rgba(11, 23, 48, 0.04),
+    0 10px 30px -18px rgba(11, 23, 48, 0.25);
+  transition:
+    background-color var(--dur) ease,
+    box-shadow var(--dur) ease;
+}
+.site-header.is-scrolled .site-header__inner.container,
+.site-header.is-open .site-header__inner.container {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 1px 2px rgba(11, 23, 48, 0.05),
+    0 16px 36px -16px rgba(11, 23, 48, 0.3);
+}
+.site-header .site-header__inner .nav {
+  position: relative;
+  flex: 0 1 auto;
+  margin-inline: auto;
+  padding: 4px;
+  gap: 2px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.045);
+  border: 1px solid rgba(15, 23, 42, 0.05);
+}
+.site-header .nav__link {
+  z-index: 1;
+  padding: 7px 14px;
+  border-radius: 999px;
+}
+.site-header .nav__link:hover {
+  background: rgba(255, 255, 255, 0.6);
+}
+.site-header .nav__link.active {
+  background: transparent;
+}
+.site-header .nav__link.active::after {
+  display: none;
+}
+.nav__indicator {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 0;
+  width: 0;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgba(11, 23, 48, 0.08),
+    0 4px 12px -4px rgba(37, 99, 235, 0.25);
+  opacity: 0;
+  transition:
+    transform 0.35s var(--ease-out),
+    width 0.35s var(--ease-out),
+    opacity var(--dur) ease;
+}
+.nav__indicator.is-ready {
+  opacity: 1;
+}
+.site-header .btn.header-cta {
+  border-radius: 12px;
+}
+/* Each page's first section runs up behind the floating bar, so its background fills the strip
+   around it. A transparent top border keeps the content below the bar. */
+#main {
+  margin-top: calc(var(--header-h) * -1);
+}
+#main > :first-child {
+  border-top: var(--header-h) solid transparent;
+  /* Measure gradients from the outer edge, or the strip shows a repeat of the gradient's end */
+  background-origin: border-box;
+}
+.site-header .menu-toggle {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav__indicator {
+    transition: none;
+  }
+}
+
 /* =========================================================
    Buttons
    Primary: blue fill. Outline (secondary): white with a neutral border. Ghost (tertiary): text.
