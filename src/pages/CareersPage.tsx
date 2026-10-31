@@ -1,37 +1,59 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   ArrowRight,
+  Award,
   Briefcase,
+  CheckCircle2,
   Clock,
-  Compass,
-  GraduationCap,
-  HeartHandshake,
+  Cloud,
+  Code,
+  Cpu,
+  Globe,
   MapPin,
+  Palette,
+  Play,
   Search,
-  Sparkles,
-  TrendingUp,
+  Send,
+  Smartphone,
   Users,
   X,
-  Code,
-  Laptop,
 } from 'lucide-react';
 import { useContent } from '../content/ContentContext';
+import { type Position } from '../data/careers';
 import {
-  hiringProcessSteps,
-  workBenefits,
-  internshipRoles,
-  type Position,
-} from '../data/careers';
-import { PageHero } from '../components/ui/PageHero';
+  defaultCareersPageData,
+  careersPageDataFromDoc,
+  type CareersPageData,
+} from '../content/careersPageData';
 import { Button } from '../components/ui/Button';
 import { SectionHeading } from '../components/ui/SectionHeading';
 import { Reveal } from '../components/animations/Reveal';
-import { Highlight } from '../components/ui/Highlight';
-import { PortalVisual } from '../components/visuals/IsoVisuals';
+import { ApplicationForm } from '../components/ui/ApplicationForm';
+import { getDb, isFirebaseConfigured } from '../config/firebase';
+
+const firestore = () => import('firebase/firestore/lite');
 
 export default function CareersPage() {
   const { positions: allPositions } = useContent();
   const openPositions = allPositions.filter((p) => p.published !== false);
+
+  // Dynamic Careers Page content (loaded from Firestore pages/careers or default)
+  const [pageData, setPageData] = useState<CareersPageData>(defaultCareersPageData);
+
+  useEffect(() => {
+    if (!isFirebaseConfigured) return;
+    (async () => {
+      try {
+        const [db, { doc, getDoc }] = await Promise.all([getDb(), firestore()]);
+        const snap = await getDoc(doc(db, 'pages', 'careers'));
+        if (snap.exists()) {
+          setPageData(careersPageDataFromDoc(snap.data()));
+        }
+      } catch (err) {
+        console.warn('Could not load custom careers page content; using defaults', err);
+      }
+    })();
+  }, []);
 
   // Filters state
   const [search, setSearch] = useState('');
@@ -42,6 +64,8 @@ export default function CareersPage() {
 
   // Selected job for detailed view modal
   const [selectedJob, setSelectedJob] = useState<Position | null>(null);
+  // Job currently applying for in modal
+  const [applyingJob, setApplyingJob] = useState<Position | null>(null);
 
   // Derive unique filter options
   const departments = useMemo(() => {
@@ -74,7 +98,7 @@ export default function CareersPage() {
         p.summary.toLowerCase().includes(q) ||
         p.department.toLowerCase().includes(q) ||
         (p.skills && p.skills.some((s) => s.toLowerCase().includes(q)));
-      const matchesDept = departmentFilter === 'all' || p.department === departmentFilter;
+      const matchesDept = departmentFilter === 'all' || p.department.toLowerCase().includes(departmentFilter.toLowerCase());
       const matchesType = typeFilter === 'all' || p.type === typeFilter;
       const matchesArrangement = arrangementFilter === 'all' || p.workArrangement === arrangementFilter;
       const matchesExp = experienceFilter === 'all' || p.experience === experienceFilter;
@@ -82,143 +106,252 @@ export default function CareersPage() {
     });
   }, [openPositions, search, departmentFilter, typeFilter, arrangementFilter, experienceFilter]);
 
+  // Handle track card click to filter positions
+  const handleTrackClick = (trackId: string) => {
+    if (trackId === 'web') setDepartmentFilter('Engineering');
+    else if (trackId === 'mobile') setDepartmentFilter('Mobile');
+    else if (trackId === 'design') setDepartmentFilter('Design');
+    else if (trackId === 'cloud') setDepartmentFilter('Engineering');
+    else if (trackId === 'ai') setDepartmentFilter('Engineering');
+    else setDepartmentFilter('all');
+
+    const el = document.getElementById('open-positions');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // Track icons helper
+  const renderTrackIcon = (iconName: string) => {
+    switch (iconName) {
+      case 'code':
+        return <Code size={24} />;
+      case 'smartphone':
+        return <Smartphone size={24} />;
+      case 'palette':
+        return <Palette size={24} />;
+      case 'cloud':
+        return <Cloud size={24} />;
+      case 'cpu':
+        return <Cpu size={24} />;
+      default:
+        return <Code size={24} />;
+    }
+  };
+
+  // Stats ribbon icon helper
+  const renderStatIcon = (iconName: string) => {
+    switch (iconName) {
+      case 'users':
+        return <Users size={32} />;
+      case 'trophy':
+        return <Award size={32} />;
+      case 'briefcase':
+        return <Briefcase size={32} />;
+      case 'globe':
+        return <Globe size={32} />;
+      default:
+        return <Users size={32} />;
+    }
+  };
+
   return (
     <>
-      {/* 1. HERO SECTION */}
-      <PageHero
-        crumb="Careers"
-        eyebrow="Join Vision Giants"
-        title="Build Your Future With Us"
-        lead="Join a team of creative thinkers, developers, and innovators who turn ideas into technology. We design, build, and deploy world-class digital experiences."
-        actions={
-          <div className="page-hero__actions">
-            <Button href="#positions" icon={<ArrowRight size={18} />}>
-              Explore Open Positions
-            </Button>
-            <Button to="/careers/apply/" variant="outline">
-              Submit Your CV
-            </Button>
-          </div>
-        }
-        visual={<PortalVisual />}
-      />
-
-      {/* 2. WHY WORK WITH US? */}
-      <section className="section" aria-labelledby="why-work-title">
+      {/* 1. HERO SECTION (MATCHING REFERENCE PICTURE) */}
+      <section className="careers-hero-section">
         <div className="container">
-          <SectionHeading
-            id="why-work-title"
-            eyebrow="Why Work With Us"
-            title="Grow Your Career in a Forward-Thinking Environment"
-            lead="We create an atmosphere where high engineering standards meet continuous mentorship and personal career growth."
-            align="center"
-          />
-          <div className="grid grid--3">
-            {workBenefits.map((b, i) => (
-              <Reveal key={b.title} delay={(i % 3) * 80}>
-                <article className="card card--interactive career-benefit-card" style={{ height: '100%' }}>
-                  <span className="icon-wrap" aria-hidden="true">
-                    {i === 0 && <TrendingUp size={22} />}
-                    {i === 1 && <GraduationCap size={22} />}
-                    {i === 2 && <Laptop size={22} />}
-                    {i === 3 && <HeartHandshake size={22} />}
-                    {i === 4 && <Compass size={22} />}
-                    {i === 5 && <Sparkles size={22} />}
+          <div className="careers-hero-grid">
+            <Reveal>
+              <div className="careers-hero-content">
+                <span className="careers-dash-eyebrow">{pageData.heroEyebrow}</span>
+                <h1 className="careers-hero-title">
+                  {pageData.heroTitleLine1}
+                  <span>{pageData.heroTitleLine2}</span>
+                </h1>
+                <p className="careers-hero-lead">{pageData.heroDescription}</p>
+
+                <div className="careers-hero-actions">
+                  <Button href={pageData.heroPrimaryCtaLink} icon={<ArrowRight size={18} />}>
+                    {pageData.heroPrimaryCtaText}
+                  </Button>
+                  <a href={pageData.heroSecondaryCtaLink} className="btn--watch">
+                    <Play size={16} fill="currentColor" />
+                    <span>{pageData.heroSecondaryCtaText}</span>
+                  </a>
+                </div>
+
+                <div className="careers-social-proof">
+                  <div className="careers-avatar-stack">
+                    <img
+                      src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+                      alt="Team Engineer"
+                    />
+                    <img
+                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80"
+                      alt="Team Engineer"
+                    />
+                    <img
+                      src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=120&q=80"
+                      alt="Team Engineer"
+                    />
+                  </div>
+                  <span className="careers-social-proof__text">
+                    Join {pageData.heroSocialProofCount} {pageData.heroSocialProofText}
                   </span>
-                  <h3>{b.title}</h3>
-                  <p>{b.description}</p>
-                </article>
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal delay={120}>
+              <div className="careers-hero-image-wrap">
+                <img
+                  src={pageData.heroImage}
+                  alt="Engineering Career at Vision Giants"
+                  className="careers-hero-portrait"
+                />
+                <div className="careers-floating-badge">
+                  <span className="careers-floating-badge__number">
+                    {pageData.heroExperienceBadgeYears}
+                  </span>
+                  <span className="careers-floating-badge__label">
+                    <Award size={14} className="careers-floating-badge__icon" />
+                    {pageData.heroExperienceBadgeText}
+                  </span>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. STATS RIBBON (NAVY BLUE FULL WIDTH) */}
+      <section className="careers-stats-ribbon">
+        <div className="container">
+          <div className="careers-stats-grid">
+            {pageData.stats.map((stat, idx) => (
+              <div key={idx} className="careers-stat-item">
+                <div className="careers-stat-item__icon">{renderStatIcon(stat.icon)}</div>
+                <div className="careers-stat-item__content">
+                  <span className="careers-stat-item__value">{stat.value}</span>
+                  <span className="careers-stat-item__label">{stat.label}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 3. CAREER TRACKS (TOP OPPORTUNITIES) */}
+      <section className="careers-tracks-section">
+        <div className="container">
+          <div className="careers-section-head">
+            <div>
+              <span className="careers-dash-eyebrow">{pageData.tracksEyebrow}</span>
+              <h2 className="careers-section-head__title">{pageData.tracksHeading}</h2>
+            </div>
+            <a href="#open-positions" className="careers-section-head__link">
+              <span>View All Openings</span>
+              <ArrowRight size={16} />
+            </a>
+          </div>
+
+          <div className="careers-tracks-grid">
+            {pageData.tracks.map((track, i) => (
+              <Reveal key={track.id} delay={i * 60}>
+                <div
+                  className="careers-track-card"
+                  onClick={() => handleTrackClick(track.id)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => e.key === 'Enter' && handleTrackClick(track.id)}
+                >
+                  <div
+                    className="careers-track-card__icon-wrap"
+                    style={{
+                      backgroundColor: `${track.accentColor}18`,
+                      color: track.accentColor,
+                    }}
+                  >
+                    {renderTrackIcon(track.icon)}
+                  </div>
+                  <h4 className="careers-track-card__title">{track.title}</h4>
+                  <p className="careers-track-card__desc">{track.description}</p>
+                  <span className="careers-track-card__link">
+                    <span>Learn More</span>
+                    <ArrowRight size={13} />
+                  </span>
+                </div>
               </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 3. OUR WORK CULTURE */}
-      <section className="section section--alt" aria-labelledby="culture-title">
+      {/* 4. WHY CHOOSE US / WE BUILD FUTURES (SPLIT SECTION) */}
+      <section className="careers-why-section" id="why-us">
         <div className="container">
-          <SectionHeading
-            id="culture-title"
-            eyebrow="Our Work Culture"
-            title="Where Craftsmanship Meets Team Collaboration"
-            lead="We prioritize psychological safety, open discourse, clean architectural conventions, and continuous learning."
-            align="center"
-          />
-
-          <div className="grid grid--3 career-culture-grid">
-            <Reveal delay={60}>
-              <div className="card feature career-culture-card">
-                <span className="icon-wrap" aria-hidden="true">
-                  <Users size={24} />
-                </span>
-                <h3>Collaborative Squads</h3>
-                <p>
-                  Engineers, designers, and project leads collaborate closely in focused squads with minimal hierarchy
-                  and complete autonomy over technical execution.
-                </p>
+          <div className="careers-why-grid">
+            <Reveal>
+              <div className="careers-why-image-wrap">
+                <img
+                  src={pageData.whyImage}
+                  alt="Team collaboration at Vision Giants"
+                  className="careers-why-image"
+                />
+                <div className="careers-why-badge">
+                  <span>{pageData.whyBadge}</span>
+                </div>
               </div>
             </Reveal>
 
-            <Reveal delay={120}>
-              <div className="card feature career-culture-card">
-                <span className="icon-wrap" aria-hidden="true">
-                  <Code size={24} />
-                </span>
-                <h3>Quality-Driven Engineering</h3>
-                <p>
-                  We believe code is craft. Rigorous peer reviews, automated CI/CD pipelines, and clean architecture ensure
-                  we deliver systems we are genuinely proud of.
-                </p>
-              </div>
-            </Reveal>
+            <Reveal delay={100}>
+              <div className="careers-why-content">
+                <span className="careers-dash-eyebrow">{pageData.whyEyebrow}</span>
+                <h2 className="careers-why-title">{pageData.whyHeading}</h2>
+                <p className="careers-why-desc">{pageData.whyDescription}</p>
 
-            <Reveal delay={180}>
-              <div className="card feature career-culture-card">
-                <span className="icon-wrap" aria-hidden="true">
-                  <GraduationCap size={24} />
-                </span>
-                <h3>Continuous Learning</h3>
-                <p>
-                  Weekly tech demos, sponsored conference attendances, book stipends, and internal hackathons keep our
-                  skills sharp and modern.
-                </p>
+                <ul className="careers-checklist">
+                  {pageData.whyChecklist.map((item, idx) => (
+                    <li key={idx} className="careers-checklist__item">
+                      <CheckCircle2 size={18} className="careers-checklist__icon" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <Button href={pageData.whyCtaLink} variant="primary">
+                  {pageData.whyCtaText}
+                </Button>
               </div>
             </Reveal>
           </div>
         </div>
       </section>
 
-      {/* 4. OPEN POSITIONS & FILTERS */}
-      <section id="positions" className="section" aria-labelledby="positions-title">
+      {/* 5. OPEN POSITIONS SECTION (WITH FILTERS & DIRECT APPLICATION) */}
+      <section className="section section--alt" id="open-positions" aria-labelledby="jobs-heading">
         <div className="container">
           <SectionHeading
-            id="positions-title"
-            eyebrow="Open Positions"
-            title="Current Career Opportunities"
-            lead="Find your next role at Vision Giants and help us build scalable software for visionary clients worldwide."
-            aside={
-              <Button to="/careers/apply/" variant="outline" size="sm" icon={<ArrowRight size={15} />}>
-                General Application
-              </Button>
-            }
+            id="jobs-heading"
+            eyebrow={pageData.positionsEyebrow}
+            title={pageData.positionsHeading}
+            lead={pageData.positionsLead}
+            align="center"
           />
 
-          {/* Interactive Filters Bar */}
-          <div className="career-filters card">
-            <div className="career-filters__search">
-              <Search size={18} className="career-filters__icon" aria-hidden="true" />
+          {/* Search & Filters */}
+          <div className="course-search-card" style={{ marginBottom: 'var(--space-6)' }}>
+            <div className="course-search-input-wrap">
+              <Search size={18} className="course-search-icon" aria-hidden="true" />
               <input
                 type="text"
-                placeholder="Search by job title, department, or skill..."
+                className="course-search-input"
+                placeholder="Search job title, technical skills (e.g. React, Flutter, Node.js)..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="career-filters__input"
-                aria-label="Search jobs"
               />
               {search && (
                 <button
                   type="button"
-                  className="career-filters__clear"
+                  className="course-search-clear"
                   onClick={() => setSearch('')}
                   aria-label="Clear search"
                 >
@@ -227,224 +360,245 @@ export default function CareersPage() {
               )}
             </div>
 
-            <div className="career-filters__dropdowns">
-              <div className="career-filters__group">
-                <label htmlFor="dept-filter">Dept:</label>
-                <select
-                  id="dept-filter"
-                  value={departmentFilter}
-                  onChange={(e) => setDepartmentFilter(e.target.value)}
+            <div className="course-filter-pills" style={{ marginTop: 'var(--space-3)' }}>
+              <span className="course-filter-label">Department:</span>
+              {departments.map((dept) => (
+                <button
+                  key={dept}
+                  type="button"
+                  className={`course-filter-pill ${departmentFilter === dept ? 'is-active' : ''}`}
+                  onClick={() => setDepartmentFilter(dept)}
                 >
-                  <option value="all">All Departments</option>
-                  {departments
-                    .filter((d) => d !== 'all')
-                    .map((d) => (
-                      <option key={d} value={d}>
-                        {d}
-                      </option>
-                    ))}
-                </select>
-              </div>
+                  {dept === 'all' ? 'All Roles' : dept}
+                </button>
+              ))}
+            </div>
 
-              <div className="career-filters__group">
-                <label htmlFor="type-filter">Type:</label>
-                <select id="type-filter" value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
-                  <option value="all">All Types</option>
-                  {types
-                    .filter((t) => t !== 'all')
-                    .map((t) => (
-                      <option key={t} value={t}>
-                        {t}
-                      </option>
-                    ))}
-                </select>
-              </div>
-
-              <div className="career-filters__group">
-                <label htmlFor="arrangement-filter">Mode:</label>
-                <select
-                  id="arrangement-filter"
-                  value={arrangementFilter}
-                  onChange={(e) => setArrangementFilter(e.target.value)}
+            <div className="course-filter-pills" style={{ marginTop: 'var(--space-2)' }}>
+              <span className="course-filter-label">Work Mode:</span>
+              {arrangements.map((arr) => (
+                <button
+                  key={arr}
+                  type="button"
+                  className={`course-filter-pill ${arrangementFilter === arr ? 'is-active' : ''}`}
+                  onClick={() => setArrangementFilter(arr)}
                 >
-                  <option value="all">All Arrangements</option>
-                  {arrangements
-                    .filter((a) => a !== 'all')
-                    .map((a) => (
-                      <option key={a} value={a}>
-                        {a}
-                      </option>
-                    ))}
-                </select>
-              </div>
+                  {arr === 'all' ? 'All Arrangements' : arr}
+                </button>
+              ))}
 
-              <div className="career-filters__group">
-                <label htmlFor="exp-filter">Level:</label>
-                <select id="exp-filter" value={experienceFilter} onChange={(e) => setExperienceFilter(e.target.value)}>
-                  <option value="all">All Levels</option>
-                  {experiences
-                    .filter((exp) => exp !== 'all')
-                    .map((exp) => (
-                      <option key={exp} value={exp}>
-                        {exp}
-                      </option>
-                    ))}
-                </select>
-              </div>
+              <span className="course-filter-label" style={{ marginLeft: 'var(--space-3)' }}>
+                Employment:
+              </span>
+              {types.map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  className={`course-filter-pill ${typeFilter === t ? 'is-active' : ''}`}
+                  onClick={() => setTypeFilter(t)}
+                >
+                  {t === 'all' ? 'All Types' : t}
+                </button>
+              ))}
+
+              {experiences.length > 2 && (
+                <>
+                  <span className="course-filter-label" style={{ marginLeft: 'var(--space-3)' }}>
+                    Level:
+                  </span>
+                  {experiences.map((exp) => (
+                    <button
+                      key={exp}
+                      type="button"
+                      className={`course-filter-pill ${experienceFilter === exp ? 'is-active' : ''}`}
+                      onClick={() => setExperienceFilter(exp)}
+                    >
+                      {exp === 'all' ? 'All Levels' : exp}
+                    </button>
+                  ))}
+                </>
+              )}
             </div>
           </div>
 
-          {/* Jobs Grid */}
-          {filteredPositions.length > 0 ? (
-            <div className="grid grid--2 career-jobs-grid" style={{ marginTop: 'var(--space-6)' }}>
-              {filteredPositions.map((job, i) => (
-                <Reveal key={job.id} delay={(i % 2) * 80}>
-                  <article className="card card--interactive career-job-card" style={{ height: '100%' }}>
-                    <div className="career-job-card__head">
-                      <div>
-                        <span className="badge badge--primary">{job.department || 'Engineering'}</span>
-                        <h3 className="career-job-card__title">{job.title}</h3>
-                      </div>
-                      <span className="career-job-card__type">{job.type}</span>
+          {/* Job Listings Grid */}
+          <div className="grid grid--2">
+            {filteredPositions.map((job, idx) => (
+              <Reveal key={job.id} delay={(idx % 2) * 80}>
+                <div
+                  className="card card--interactive course-job-card"
+                  style={{
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+                      <span className="badge badge--neutral">{job.department}</span>
+                      <span className="muted" style={{ fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <MapPin size={13} /> {job.location} ({job.workArrangement})
+                      </span>
                     </div>
 
-                    <div className="career-job-card__meta">
-                      <span>
-                        <MapPin size={15} aria-hidden="true" />
-                        {job.location} ({job.workArrangement})
-                      </span>
-                      <span>
-                        <Briefcase size={15} aria-hidden="true" />
-                        {job.experience}
-                      </span>
-                      {job.deadline && (
-                        <span>
-                          <Clock size={15} aria-hidden="true" />
-                          Apply by {job.deadline}
-                        </span>
-                      )}
-                    </div>
-
-                    <p className="career-job-card__summary">{job.summary}</p>
+                    <h3 style={{ fontSize: '1.25rem', marginBottom: '6px' }}>{job.title}</h3>
+                    <p style={{ color: 'var(--color-muted)', fontSize: '0.92rem', marginBottom: '14px', lineHeight: 1.55 }}>
+                      {job.summary}
+                    </p>
 
                     {job.skills && job.skills.length > 0 && (
-                      <div className="career-job-card__skills">
-                        {job.skills.map((skill) => (
-                          <span key={skill} className="badge badge--neutral">
-                            {skill}
+                      <div className="course-job-card__skills" style={{ marginBottom: '16px' }}>
+                        {job.skills.slice(0, 4).map((s) => (
+                          <span key={s} className="badge badge--neutral">
+                            {s}
                           </span>
                         ))}
+                        {job.skills.length > 4 && (
+                          <span className="badge badge--neutral">+{job.skills.length - 4} more</span>
+                        )}
                       </div>
                     )}
+                  </div>
 
-                    <div className="career-job-card__footer">
-                      <button
-                        type="button"
-                        className="btn btn--outline btn--sm"
-                        onClick={() => setSelectedJob(job)}
-                      >
+                  <div style={{ borderTop: '1px solid var(--border)', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span className="muted" style={{ fontSize: '0.85rem' }}>
+                      <Clock size={13} style={{ display: 'inline', verticalAlign: '-1px', marginRight: 4 }} />
+                      {job.type}
+                    </span>
+
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <Button variant="outline" size="sm" onClick={() => setSelectedJob(job)}>
                         View Details
-                      </button>
-                      <Button
-                        to={`/careers/apply/?position=${encodeURIComponent(job.id)}`}
-                        size="sm"
-                        icon={<ArrowRight size={15} />}
-                      >
+                      </Button>
+                      <Button variant="primary" size="sm" onClick={() => setApplyingJob(job)}>
                         Apply Now
                       </Button>
                     </div>
-                  </article>
-                </Reveal>
-              ))}
-            </div>
-          ) : (
-            <div className="card career-empty-state" style={{ marginTop: 'var(--space-6)' }}>
-              <span className="icon-wrap" aria-hidden="true">
-                <Briefcase size={26} />
-              </span>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          {filteredPositions.length === 0 && (
+            <div className="admin-table-empty card" style={{ padding: '48px 24px', textAlign: 'center' }}>
+              <Briefcase size={36} style={{ color: 'var(--color-muted)', margin: '0 auto 12px' }} />
               <h3>No matching positions found</h3>
-              <p>
-                We don’t have a role matching your exact filter criteria right now, but we are always eager to talk to
-                exceptionally talented engineers and designers.
+              <p className="muted" style={{ marginBottom: '16px' }}>
+                Try adjusting your search query or reset the filters to see all available vacancies.
               </p>
-              <div className="career-empty-state__actions">
-                <button
-                  type="button"
-                  className="btn btn--outline btn--sm"
-                  onClick={() => {
-                    setSearch('');
-                    setDepartmentFilter('all');
-                    setTypeFilter('all');
-                    setArrangementFilter('all');
-                    setExperienceFilter('all');
-                  }}
-                >
-                  Clear Filters
-                </button>
-                <Button to="/careers/apply/" size="sm" icon={<ArrowRight size={15} />}>
-                  Send General Application
-                </Button>
-              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setSearch('');
+                  setDepartmentFilter('all');
+                  setTypeFilter('all');
+                  setArrangementFilter('all');
+                  setExperienceFilter('all');
+                }}
+              >
+                Reset All Filters
+              </Button>
             </div>
           )}
         </div>
       </section>
 
-      {/* 5. JOB DETAILS MODAL */}
+      {/* 6. TEAM TESTIMONIALS (STUDENT & TEAM STORIES) */}
+      <section className="careers-testimonials-section">
+        <div className="container">
+          <div style={{ textAlign: 'center', marginBottom: 'var(--space-6)' }}>
+            <span className="careers-dash-eyebrow">{pageData.testimonialsEyebrow}</span>
+            <h2 className="careers-section-head__title" style={{ textAlign: 'center' }}>
+              {pageData.testimonialsHeading}
+            </h2>
+          </div>
+
+          <div className="careers-testimonials-grid">
+            {pageData.testimonials.map((item, idx) => (
+              <Reveal key={item.id} delay={idx * 80}>
+                <article className="careers-testimonial-card">
+                  <img src={item.photo} alt={item.name} className="careers-testimonial-card__avatar" />
+                  <div className="careers-testimonial-card__content">
+                    <p className="careers-testimonial-card__quote">“{item.quote}”</p>
+                    <strong className="careers-testimonial-card__name">{item.name}</strong>
+                    <span className="careers-testimonial-card__role">{item.role}</span>
+                  </div>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 7. BOTTOM CALL TO ACTION BANNER (MATCHING REFERENCE PICTURE) */}
+      <section className="careers-cta-ribbon-section">
+        <div className="container">
+          <div className="careers-cta-ribbon">
+            <div className="careers-cta-ribbon__left">
+              <div className="careers-cta-ribbon__icon-wrap">
+                <Send size={26} />
+              </div>
+              <div>
+                <h3 className="careers-cta-ribbon__title">{pageData.ctaHeading}</h3>
+                <p className="careers-cta-ribbon__desc">{pageData.ctaDescription}</p>
+              </div>
+            </div>
+
+            <a href={pageData.ctaButtonLink} className="btn--amber">
+              <span>{pageData.ctaButtonText}</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* MODAL: JOB DETAILS */}
       {selectedJob && (
-        <div className="career-modal-backdrop" onClick={() => setSelectedJob(null)}>
+        <div
+          className="admin-modal-backdrop"
+          onClick={() => setSelectedJob(null)}
+          role="dialog"
+          aria-modal="true"
+        >
           <div
-            className="career-modal card"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="modal-job-title"
+            className="admin-modal-card"
+            style={{ maxWidth: '640px' }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="career-modal__head">
+            <div className="admin-modal-head">
               <div>
-                <span className="badge badge--primary">{selectedJob.department}</span>
-                <h2 id="modal-job-title">{selectedJob.title}</h2>
-                <div className="career-modal__meta">
-                  <span>
-                    <MapPin size={15} /> {selectedJob.location} · {selectedJob.workArrangement}
-                  </span>
-                  <span>
-                    <Briefcase size={15} /> {selectedJob.type} · {selectedJob.experience}
-                  </span>
-                  {selectedJob.salaryRange && (
-                    <span>
-                      <strong>Salary:</strong> {selectedJob.salaryRange}
-                    </span>
-                  )}
-                  {selectedJob.deadline && (
-                    <span>
-                      <Clock size={15} /> Deadline: {selectedJob.deadline}
-                    </span>
-                  )}
-                </div>
+                <span className="badge badge--neutral" style={{ marginBottom: 6 }}>
+                  {selectedJob.department} · {selectedJob.type}
+                </span>
+                <h2 style={{ fontSize: '1.4rem', margin: 0 }}>{selectedJob.title}</h2>
+                <p className="muted" style={{ margin: '4px 0 0', fontSize: '0.85rem' }}>
+                  {selectedJob.location} · {selectedJob.workArrangement} · {selectedJob.experience}
+                </p>
               </div>
               <button
                 type="button"
-                className="career-modal__close"
+                className="btn-icon"
                 onClick={() => setSelectedJob(null)}
-                aria-label="Close modal"
+                aria-label="Close"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
 
-            <div className="career-modal__body">
-              {selectedJob.description && (
-                <div className="career-modal__section">
-                  <h3>About the Role</h3>
-                  <p>{selectedJob.description}</p>
-                </div>
-              )}
+            <div className="admin-modal-body" style={{ maxHeight: '68vh', overflowY: 'auto' }}>
+              <div style={{ marginBottom: '16px' }}>
+                <h4 style={{ fontSize: '0.95rem', marginBottom: '6px' }}>About The Role</h4>
+                <p style={{ color: 'var(--color-muted)', fontSize: '0.9rem', lineHeight: 1.6 }}>
+                  {selectedJob.description || selectedJob.summary}
+                </p>
+              </div>
 
               {selectedJob.responsibilities && selectedJob.responsibilities.length > 0 && (
-                <div className="career-modal__section">
-                  <h3>Key Responsibilities</h3>
-                  <ul>
+                <div style={{ marginBottom: '16px' }}>
+                  <h4 style={{ fontSize: '0.95rem', marginBottom: '6px' }}>Key Responsibilities</h4>
+                  <ul style={{ paddingLeft: '20px', color: 'var(--color-muted)', fontSize: '0.9rem', lineHeight: 1.6 }}>
                     {selectedJob.responsibilities.map((r, i) => (
                       <li key={i}>{r}</li>
                     ))}
@@ -453,9 +607,9 @@ export default function CareersPage() {
               )}
 
               {selectedJob.skills && selectedJob.skills.length > 0 && (
-                <div className="career-modal__section">
-                  <h3>Required Skills & Technologies</h3>
-                  <div className="career-job-card__skills">
+                <div style={{ marginBottom: '16px' }}>
+                  <h4 style={{ fontSize: '0.95rem', marginBottom: '6px' }}>Required Skills</h4>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                     {selectedJob.skills.map((s) => (
                       <span key={s} className="badge badge--neutral">
                         {s}
@@ -466,9 +620,9 @@ export default function CareersPage() {
               )}
 
               {selectedJob.qualifications && selectedJob.qualifications.length > 0 && (
-                <div className="career-modal__section">
-                  <h3>Qualifications & Requirements</h3>
-                  <ul>
+                <div style={{ marginBottom: '16px' }}>
+                  <h4 style={{ fontSize: '0.95rem', marginBottom: '6px' }}>Qualifications</h4>
+                  <ul style={{ paddingLeft: '20px', color: 'var(--color-muted)', fontSize: '0.9rem', lineHeight: 1.6 }}>
                     {selectedJob.qualifications.map((q, i) => (
                       <li key={i}>{q}</li>
                     ))}
@@ -476,21 +630,27 @@ export default function CareersPage() {
                 </div>
               )}
 
-              {selectedJob.applicationInstructions && (
-                <div className="career-modal__section">
-                  <h3>How to Apply</h3>
-                  <p>{selectedJob.applicationInstructions}</p>
+              {selectedJob.salaryRange && (
+                <div style={{ marginBottom: '16px', background: 'var(--color-surface-2)', padding: '12px', borderRadius: 'var(--radius-sm)' }}>
+                  <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-muted)', display: 'block' }}>
+                    COMPENSATION
+                  </span>
+                  <strong style={{ color: 'var(--color-navy)' }}>{selectedJob.salaryRange}</strong>
                 </div>
               )}
             </div>
 
-            <div className="career-modal__footer">
-              <button type="button" className="btn btn--outline" onClick={() => setSelectedJob(null)}>
+            <div className="admin-modal-foot" style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              <Button variant="outline" onClick={() => setSelectedJob(null)}>
                 Close
-              </button>
+              </Button>
               <Button
-                to={`/careers/apply/?position=${encodeURIComponent(selectedJob.id)}`}
-                icon={<ArrowRight size={16} />}
+                variant="primary"
+                onClick={() => {
+                  const job = selectedJob;
+                  setSelectedJob(null);
+                  setApplyingJob(job);
+                }}
               >
                 Apply for this Position
               </Button>
@@ -499,144 +659,42 @@ export default function CareersPage() {
         </div>
       )}
 
-      {/* 7. INTERNSHIPS SECTION */}
-      <section className="section section--alt" aria-labelledby="internships-title">
-        <div className="container">
-          <SectionHeading
-            id="internships-title"
-            eyebrow="Student & Graduate Tracks"
-            title="Accelerate Your Future With Our Internship Program"
-            lead="Kickstart your professional software engineering career with dedicated 1-on-1 mentorship, real production code, and clear pathways to full-time employment."
-          />
-
-          <div className="grid grid--4 career-internships-grid">
-            {internshipRoles.map((role, i) => (
-              <Reveal key={role.title} delay={(i % 4) * 60}>
-                <article className="card card--interactive career-internship-card">
-                  <div className="career-internship-card__top">
-                    <span className="badge badge--secondary">Internship</span>
-                    <span className="career-internship-card__duration">{role.duration}</span>
-                  </div>
-                  <h4>{role.title}</h4>
-                  <p className="career-internship-card__track">{role.track}</p>
-                  <p className="muted" style={{ fontSize: '0.85rem' }}>{role.mode}</p>
-                  <Button
-                    to={`/careers/apply/?position=${encodeURIComponent(role.title.toLowerCase().replace(/ /g, '-'))}`}
-                    variant="outline"
-                    size="sm"
-                    icon={<ArrowRight size={14} />}
-                  >
-                    Apply Now
-                  </Button>
-                </article>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 8. HIRING PROCESS */}
-      <section className="section" aria-labelledby="process-title">
-        <div className="container">
-          <SectionHeading
-            id="process-title"
-            eyebrow="Hiring Process"
-            title="Our Transparent, 6-Step Recruitment Journey"
-            lead="We respect your time. Our hiring pipeline is clear, communicative, and structured around your strengths."
-            align="center"
-          />
-
-          <div className="grid grid--3 career-process-grid">
-            {hiringProcessSteps.map((step, i) => (
-              <Reveal key={step.step} delay={(i % 3) * 80}>
-                <div className="card feature career-process-card">
-                  <span className="career-process-card__number">{step.step}</span>
-                  <h3>{step.title}</h3>
-                  <p>{step.description}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 9. TEAM TESTIMONIALS */}
-      <section className="section section--alt" aria-labelledby="testimonials-title">
-        <div className="container">
-          <SectionHeading
-            id="testimonials-title"
-            eyebrow="Life at Vision Giants"
-            title="What Our Engineers & Designers Say"
-            lead="Authentic perspectives from the people who build technology with us every day."
-            align="center"
-          />
-
-          <div className="grid grid--3 career-testimonials-grid">
-            <Reveal delay={60}>
-              <blockquote className="card career-testimonial-card">
-                <p>
-                  “The best part about engineering at Vision Giants is the emphasis on code quality. We are given the time
-                  and tooling to design systems right, write comprehensive tests, and deploy with confidence.”
-                </p>
-                <footer>
-                  <strong>Frontend Architect</strong>
-                  <span className="muted">Engineering Squad</span>
-                </footer>
-              </blockquote>
-            </Reveal>
-
-            <Reveal delay={120}>
-              <blockquote className="card career-testimonial-card">
-                <p>
-                  “From day one, the mentorship and transparency have been incredible. You have real ownership of client
-                  features and direct communication with leadership.”
-                </p>
-                <footer>
-                  <strong>Mobile Developer</strong>
-                  <span className="muted">Mobile Systems Squad</span>
-                </footer>
-              </blockquote>
-            </Reveal>
-
-            <Reveal delay={180}>
-              <blockquote className="card career-testimonial-card">
-                <p>
-                  “Designers and engineers actually collaborate like true partners here. Ideas are challenged constructively,
-                  and everyone is motivated to ship exceptional products.”
-                </p>
-                <footer>
-                  <strong>UI/UX Designer</strong>
-                  <span className="muted">Product Design Squad</span>
-                </footer>
-              </blockquote>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* 10. FINAL CALL TO ACTION */}
-      <section className="section section--tight" aria-labelledby="careers-cta-title">
-        <div className="container">
-          <Reveal className="cta">
-            <div>
-              <h2 id="careers-cta-title">
-                <Highlight text="Ready to Become Part of Our Team?" />
-              </h2>
-              <p>
-                Explore current opportunities or send an open application with your resume and portfolio.
-              </p>
+      {/* MODAL: DIRECT APPLICATION FORM */}
+      {applyingJob && (
+        <div
+          className="admin-modal-backdrop"
+          onClick={() => setApplyingJob(null)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="admin-modal-card"
+            style={{ maxWidth: '640px' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="admin-modal-head">
+              <div>
+                <span className="badge badge--neutral" style={{ marginBottom: 4 }}>
+                  Job Application
+                </span>
+                <h2 style={{ fontSize: '1.3rem', margin: 0 }}>Apply: {applyingJob.title}</h2>
+              </div>
+              <button
+                type="button"
+                className="btn-icon"
+                onClick={() => setApplyingJob(null)}
+                aria-label="Close"
+              >
+                <X size={18} />
+              </button>
             </div>
-            <div className="cta__actions">
-              <Button href="#positions" icon={<ArrowRight size={18} />}>
-                Explore Opportunities
-              </Button>
-              <Button to="/careers/apply/" variant="outline">
-                Submit Your CV
-              </Button>
+
+            <div className="admin-modal-body" style={{ maxHeight: '72vh', overflowY: 'auto' }}>
+              <ApplicationForm positions={applyingJob ? [applyingJob] : openPositions} />
             </div>
-          </Reveal>
+          </div>
         </div>
-      </section>
+      )}
     </>
   );
 }
