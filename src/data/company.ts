@@ -12,7 +12,8 @@ export interface Company {
   tagline: string;
   description: string;
   email: string | null;
-  phone: string | null;
+  /** Contact numbers as displayed, in local format (e.g. 0308 0058600). Empty to hide. */
+  phones: string[];
   address: string | null;
   /** `placeholder` links are shown but left out of search-engine data until replaced. */
   social: { label: string; href: string; placeholder?: boolean }[];
@@ -26,15 +27,19 @@ export const company: Company = {
   description:
     'We design and develop web applications, mobile apps and custom software that help businesses work better and grow.',
   email: null,
-  phone: null,
+  phones: ['0308 0058600', '0317 6572690'],
   address: 'Chapter 2 Plaza, near Zavia School, Gulgasht, Multan, Pakistan',
-  // PLACEHOLDERS: replace each href with the real profile/number/address, then delete `placeholder: true`.
   // WhatsApp format: https://wa.me/923001234567 (country code + number, digits only).
   social: [
-    { label: 'WhatsApp', href: 'https://wa.me/', placeholder: true },
-    { label: 'LinkedIn', href: 'https://www.linkedin.com/', placeholder: true },
-    { label: 'Instagram', href: 'https://www.instagram.com/', placeholder: true },
-    { label: 'Facebook', href: 'https://www.facebook.com/', placeholder: true },
-    { label: 'Email', href: 'mailto:', placeholder: true },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/company/vision-giants/' },
+    { label: 'Facebook', href: 'https://www.facebook.com/share/1KKtHY6Huo/' },
+    { label: 'Instagram', href: 'https://www.instagram.com/visiongiants/' },
+    { label: 'TikTok', href: 'https://www.tiktok.com/@vision.giants' },
   ],
+};
+
+/** tel: link for a Pakistani number in local format: "0308 0058600" -> "tel:+923080058600". */
+export const telHref = (phone: string) => {
+  const digits = phone.replace(/\D/g, '');
+  return `tel:${digits.startsWith('0') ? `+92${digits.slice(1)}` : `+${digits}`}`;
 };

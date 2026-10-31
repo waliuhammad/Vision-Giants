@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 import { Mail, Phone, MapPin, Info } from 'lucide-react';
-import { company } from '../data/company';
+import { company, telHref } from '../data/company';
 import { ContactForm } from '../components/ui/ContactForm';
 import { EnvelopeVisual } from '../components/visuals/IsoVisuals';
 import { usePageText } from '../content/ContentContext';
@@ -10,7 +10,7 @@ export default function ContactPage() {
   const t = usePageText('contact');
   const details = [
     company.email && { icon: Mail, label: 'Email', value: company.email, href: `mailto:${company.email}` },
-    company.phone && { icon: Phone, label: 'Phone', value: company.phone, href: `tel:${company.phone.replace(/\s+/g, '')}` },
+    ...company.phones.map((p, i) => ({ icon: Phone, label: company.phones.length > 1 ? `Phone ${i + 1}` : 'Phone', value: p, href: telHref(p) })),
     company.address && { icon: MapPin, label: 'Location', value: company.address },
   ].filter(Boolean) as { icon: typeof Mail; label: string; value: string; href?: string }[];
 

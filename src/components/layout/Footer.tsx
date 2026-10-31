@@ -9,7 +9,7 @@ import {
   Globe,
 } from 'lucide-react';
 import type { ReactElement, ReactNode } from 'react';
-import { company } from '../../data/company';
+import { company, telHref } from '../../data/company';
 import { footerCompanyNav } from '../../data/navigation';
 import { useContent } from '../../content/ContentContext';
 import { Logo } from './Logo';
@@ -73,6 +73,11 @@ const Github = createIcon(
   </>
 );
 
+// TikTok's note mark, drawn as an outline to match the other icons.
+const Tiktok = createIcon(
+  <path d="M16 3a5 5 0 0 0 5 5v3a8 8 0 0 1-5-1.7V15a6 6 0 1 1-6-6v3.2a2.8 2.8 0 1 0 2.8 2.8V3z" />
+);
+
 const Twitter = createIcon(
   <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
 );
@@ -107,6 +112,7 @@ function getSocialIcon(label: string, href: string): IconComponent {
   if (key.includes('linkedin')) return Linkedin;
   if (key.includes('facebook')) return Facebook;
   if (key.includes('instagram')) return Instagram;
+  if (key.includes('tiktok')) return Tiktok;
   if (key.includes('github')) return Github;
   if (key.includes('twitter') || key.includes('x.com')) return Twitter;
   return GlobeIcon;
@@ -420,14 +426,14 @@ export function Footer() {
                   <a href={`mailto:${company.email}`}>{company.email}</a>
                 </li>
               )}
-              {company.phone && (
-                <li>
+              {company.phones.map((p) => (
+                <li key={p}>
                   <span className="site-footer__icon" aria-hidden="true">
                     <Phone size={15} />
                   </span>
-                  <a href={`tel:${company.phone.replace(/\s+/g, '')}`}>{company.phone}</a>
+                  <a href={telHref(p)}>{p}</a>
                 </li>
-              )}
+              ))}
               {company.address && (
                 <li>
                   <span className="site-footer__icon" aria-hidden="true">

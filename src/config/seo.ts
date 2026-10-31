@@ -1,4 +1,4 @@
-import { company } from '../data/company';
+import { company, telHref } from '../data/company';
 import { services } from '../data/services';
 import { blogPosts } from '../data/blog';
 
@@ -120,7 +120,7 @@ function organizationJsonLd(): string {
     description: company.description,
   };
   if (company.email) data.email = company.email;
-  if (company.phone) data.telephone = company.phone;
+  if (company.phones.length) data.telephone = company.phones.map((p) => telHref(p).slice(4));
   const profiles = company.social.filter((s) => !s.placeholder && s.href.startsWith('http')).map((s) => s.href);
   if (profiles.length) data.sameAs = profiles;
   return `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;

@@ -177,7 +177,7 @@ const signature = (sender: string) =>
     company.legalName,
     company.tagline,
     ...(company.address ? [company.address] : []),
-    ...(company.phone ? [company.phone] : []),
+    ...(company.phones.length ? [company.phones.join(' | ')] : []),
   ].join('\n');
 
 const numbered = (items: string[]) => items.map((q, i) => `${i + 1}. ${q}`);
