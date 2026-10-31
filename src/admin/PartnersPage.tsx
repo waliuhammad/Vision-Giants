@@ -62,6 +62,44 @@ const normalizeUrl = (v: string) => {
   return t && !/^[a-z][a-z0-9+.-]*:/i.test(t) ? `https://${t}` : t;
 };
 
+/**
+ * Placeholder partners for previewing the Home page section before real ones exist. Names start
+ * with "Sample" so they are recognisable on the site and can be removed in one click.
+ */
+const SAMPLE_PREFIX = 'Sample ';
+const samplePartners = [
+  { name: 'Sample Technology Partner', type: 'Technology Partner', mark: 'T', color: '#2563eb', description: 'Cloud infrastructure and platform services that power the applications we build for our clients.' },
+  { name: 'Sample Training Institute', type: 'Training Partner', mark: 'A', color: '#0f9d76', description: 'Certified courses and workshops that keep our engineers current with modern tools and practices.' },
+  { name: 'Sample Business Group', type: 'Business Partner', mark: 'B', color: '#c2410c', description: 'Joint go-to-market work bringing digital solutions to retail and distribution businesses.' },
+  { name: 'Sample Development Studio', type: 'Development Partner', mark: 'D', color: '#7c3aed', description: 'Shared delivery capacity for large projects, from UI/UX design through to quality assurance.' },
+];
+
+/** Draws a simple placeholder logo (coloured mark + name) and returns it as a data: URL. */
+function sampleLogo(mark: string, label: string, color: string): string {
+  const canvas = document.createElement('canvas');
+  canvas.width = 520;
+  canvas.height = 140;
+  const ctx = canvas.getContext('2d')!;
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.roundRect(10, 20, 100, 100, 26);
+  ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.font = '700 58px Inter, "Segoe UI", system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(mark, 60, 73);
+  ctx.fillStyle = '#0b1730';
+  ctx.textAlign = 'left';
+  ctx.font = '700 44px Inter, "Segoe UI", system-ui, sans-serif';
+  ctx.fillText(label, 132, 58);
+  ctx.fillStyle = '#6b7789';
+  ctx.font = '500 26px Inter, "Segoe UI", system-ui, sans-serif';
+  ctx.fillText('SAMPLE PARTNER', 134, 100);
+  const webp = canvas.toDataURL('image/webp', 0.92);
+  return webp.startsWith('data:image/webp') ? webp : canvas.toDataURL('image/png');
+}
+
 interface Draft {
   name: string;
   logo: string;
@@ -148,6 +186,39 @@ export function PartnersPage() {
       await updateDoc(doc(db, 'partners', p.id), { active: !p.active, updatedAt: serverTimestamp() });
     }, `Could not ${p.active ? 'deactivate' : 'activate'} ${p.name}.`);
 
+  const addSamples = () =>
+    run(async () => {
+      const [db, { collection, doc, writeBatch, serverTimestamp }] = await Promise.all([getAdminDb(), firestore()]);
+      const start = (items?.at(-1)?.order ?? 0) + 10;
+      const batch = writeBatch(db);
+      samplePartners.forEach((p, i) => {
+        batch.set(doc(collection(db, 'partners')), {
+          name: p.name,
+          logo: sampleLogo(p.mark, p.name.slice(SAMPLE_PREFIX.length).split(' ')[0], p.color),
+          type: p.type,
+          description: p.description,
+          details: 'This is a sample entry to preview the section. Replace it with a real partner, or remove all samples in Admin → Partners.',
+          url: '',
+          order: start + i * 10,
+          active: true,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        });
+      });
+      await batch.commit();
+    }, 'Could not add the sample partners.');
+
+  const samples = items?.filter((p) => p.name.startsWith(SAMPLE_PREFIX)) ?? [];
+  const removeSamples = () => {
+    if (!window.confirm(`Remove the ${samples.length} sample partner${samples.length === 1 ? '' : 's'}? Your real partners are not affected.`)) return;
+    run(async () => {
+      const [db, { doc, writeBatch }] = await Promise.all([getAdminDb(), firestore()]);
+      const batch = writeBatch(db);
+      samples.forEach((p) => batch.delete(doc(db, 'partners', p.id)));
+      await batch.commit();
+    }, 'Could not remove the sample partners.');
+  };
+
   const activeCount = items?.filter((p) => p.active).length ?? 0;
 
   return (
@@ -187,11 +258,27 @@ export function PartnersPage() {
       <div className={`admin-split${editing ? ' admin-split--open' : ''}`}>
         <div className="card admin-list">
           {items === null && !error && <p className="admin-empty">Loading…</p>}
-          {items?.length === 0 && <p className="admin-empty">No partners yet. Use “Add partner” to add your first one.</p>}
+          {items?.length === 0 && (
+            <div className="admin-empty">
+              <p>No partners yet. Use “Add partner” to add your first one.</p>
+              <p className="muted">Want to see how the Home page section looks first? Add four clearly labelled sample partners and remove them later in one click.</p>
+              <button type="button" className="btn btn--outline btn--sm" onClick={addSamples} disabled={busy}>
+                {busy ? 'Adding…' : 'Add sample partners'}
+              </button>
+            </div>
+          )}
           {items && items.length > 0 && (
             <>
               <p className="admin-list__summary muted">
                 {items.length} partner{items.length === 1 ? '' : 's'} · {activeCount} active on the website
+                {samples.length > 0 && (
+                  <>
+                    {' · '}
+                    <button type="button" className="admin-link" onClick={removeSamples} disabled={busy}>
+                      Remove {samples.length} sample partner{samples.length === 1 ? '' : 's'}
+                    </button>
+                  </>
+                )}
               </p>
               <ul>
                 {items.map((p, i) => (
