@@ -1,17 +1,19 @@
 import {
   ArrowRight,
   Award,
+  Building2,
   CheckCircle,
   Clock,
   Code,
   Cpu,
+  ExternalLink,
+  Eye,
   HeartHandshake,
   Lightbulb,
   MessageSquare,
   ShieldCheck,
   Star,
   Target,
-  Eye,
   TrendingUp,
   Users,
   Wrench,
@@ -51,55 +53,60 @@ function getIcon(name?: string, fallback: LucideIcon = Star): LucideIcon {
 }
 
 export default function AboutPage() {
-  const { about, services } = useContent();
-  const { visibility } = about;
+  const { about, services, clients: globalClients } = useContent();
+  const visibility = about.visibility;
+  const activeClients = (about.clientsList?.length ? about.clientsList : globalClients)
+    .filter((c) => c.active !== false)
+    .sort((a, b) => (a.order || 0) - (b.order || 0));
 
   return (
     <>
       {/* 1. HERO SECTION */}
       {visibility.hero && (
-        <section className="page-hero about-hero" aria-labelledby="about-hero-title">
-          <div className="bg-grid" aria-hidden="true" />
-          <div className="container">
-            <nav className="breadcrumbs enter" aria-label="Breadcrumb">
-              <ol>
-                <li>
-                  <Link to="/">Home</Link>
-                </li>
-                <li aria-current="page">About</li>
-              </ol>
-            </nav>
+        <section className="page-hero page-hero--about" aria-labelledby="about-hero-title">
+          <div className="container page-hero__inner">
+            <div className="page-hero__body">
+              <Reveal>
+                <div className="crumb-wrap">
+                  <span className="crumb">{about.heroEyebrow}</span>
+                </div>
+              </Reveal>
 
-            <div className="page-hero__grid">
-              <div className="page-hero__copy enter">
-                <p className="eyebrow">{about.heroEyebrow}</p>
+              <Reveal delay={60}>
                 <h1 id="about-hero-title">
                   <Highlight text={about.heroHeadline} />
                 </h1>
+              </Reveal>
+
+              <Reveal delay={120}>
                 <p className="lead">{about.heroDescription}</p>
+              </Reveal>
+
+              <Reveal delay={180}>
                 <div className="page-hero__actions">
                   <Button to={about.heroCtaLink} icon={<ArrowRight size={18} />}>
                     {about.heroCtaText}
                   </Button>
                   <Button to="/services/" variant="outline">
-                    Explore Services
+                    Our Services
                   </Button>
                 </div>
-              </div>
+              </Reveal>
+            </div>
 
-              <div className="page-hero__visual enter" aria-hidden="true">
-                {about.heroImage ? (
-                  <div className="about-hero__custom-image-wrap">
-                    <img
-                      src={about.heroImage}
-                      alt={about.heroImageAlt || 'Vision Giants team'}
-                      className="about-hero__custom-image"
-                    />
-                  </div>
-                ) : (
-                  <CubeVisual />
-                )}
-              </div>
+            <div className="page-hero__visual" aria-hidden="true">
+              {about.heroImage ? (
+                <div className="about-hero__custom-image-wrap">
+                  <img
+                    src={about.heroImage}
+                    alt={about.heroImageAlt || 'About Vision Giants'}
+                    className="about-hero__custom-image"
+                    loading="eager"
+                  />
+                </div>
+              ) : (
+                <CubeVisual />
+              )}
             </div>
           </div>
         </section>
@@ -107,42 +114,64 @@ export default function AboutPage() {
 
       {/* 2. WHO WE ARE */}
       {visibility.whoWeAre && (
-        <section className="section section--tight" aria-labelledby="who-title">
+        <section className="section" aria-labelledby="who-title">
           <div className="container">
-            <div className="intro-grid">
-              <Reveal>
-                <p className="eyebrow">{about.whoWeAreEyebrow}</p>
-                <h2 id="who-title">
-                  <Highlight text={about.whoWeAreHeading} />
-                </h2>
-                <div className="prose" style={{ marginTop: 'var(--space-4)' }}>
-                  {about.whoWeAreText.split('\n\n').map((paragraph, idx) => (
-                    <p key={idx}>{paragraph}</p>
-                  ))}
-                </div>
-              </Reveal>
-
-              <Reveal delay={120}>
-                <div className="card about-highlights-card">
-                  <h3 className="about-highlights-card__title">How We Deliver Value</h3>
-                  <ul className="about-highlights-list">
-                    {(about.whoWeAreBullets || []).map((bullet, idx) => (
-                      <li key={idx} className="about-highlights-list__item">
-                        <span className="icon-wrap" aria-hidden="true">
-                          <CheckCircle size={18} />
-                        </span>
+            <div className="grid grid--2 about-highlights-grid" style={{ alignItems: 'center', gap: 'var(--space-6)' }}>
+              <div>
+                <SectionHeading
+                  id="who-title"
+                  eyebrow={about.whoWeAreEyebrow}
+                  title={about.whoWeAreHeading}
+                />
+                <p className="lead" style={{ marginBottom: 'var(--space-4)' }}>
+                  {about.whoWeAreText}
+                </p>
+                {about.whoWeAreBullets && about.whoWeAreBullets.length > 0 && (
+                  <ul className="about-bullets">
+                    {about.whoWeAreBullets.map((bullet, i) => (
+                      <li key={i} className="about-bullet-item">
+                        <CheckCircle size={18} className="about-bullet-icon" aria-hidden="true" />
                         <span>{bullet}</span>
                       </li>
                     ))}
                   </ul>
-                </div>
-              </Reveal>
+                )}
+              </div>
+
+              <div className="about-who-card-col">
+                <Reveal delay={100}>
+                  <div className="card about-highlights-card">
+                    <span className="icon-wrap" aria-hidden="true">
+                      <Cpu size={24} />
+                    </span>
+                    <h3>Engineering High-Performance Solutions</h3>
+                    <p>
+                      We don’t believe in one-size-fits-all templates. Every architecture is tailored to handle high
+                      traffic, scale smoothly, and maintain uncompromising responsiveness across mobile, tablet, and desktop devices.
+                    </p>
+                    <div className="about-metric-row">
+                      <div className="about-metric">
+                        <strong>99.9%</strong>
+                        <span>Uptime Focused</span>
+                      </div>
+                      <div className="about-metric">
+                        <strong>100%</strong>
+                        <span>Transparent Agile</span>
+                      </div>
+                      <div className="about-metric">
+                        <strong>Global</strong>
+                        <span>Client Presence</span>
+                      </div>
+                    </div>
+                  </div>
+                </Reveal>
+              </div>
             </div>
           </div>
         </section>
       )}
 
-      {/* 3. MISSION & VISION */}
+      {/* 3. OUR MISSION & VISION */}
       {visibility.missionVision && (
         <section className="section section--alt" aria-labelledby="mission-vision-title">
           <div className="container">
@@ -266,6 +295,84 @@ export default function AboutPage() {
                 );
               })}
             </div>
+          </div>
+        </section>
+      )}
+
+      {/* 6b. TRUSTED BY OUR CLIENTS (Directly above Our Team) */}
+      {visibility.clients && (
+        <section className="section section--tight client-showcase-section" aria-labelledby="clients-title">
+          <div className="container">
+            <SectionHeading
+              id="clients-title"
+              eyebrow={about.clientsEyebrow || 'Our Clients'}
+              title={about.clientsHeading || 'Trusted by Our Clients'}
+              lead={about.clientsLead || 'Building lasting partnerships through technology, innovation, and exceptional digital solutions.'}
+              align="center"
+              aside={
+                about.clientsCtaText ? (
+                  <Button to={about.clientsCtaLink || '/contact/'} variant="outline" size="sm" icon={<ArrowRight size={15} />}>
+                    {about.clientsCtaText}
+                  </Button>
+                ) : undefined
+              }
+            />
+
+            {activeClients.length > 0 ? (
+              <div className="client-grid">
+                {activeClients.map((client, i) => (
+                  <Reveal key={client.id || client.name} delay={(i % 5) * 60}>
+                    <div className="client-card" title={`${client.name} — ${client.industry}`}>
+                      <div className="client-card__logo-wrap">
+                        {client.logo ? (
+                          <img
+                            src={client.logo}
+                            alt={`${client.name} logo`}
+                            className="client-card__logo"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <span className="client-card__fallback-badge">
+                            <Building2 size={24} aria-hidden="true" />
+                            <span className="client-card__name-fallback">{client.name}</span>
+                          </span>
+                        )}
+                      </div>
+                      <div className="client-card__info">
+                        <h4 className="client-card__title">{client.name}</h4>
+                        <span className="client-card__industry">{client.industry}</span>
+                        {client.description && (
+                          <p className="client-card__desc">{client.description}</p>
+                        )}
+                        {client.websiteUrl && (
+                          <a
+                            href={client.websiteUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="client-card__link"
+                            aria-label={`Visit ${client.name} website`}
+                          >
+                            <span>Visit website</span>
+                            <ExternalLink size={13} aria-hidden="true" />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </Reveal>
+                ))}
+              </div>
+            ) : (
+              <div className="card client-empty-state">
+                <Building2 size={32} className="muted" aria-hidden="true" />
+                <h3>Client Partnerships</h3>
+                <p>
+                  We partner with forward-thinking enterprises, fast-growing startups, and ambitious founders.
+                </p>
+                <Button to="/contact/" variant="outline" size="sm">
+                  Become a Partner
+                </Button>
+              </div>
+            )}
           </div>
         </section>
       )}

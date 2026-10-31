@@ -8,8 +8,13 @@ import { SubmissionsPage } from './SubmissionsPage';
 import { ContentPage } from './ContentPage';
 import { AboutPageEditor } from './AboutPageEditor';
 import { SitePagesList, SitePageEditor } from './SitePages';
-import { inquiriesConfig, applicationsConfig } from './submissionsConfig';
-import { servicesConfig, positionsConfig } from './contentConfig';
+import { inquiriesConfig, applicationsConfig, enrollmentsConfig } from './submissionsConfig';
+import { servicesConfig } from './contentConfig';
+import { ClientsManager } from './ClientsManager';
+import { CareersManager } from './CareersManager';
+import { CoursesManager } from './CoursesManager';
+import { CourseCategoriesManager } from './CourseCategoriesManager';
+import { InstructorsManager } from './InstructorsManager';
 import './admin.css';
 
 export default function AdminApp() {
@@ -60,11 +65,17 @@ function AuthGate() {
         <Route index element={<Navigate to="inquiries" replace />} />
         <Route path="inquiries" element={<SubmissionsPage key="inquiries" config={inquiriesConfig} />} />
         <Route path="applications" element={<SubmissionsPage key="applications" config={applicationsConfig} />} />
+        <Route path="enrollments" element={<SubmissionsPage key="enrollments" config={enrollmentsConfig} />} />
         <Route path="about-page" element={<AboutPageEditor />} />
+        <Route path="clients" element={<ClientsManager />} />
+        <Route path="careers" element={<CareersManager />} />
+        <Route path="positions" element={<Navigate to="/admin/careers" replace />} />
+        <Route path="courses" element={<CoursesManager />} />
+        <Route path="course-categories" element={<CourseCategoriesManager />} />
+        <Route path="instructors" element={<InstructorsManager />} />
         <Route path="pages" element={<SitePagesList />} />
         <Route path="pages/:id" element={<SitePageEditor />} />
         <Route path="services" element={<ContentPage key="services" config={servicesConfig} />} />
-        <Route path="positions" element={<ContentPage key="positions" config={positionsConfig} />} />
         <Route path="*" element={<Navigate to="/admin/inquiries" replace />} />
       </Route>
     </Routes>

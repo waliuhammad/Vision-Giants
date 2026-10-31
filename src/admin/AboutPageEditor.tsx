@@ -665,6 +665,73 @@ export function AboutPageEditor() {
           </div>
         </section>
 
+        {/* 6b. Trusted by Our Clients */}
+        <section className="card admin-profile__section">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <h2>6b. Trusted by Our Clients</h2>
+              <p className="muted" style={{ margin: '4px 0 0' }}>Client logo showcase displayed directly above Our Team.</p>
+            </div>
+            <a href="/admin/clients" className="btn btn--outline btn--sm">
+              Manage Client Logos <ExternalLink size={14} />
+            </a>
+          </div>
+
+          <div className="grid grid--2">
+            <div className="field">
+              <label htmlFor="clients-eyebrow">Section Eyebrow</label>
+              <input
+                id="clients-eyebrow"
+                className="input"
+                value={data.clientsEyebrow || ''}
+                onChange={(e) => update({ clientsEyebrow: e.target.value })}
+              />
+            </div>
+            <div className="field">
+              <label htmlFor="clients-heading">Section Heading</label>
+              <input
+                id="clients-heading"
+                className="input"
+                value={data.clientsHeading || ''}
+                onChange={(e) => update({ clientsHeading: e.target.value })}
+              />
+            </div>
+          </div>
+
+          <div className="field">
+            <label htmlFor="clients-lead">Section Subtitle / Description</label>
+            <input
+              id="clients-lead"
+              className="input"
+              value={data.clientsLead || ''}
+              onChange={(e) => update({ clientsLead: e.target.value })}
+            />
+          </div>
+
+          <div className="grid grid--2">
+            <div className="field">
+              <label htmlFor="clients-cta-text">CTA Button Text (Optional)</label>
+              <input
+                id="clients-cta-text"
+                className="input"
+                value={data.clientsCtaText || ''}
+                onChange={(e) => update({ clientsCtaText: e.target.value })}
+                placeholder="e.g. Become Our Client"
+              />
+            </div>
+            <div className="field">
+              <label htmlFor="clients-cta-link">CTA Button Link</label>
+              <input
+                id="clients-cta-link"
+                className="input"
+                value={data.clientsCtaLink || ''}
+                onChange={(e) => update({ clientsCtaLink: e.target.value })}
+                placeholder="/contact/"
+              />
+            </div>
+          </div>
+        </section>
+
         {/* 7. Team Members CRUD */}
         <section className="card admin-profile__section">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

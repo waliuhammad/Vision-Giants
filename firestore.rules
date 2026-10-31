@@ -1,10 +1,115 @@
 rules_version = '2';
 
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Collection: admins
+// Document ID: {uid} (Firebase Auth UID)
+// Fields: Managed solely in Firebase Console. Read-only for the owner.
+//
+// Collection: inquiries
+// Document ID: auto-generated
+// Fields:
+//   - name: string (2-120 chars) - submitter name
+//   - email: string (valid email format) - submitter email
+//   - company: string (0-200 chars) - optional company name
+//   - projectType: string (1-80 chars) - type of project
+//   - budget: string (0-80 chars) - budget range
+//   - message: string (20-5000 chars) - inquiry message
+//   - consent: bool (true) - privacy consent
+//   - status: string ('new', 'reviewed', 'contacted', 'closed')
+//   - notes: string (<=5000 chars) - admin notes
+//   - createdAt: timestamp - creation time
+//   - updatedAt: timestamp - last updated time
+//
+// Collection: applications
+// Document ID: auto-generated
+// Fields:
+//   - positionId: string (0-120 chars)
+//   - positionTitle: string (1-200 chars)
+//   - name: string (2-120 chars)
+//   - email: string (valid email format)
+//   - phone: string (0-40 chars)
+//   - portfolioUrl: string (valid url or empty)
+//   - linkedinUrl: string (valid url or empty)
+//   - message: string (0-5000 chars)
+//   - cvUrl: string (valid url, non-empty)
+//   - department: string (optional, 0-100 chars)
+//   - experience: string (optional, 0-200 chars)
+//   - education: string (optional, 0-200 chars)
+//   - consent: bool (true)
+//   - status: string ('new', 'reviewed', 'reviewing', 'under_review', 'shortlisted', 'interview', 'interview_scheduled', 'selected', 'hired', 'rejected')
+//   - notes: string (<=5000 chars)
+//   - createdAt: timestamp
+//   - updatedAt: timestamp
+//
+// Collection: enrollments
+// Document ID: auto-generated
+// Fields:
+//   - courseId: string (optional, 0-120 chars)
+//   - courseTitle: string (1-200 chars)
+//   - fullName: string (2-120 chars)
+//   - email: string (valid email format)
+//   - phone: string (0-40 chars)
+//   - learningMode: string ('online', 'onsite', 'hybrid', 'selfPaced')
+//   - preferredBatch: string (optional, 0-100 chars)
+//   - city: string (0-100 chars)
+//   - education: string (optional, 0-200 chars)
+//   - message: string (optional, 0-5000 chars)
+//   - classTiming: string (optional, 0-100 chars)
+//   - timeZone: string (optional, 0-100 chars)
+//   - preferredCampus: string (optional, 0-100 chars)
+//   - hybridPreference: string (optional, 0-100 chars)
+//   - consent: bool (true)
+//   - status: string ('new', 'new_inquiry', 'contacted', 'pending', 'confirmed', 'enrolled', 'completed', 'cancelled')
+//   - notes: string (<=5000 chars)
+//   - createdAt: timestamp
+//   - updatedAt: timestamp
+//
+// Collection: projects
+// Document ID: {id}
+// Fields: published (bool), order (number), etc. Managed by admins. Publicly readable when published.
+//
+// Collection: services
+// Document ID: {id}
+// Fields: published (bool), order (number), etc. Managed by admins. Publicly readable when published.
+//
+// Collection: positions
+// Document ID: {id}
+// Fields: published (bool), order (number), etc. Managed by admins. Publicly readable when published.
+//
+// Collection: clients
+// Document ID: {id}
+// Fields: active (bool), name (string), etc. Managed by admins. Publicly readable when active.
+//
+// Collection: courses
+// Document ID: {id}
+// Fields: published (bool), title (string), etc. Managed by admins. Publicly readable when published.
+//
+// Collection: course_categories
+// Document ID: {id}
+// Fields: active (bool), name (string), etc. Managed by admins. Publicly readable when active.
+//
+// Collection: instructors
+// Document ID: {id}
+// Fields: active (bool), name (string), etc. Managed by admins. Publicly readable when active.
+//
+// Collection: config
+// Document ID: public
+// Fields: Public configuration document. Managed by admins. Publicly readable.
+//
+// Collection: pages
+// Document ID: {id}
+// Fields: Managed by admins. Publicly readable.
+// ===============================================================
+
 // Access model
 // - Public visitors can read published website content and nothing else.
-// - Inquiries and job applications are created by the website's forms. The project is on the free
-//   Spark plan (no Cloud Functions), so these rules are the validation: visitors may only create a
-//   new record with exactly the expected fields and limits, and can never read or change one.
+// - Inquiries, job applications, and course enrollments are created by the website's forms.
+//   The project is on the free Spark plan (no Cloud Functions), so these rules are the validation:
+//   visitors may only create a new record with exactly the expected fields and limits, and can never
+//   read or change one.
 // - Admins are users whose UID has a document in `admins` (create it in the Firebase console).
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -22,6 +127,9 @@ service cloud.firestore {
     function text(v, min, max) {
       return v is string && v.size() >= min && v.size() <= max;
     }
+    function optText(d, field, min, max) {
+      return !(field in d) || text(d[field], min, max);
+    }
     function isEmail(v) {
       return text(v, 5, 254) && v.matches('^[^@ ]+@[^@ ]+[.][^@ ]{2,}$');
     }
@@ -30,8 +138,11 @@ service cloud.firestore {
     }
     // Fields every new submission gets from the form code (src/config/firebase.ts)
     function isNewSubmission(d) {
-      return d.consent == true && d.status == 'new' && d.notes == ''
-          && d.createdAt == request.time && d.updatedAt == request.time;
+      return d.consent == true
+          && (d.status == 'new' || d.status == 'new_inquiry')
+          && d.notes == ''
+          && d.createdAt == request.time
+          && d.updatedAt == request.time;
     }
 
     match /inquiries/{id} {
@@ -54,9 +165,9 @@ service cloud.firestore {
       allow read, delete: if isAdmin();
       allow update: if isAdmin()
                     && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'notes', 'updatedAt'])
-                    && request.resource.data.status in ['new', 'reviewed', 'reviewing', 'interview', 'rejected', 'hired']
+                    && request.resource.data.status in ['new', 'reviewed', 'reviewing', 'under_review', 'shortlisted', 'interview', 'interview_scheduled', 'selected', 'hired', 'rejected']
                     && request.resource.data.notes is string && request.resource.data.notes.size() <= 5000;
-      allow create: if request.resource.data.keys().hasOnly(['positionId', 'positionTitle', 'name', 'email', 'phone', 'portfolioUrl', 'linkedinUrl', 'message', 'cvUrl', 'consent', 'status', 'notes', 'createdAt', 'updatedAt'])
+      allow create: if request.resource.data.keys().hasOnly(['positionId', 'positionTitle', 'name', 'email', 'phone', 'portfolioUrl', 'linkedinUrl', 'message', 'cvUrl', 'department', 'experience', 'education', 'consent', 'status', 'notes', 'createdAt', 'updatedAt'])
                     && text(request.resource.data.positionId, 0, 120)
                     && text(request.resource.data.positionTitle, 1, 200)
                     && text(request.resource.data.name, 2, 120)
@@ -66,6 +177,33 @@ service cloud.firestore {
                     && isLink(request.resource.data.linkedinUrl)
                     && text(request.resource.data.message, 0, 5000)
                     && isLink(request.resource.data.cvUrl) && request.resource.data.cvUrl != ''
+                    && optText(request.resource.data, 'department', 0, 100)
+                    && optText(request.resource.data, 'experience', 0, 200)
+                    && optText(request.resource.data, 'education', 0, 200)
+                    && isNewSubmission(request.resource.data);
+    }
+
+    match /enrollments/{id} {
+      allow read, delete: if isAdmin();
+      allow update: if isAdmin()
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'notes', 'updatedAt'])
+                    && request.resource.data.status in ['new', 'new_inquiry', 'contacted', 'pending', 'confirmed', 'enrolled', 'completed', 'cancelled']
+                    && request.resource.data.notes is string && request.resource.data.notes.size() <= 5000;
+      allow create: if request.resource.data.keys().hasOnly(['courseId', 'courseTitle', 'fullName', 'email', 'phone', 'learningMode', 'preferredBatch', 'city', 'education', 'message', 'classTiming', 'timeZone', 'preferredCampus', 'hybridPreference', 'consent', 'status', 'notes', 'createdAt', 'updatedAt'])
+                    && text(request.resource.data.courseTitle, 1, 200)
+                    && text(request.resource.data.fullName, 2, 120)
+                    && isEmail(request.resource.data.email)
+                    && text(request.resource.data.phone, 0, 40)
+                    && request.resource.data.learningMode in ['online', 'onsite', 'hybrid', 'selfPaced']
+                    && text(request.resource.data.city, 0, 100)
+                    && optText(request.resource.data, 'courseId', 0, 120)
+                    && optText(request.resource.data, 'preferredBatch', 0, 100)
+                    && optText(request.resource.data, 'education', 0, 200)
+                    && optText(request.resource.data, 'message', 0, 5000)
+                    && optText(request.resource.data, 'classTiming', 0, 100)
+                    && optText(request.resource.data, 'timeZone', 0, 100)
+                    && optText(request.resource.data, 'preferredCampus', 0, 100)
+                    && optText(request.resource.data, 'hybridPreference', 0, 100)
                     && isNewSubmission(request.resource.data);
     }
 
@@ -90,6 +228,27 @@ service cloud.firestore {
       allow read: if resource.data.published == true || isAdmin();
       allow create, update: if isAdmin() && isContent();
       allow delete: if isAdmin();
+    }
+
+    // ---- New Academy & Client Modules ----
+    match /clients/{id} {
+      allow read: if resource.data.active == true || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /courses/{id} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /course_categories/{id} {
+      allow read: if resource.data.active == true || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /instructors/{id} {
+      allow read: if resource.data.active == true || isAdmin();
+      allow create, update, delete: if isAdmin();
     }
 
     // `config/public` tells the website whether to use Firestore content or its built-in defaults.

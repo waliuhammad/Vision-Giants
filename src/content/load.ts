@@ -1,7 +1,9 @@
 import { getDb, isFirebaseConfigured } from '../config/firebase';
-import { defaultContent, fromDoc, type ContentCollection, type SiteContent } from './schema';
+import { defaultContent, fromDoc, type SiteContent } from './schema';
 import { pageTextsFromDoc, type PageTexts } from './pages';
 import { aboutDataFromDoc } from './about';
+import type { ClientItem } from '../data/clients';
+import type { Course, CourseCategory, Instructor } from '../data/courses';
 
 /**
  * Loads published content from Firestore. Returns the built-in defaults when Firebase isn't
@@ -36,13 +38,61 @@ export async function loadContent(): Promise<SiteContent> {
 
   if (config.get('contentManaged') !== true) return { ...defaultContent, about, pages };
 
-  const load = async <K extends ContentCollection>(name: K): Promise<SiteContent[K]> => {
-    const snap = await getDocs(query(collection(db, name), where('published', '==', true)));
-    return snap.docs
-      .map((d) => ({ order: Number(d.get('order')) || 0, item: fromDoc[name](d.id, d.data()) }))
-      .sort((a, b) => a.order - b.order)
-      .map((x) => x.item) as SiteContent[K];
+  const loadPublished = async (name: 'services' | 'projects' | 'positions' | 'courses') => {
+    try {
+      const snap = await getDocs(query(collection(db, name), where('published', '==', true)));
+      if (snap.empty) return defaultContent[name];
+      return snap.docs
+        .map((d) => ({ order: Number(d.get('order') ?? d.get('displayOrder')) || 0, item: fromDoc[name](d.id, d.data()) }))
+        .sort((a, b) => a.order - b.order)
+        .map((x) => x.item);
+    } catch {
+      return defaultContent[name];
+    }
   };
-  const [services, projects, positions] = await Promise.all([load('services'), load('projects'), load('positions')]);
-  return { services, projects, positions, about, pages };
+
+  const loadActive = async (name: 'clients' | 'course_categories') => {
+    try {
+      const snap = await getDocs(query(collection(db, name), where('active', '==', true)));
+      if (snap.empty) return name === 'clients' ? defaultContent.clients : defaultContent.categories;
+      return snap.docs
+        .map((d) => ({ order: Number(d.get('order')) || 0, item: fromDoc[name](d.id, d.data()) }))
+        .sort((a, b) => a.order - b.order)
+        .map((x) => x.item);
+    } catch {
+      return name === 'clients' ? defaultContent.clients : defaultContent.categories;
+    }
+  };
+
+  const loadInstructors = async () => {
+    try {
+      const snap = await getDocs(collection(db, 'instructors'));
+      if (snap.empty) return defaultContent.instructors;
+      return snap.docs.map((d) => fromDoc.instructors(d.id, d.data()));
+    } catch {
+      return defaultContent.instructors;
+    }
+  };
+
+  const [services, projects, positions, courses, clients, categories, instructors] = await Promise.all([
+    loadPublished('services'),
+    loadPublished('projects'),
+    loadPublished('positions'),
+    loadPublished('courses') as Promise<Course[]>,
+    loadActive('clients') as Promise<ClientItem[]>,
+    loadActive('course_categories') as Promise<CourseCategory[]>,
+    loadInstructors() as Promise<Instructor[]>,
+  ]);
+
+  return {
+    services,
+    projects,
+    positions,
+    courses: courses.length > 0 ? courses : defaultContent.courses,
+    clients: clients.length > 0 ? clients : defaultContent.clients,
+    categories: categories.length > 0 ? categories : defaultContent.categories,
+    instructors: instructors.length > 0 ? instructors : defaultContent.instructors,
+    about,
+    pages,
+  };
 }

@@ -48,10 +48,9 @@ export function getDb(): Promise<Firestore> {
 /**
  * Saves a form submission straight to Firestore. The project is on the free Spark plan, where Cloud
  * Functions can't be deployed, so firestore.rules validates every field instead and lets visitors
- * only create new records (never read or change them). The functions in functions/src are kept for
- * a later move to the Blaze plan, which would add rate limiting, email alerts and CV uploads.
+ * only create new records (never read or change them).
  */
-async function addSubmission(collectionName: 'inquiries' | 'applications', data: Record<string, unknown>): Promise<void> {
+async function addSubmission(collectionName: 'inquiries' | 'applications' | 'enrollments', data: Record<string, unknown>): Promise<void> {
   const [db, { addDoc, collection, serverTimestamp }] = await Promise.all([getDb(), import('firebase/firestore/lite')]);
   await addDoc(collection(db, collectionName), {
     ...data,
@@ -93,11 +92,37 @@ export interface ApplicationPayload {
   linkedinUrl: string;
   message: string;
   consent: boolean;
-  /** Shareable link to the CV (file uploads need Cloud Storage, which the Spark plan doesn't include). */
+  /** Shareable link to the CV or storage link. */
   cvUrl: string;
+  department?: string;
+  experience?: string;
+  education?: string;
 }
 
 /** Saves a job application; it appears under Admin → Applications. */
 export function submitApplication({ consent: _consent, ...application }: ApplicationPayload): Promise<void> {
   return addSubmission('applications', application);
+}
+
+export interface EnrollmentPayload {
+  courseId: string;
+  courseTitle: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  learningMode: string;
+  preferredBatch: string;
+  city: string;
+  education: string;
+  message?: string;
+  classTiming?: string;
+  timeZone?: string;
+  preferredCampus?: string;
+  hybridPreference?: string;
+  consent: boolean;
+}
+
+/** Saves a course enrollment application; it appears under Admin → Course Enrollments. */
+export function submitEnrollment({ consent: _consent, ...enrollment }: EnrollmentPayload): Promise<void> {
+  return addSubmission('enrollments', enrollment);
 }

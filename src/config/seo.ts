@@ -1,6 +1,7 @@
 import { company, telHref } from '../data/company';
 import { services } from '../data/services';
 import { blogPosts } from '../data/blog';
+import { defaultCourses } from '../data/courses';
 
 /** Public site origin, without trailing slash. Set VITE_SITE_URL before a production build. */
 export const SITE_URL = (import.meta.env.VITE_SITE_URL || 'https://www.example.com').replace(/\/+$/, '');
@@ -58,13 +59,25 @@ export const pages: PageMeta[] = [
     path: '/careers/',
     title: `Careers | Build Your Future With Us | ${company.name}`,
     description:
-      'Interested in joining our team? Learn about our culture and working principles, and how to express your interest.',
+      'Join our team of developers, designers, and problem solvers. Explore open positions, our work culture, and career opportunities.',
   },
   {
     path: '/careers/apply/',
     title: `Apply | Careers | ${company.name}`,
     description: 'Apply for an open position or send a general application with your CV.',
   },
+  {
+    path: '/courses/',
+    title: `Courses & Training Academy | Online & Onsite Tech Education | ${company.name}`,
+    description:
+      'Master in-demand technology skills with practical software training. Learn Web Development, Mobile Apps, UI/UX, and Python via Online, Onsite, Hybrid, and Self-Paced formats.',
+  },
+  // One page per course (src/pages/CourseDetailPage.tsx)
+  ...defaultCourses.map((c) => ({
+    path: `/courses/${c.slug}/`,
+    title: `${c.title} | Courses | ${company.name}`,
+    description: c.introduction,
+  })),
   // One page per service (src/pages/ServiceDetailPage.tsx)
   ...services.map((s) => ({
     path: `/services/${s.id}/`,
@@ -120,24 +133,28 @@ function organizationJsonLd(): string {
   return `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;
 }
 
-/** Head tags injected into each prerendered HTML file. */
-export function renderHeadTags(meta: PageMeta): string {
-  const noIndex = meta === notFoundMeta || meta === adminMeta;
-  const url = canonicalUrl(meta.path);
-  const t = escapeHtml(meta.title);
-  const d = escapeHtml(meta.description);
+export function renderHeadTags(path: string): string {
+  const meta = getPageMeta(path);
+  const canonical = canonicalUrl(meta.path);
+  const ogImage = `${SITE_URL}/og-image.png`;
+  const orgJsonLd = organizationJsonLd();
+
   return [
-    `<title>${t}</title>`,
-    `<meta name="description" content="${d}" />`,
-    noIndex ? '<meta name="robots" content="noindex" />' : `<link rel="canonical" href="${url}" />`,
-    `<meta property="og:type" content="website" />`,
-    `<meta property="og:site_name" content="${escapeHtml(company.name)}" />`,
-    `<meta property="og:title" content="${t}" />`,
-    `<meta property="og:description" content="${d}" />`,
-    noIndex ? '' : `<meta property="og:url" content="${url}" />`,
-    `<meta property="og:image" content="${SITE_URL}/og-image.png" />`,
-    `<meta name="twitter:card" content="summary_large_image" />`,
-    meta.path === '/' ? organizationJsonLd() : '',
+    `<title>${escapeHtml(meta.title)}</title>`,
+    `<meta name="description" content="${escapeHtml(meta.description)}">`,
+    `<link rel="canonical" href="${escapeHtml(canonical)}">`,
+    `<meta property="og:type" content="website">`,
+    `<meta property="og:site_name" content="${escapeHtml(company.legalName)}">`,
+    `<meta property="og:url" content="${escapeHtml(canonical)}">`,
+    `<meta property="og:title" content="${escapeHtml(meta.title)}">`,
+    `<meta property="og:description" content="${escapeHtml(meta.description)}">`,
+    `<meta property="og:image" content="${escapeHtml(ogImage)}">`,
+    `<meta property="og:image:alt" content="${escapeHtml(company.legalName)}">`,
+    `<meta name="twitter:card" content="summary_large_image">`,
+    `<meta name="twitter:title" content="${escapeHtml(meta.title)}">`,
+    `<meta name="twitter:description" content="${escapeHtml(meta.description)}">`,
+    `<meta name="twitter:image" content="${escapeHtml(ogImage)}">`,
+    orgJsonLd,
   ]
     .filter(Boolean)
     .join('\n    ');

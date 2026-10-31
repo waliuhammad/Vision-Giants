@@ -1,4 +1,5 @@
 import { teamMembers, type TeamMember } from '../data/team';
+import { defaultClients, type ClientItem } from '../data/clients';
 
 export interface AboutCoreValue {
   id: string;
@@ -21,6 +22,7 @@ export interface AboutSectionVisibility {
   values: boolean;
   expertise: boolean;
   whyChooseUs: boolean;
+  clients: boolean;
   team: boolean;
   cta: boolean;
 }
@@ -64,6 +66,14 @@ export interface AboutPageData {
   whyLead?: string;
   whyList: AboutWhyReason[];
 
+  // 6b. Our Clients (Directly above Our Team)
+  clientsEyebrow: string;
+  clientsHeading: string;
+  clientsLead: string;
+  clientsCtaText?: string;
+  clientsCtaLink?: string;
+  clientsList: ClientItem[];
+
   // 7. Team
   teamEyebrow: string;
   teamHeading: string;
@@ -93,14 +103,14 @@ export const defaultAboutData: AboutPageData = {
 
   // 2. Who We Are
   whoWeAreEyebrow: 'Who We Are',
-  whoWeAreHeading: 'Design, Engineering & Strategic Innovation Under One Roof',
+  whoWeAreHeading: 'Engineers, Designers & Innovators Building Reliable Software',
   whoWeAreText:
-    'We are a technology-driven software development company dedicated to helping businesses grow through innovative digital solutions. Our team combines creativity, technical expertise, and strategic thinking to develop reliable, scalable, and user-friendly software.\n\nFrom ambitious startups to established enterprises, we solve complex digital challenges with clean architecture, modern toolchains, and collaborative execution. We don’t just write code — we engineer long-term business assets designed to scale effortlessly.',
+    'We are a technology-driven software development company dedicated to helping businesses grow through innovative digital solutions. Our team combines creativity, technical expertise, and strategic thinking to develop reliable, scalable, and user-friendly software. From budding ventures to enterprise industry leaders, we architect software that solves real business challenges, drives revenue, and stands the test of scale.',
   whoWeAreBullets: [
-    'Tailored solutions designed around your actual business workflows',
-    'Agile development cycles with predictable milestones and zero surprise costs',
-    'Senior engineers and product architects on every engagement',
-    'End-to-end delivery: discovery, UI/UX, engineering, testing, and continuous support',
+    'Technology-driven team combining creative UI/UX with robust engineering.',
+    'Serving dynamic startups, SMEs, and international brands across 6+ countries.',
+    'Specializing in solving complex workflow, mobile, and web modernization bottlenecks.',
+    'Agile delivery with transparent milestones and high engineering standards.',
   ],
 
   // 3. Mission & Vision
@@ -113,95 +123,106 @@ export const defaultAboutData: AboutPageData = {
 
   // 4. Core Values
   valuesEyebrow: 'Our Core Values',
-  valuesHeading: 'The Principles That Drive Our Work Every Day',
-  valuesLead: 'Our culture and work ethic are anchored in enduring standards of engineering and partnership.',
+  valuesHeading: 'The Principles That Guide Everything We Engineer',
+  valuesLead:
+    'Our core values form the foundation of our work culture, customer relationships, and architectural decisions.',
   valuesList: [
     {
-      id: 'innovation',
+      id: 'val-1',
       title: 'Innovation',
-      description: 'We explore modern technologies, adopting modern tools when they deliver genuine competitive value.',
-      icon: 'lightbulb',
+      description: 'Constantly exploring modern architectures, cutting-edge frameworks, and creative problem-solving.',
+      icon: 'sparkles',
     },
     {
-      id: 'quality',
+      id: 'val-2',
       title: 'Quality',
-      description: 'We adhere to uncompromising standards of clean code, security, performance, and long-term maintainability.',
+      description: 'Zero compromises on code quality, security standards, maintainability, and end-user delight.',
       icon: 'shield-check',
     },
     {
-      id: 'integrity',
+      id: 'val-3',
       title: 'Integrity',
-      description: 'We communicate with radical honesty about timelines, scope trade-offs, and technical feasibility.',
+      description: 'Transparent communication, honest timelines, intellectual honesty, and mutual trust.',
       icon: 'check-circle',
     },
     {
-      id: 'collaboration',
+      id: 'val-4',
       title: 'Collaboration',
-      description: 'We work hand-in-hand with clients and stakeholder teams, treating your objectives as our personal mission.',
+      description: 'Working side by side with clients as dedicated technology partners rather than distant vendors.',
       icon: 'users',
     },
     {
-      id: 'customer-satisfaction',
+      id: 'val-5',
       title: 'Customer Satisfaction',
-      description: 'We measure success not by lines of code deployed, but by measurable impact and happy partners.',
+      description: 'Measuring our success by the tangible business growth and competitive edge we deliver to our partners.',
       icon: 'heart-handshake',
     },
     {
-      id: 'continuous-improvement',
+      id: 'val-6',
       title: 'Continuous Improvement',
-      description: 'We actively refine our skills, development methodologies, and internal processes on every project.',
+      description: 'Iterative optimization, continuous learning, and constant refinement of our crafts and systems.',
       icon: 'trending-up',
     },
   ],
 
   // 5. Expertise
   expertiseEyebrow: 'Our Expertise',
-  expertiseHeading: 'Proven Technical Competence Across the Entire Digital Lifecycle',
+  expertiseHeading: 'Full-Spectrum Technology Capabilities',
   expertiseLead:
-    'We provide comprehensive software engineering services backed by hands-on industry experience and modern architectural patterns.',
+    'We build production-ready digital solutions across web, mobile, cloud, design, and intelligent automation.',
 
   // 6. Why Choose Us
   whyEyebrow: 'Why Choose Us',
-  whyHeading: 'A Software Engineering Partner You Can Count On',
-  whyLead: 'Six key pillars that set Vision Giants apart from traditional agencies and outsource vendors.',
+  whyHeading: 'Why Industry Leaders Trust Vision Giants',
+  whyLead:
+    'We combine technical excellence with strategic business thinking to deliver lasting software value.',
   whyList: [
     {
-      id: 'skilled-team',
+      id: 'why-1',
       title: 'Skilled Development Team',
-      description: 'Experienced engineers, UI/UX designers, and solution architects dedicated to your project success.',
+      description: 'Senior engineers, full-stack specialists, and design architects experienced across modern stacks.',
       icon: 'code',
     },
     {
-      id: 'quality-focused',
+      id: 'why-2',
       title: 'Quality-Focused Development',
-      description: 'Rigorous automated testing, architectural reviews, and best-in-class security standards on every deliverable.',
-      icon: 'award',
+      description: 'Rigorous automated testing, clean code conventions, and high-performance standards from day one.',
+      icon: 'check-circle-2',
     },
     {
-      id: 'modern-technologies',
+      id: 'why-3',
       title: 'Modern Technologies',
-      description: 'Proven, battle-tested modern stacks that keep your product fast, scalable, and easy to maintain.',
-      icon: 'cpu',
+      description: 'Leveraging React, Node.js, TypeScript, Flutter, Cloud, and AI for future-proof scalability.',
+      icon: 'layers',
     },
     {
-      id: 'transparent-communication',
+      id: 'why-4',
       title: 'Transparent Communication',
-      description: 'Regular demos, clear progress tracking, and open communication channels so you are always in the loop.',
+      description: 'Direct Slack channels, weekly demo sprints, transparent milestones, and zero hidden costs.',
       icon: 'message-square',
     },
     {
-      id: 'on-time-delivery',
+      id: 'why-5',
       title: 'On-Time Project Delivery',
-      description: 'Strict adherence to project schedules, milestone commitments, and dependable delivery timelines.',
+      description: 'Disciplined agile sprint cycles ensuring predictive roadmaps and timely, stress-free launches.',
       icon: 'clock',
     },
     {
-      id: 'long-term-support',
+      id: 'why-6',
       title: 'Long-Term Technical Support',
       description: 'Reliable post-launch maintenance, performance monitoring, and continuous product enhancement.',
       icon: 'wrench',
     },
   ],
+
+  // 6b. Our Clients (Directly above Our Team)
+  clientsEyebrow: 'Our Clients',
+  clientsHeading: 'Trusted by Our Clients',
+  clientsLead:
+    'Building lasting partnerships through technology, innovation, and exceptional digital solutions.',
+  clientsCtaText: 'Become Our Client',
+  clientsCtaLink: '/contact/',
+  clientsList: defaultClients,
 
   // 7. Team
   teamEyebrow: 'Our Team',
@@ -223,6 +244,7 @@ export const defaultAboutData: AboutPageData = {
     values: true,
     expertise: true,
     whyChooseUs: true,
+    clients: true,
     team: true,
     cta: true,
   },
@@ -284,6 +306,22 @@ export function aboutDataFromDoc(data: Record<string, unknown>): AboutPageData {
       }).filter((m) => m.name)
     : defaultAboutData.teamMembers;
 
+  const clientsList = Array.isArray(data.clientsList)
+    ? data.clientsList.map((item, index) => {
+        const row = (item && typeof item === 'object' ? item : {}) as Record<string, unknown>;
+        return {
+          id: str(row.id) || `client-${index}`,
+          name: str(row.name),
+          logo: str(row.logo) || undefined,
+          industry: str(row.industry) || 'Technology',
+          description: str(row.description) || undefined,
+          websiteUrl: str(row.websiteUrl) || undefined,
+          order: typeof row.order === 'number' ? row.order : index + 1,
+          active: row.active !== false,
+        } as ClientItem;
+      }).filter((c) => c.name)
+    : defaultAboutData.clientsList;
+
   const whoWeAreBullets = Array.isArray(data.whoWeAreBullets)
     ? data.whoWeAreBullets.map((b) => str(b)).filter(Boolean)
     : defaultAboutData.whoWeAreBullets;
@@ -321,6 +359,13 @@ export function aboutDataFromDoc(data: Record<string, unknown>): AboutPageData {
     whyLead: str(data.whyLead) || defaultAboutData.whyLead,
     whyList: whyList.length > 0 ? whyList : defaultAboutData.whyList,
 
+    clientsEyebrow: str(data.clientsEyebrow) || defaultAboutData.clientsEyebrow,
+    clientsHeading: str(data.clientsHeading) || defaultAboutData.clientsHeading,
+    clientsLead: str(data.clientsLead) || defaultAboutData.clientsLead,
+    clientsCtaText: str(data.clientsCtaText) || defaultAboutData.clientsCtaText,
+    clientsCtaLink: str(data.clientsCtaLink) || defaultAboutData.clientsCtaLink,
+    clientsList: clientsList.length > 0 ? clientsList : defaultAboutData.clientsList,
+
     teamEyebrow: str(data.teamEyebrow) || defaultAboutData.teamEyebrow,
     teamHeading: str(data.teamHeading) || defaultAboutData.teamHeading,
     teamLead: str(data.teamLead) || defaultAboutData.teamLead,
@@ -338,9 +383,9 @@ export function aboutDataFromDoc(data: Record<string, unknown>): AboutPageData {
       values: bool(vis.values, true),
       expertise: bool(vis.expertise, true),
       whyChooseUs: bool(vis.whyChooseUs, true),
+      clients: bool(vis.clients, true),
       team: bool(vis.team, true),
       cta: bool(vis.cta, true),
     },
   };
 }
-

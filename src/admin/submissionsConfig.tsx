@@ -5,7 +5,7 @@ import { getAdminStorage } from './firebase';
 export type Submission = Record<string, unknown> & { id: string; status: string; notes: string; createdAt?: Date };
 
 export interface SubmissionsConfig {
-  collection: 'inquiries' | 'applications';
+  collection: 'inquiries' | 'applications' | 'enrollments';
   title: string;
   singular: string;
   /** Allowed statuses; must match the `status in [...]` lists in firestore.rules. */
@@ -65,7 +65,7 @@ function CvButton({ path, fileName }: { path: string; fileName: string }) {
   const open = async () => {
     setBusy(true);
     setError('');
-    // Open the tab synchronously so pop-up blockers allow it, then point it at the file.
+    // Open tab synchronously so pop-up blockers allow it
     const tab = window.open('', '_blank');
     try {
       const [storage, { ref, getDownloadURL }] = await Promise.all([getAdminStorage(), import('firebase/storage')]);
@@ -93,11 +93,11 @@ function CvButton({ path, fileName }: { path: string; fileName: string }) {
 
 export const applicationsConfig: SubmissionsConfig = {
   collection: 'applications',
-  title: 'Applications',
+  title: 'Job Applications',
   singular: 'application',
-  statuses: ['new', 'reviewed', 'interview', 'rejected', 'hired'],
-  row: (s) => ({ title: str(s.name), subtitle: str(s.positionTitle) }),
-  searchKeys: ['name', 'email', 'positionTitle', 'message'],
+  statuses: ['new', 'under_review', 'shortlisted', 'interview_scheduled', 'selected', 'rejected'],
+  row: (s) => ({ title: str(s.name), subtitle: [str(s.positionTitle), str(s.experience)].filter(Boolean).join(' · ') }),
+  searchKeys: ['name', 'email', 'positionTitle', 'experience', 'education', 'message'],
   details: (s) => (
     <dl>
       <Detail label="Position">{str(s.positionTitle)}</Detail>
@@ -105,13 +105,58 @@ export const applicationsConfig: SubmissionsConfig = {
         <a href={`mailto:${str(s.email)}`}>{str(s.email)}</a>
       </Detail>
       <Detail label="Phone">{str(s.phone) && <a href={`tel:${str(s.phone)}`}>{str(s.phone)}</a>}</Detail>
-      <Detail label="CV">
-        {str(s.cvPath) ? <CvButton path={str(s.cvPath)} fileName={str(s.cvFileName)} /> : str(s.cvUrl) && <Link href={str(s.cvUrl)} />}
+      <Detail label="Experience">{str(s.experience)}</Detail>
+      <Detail label="Education">{str(s.education)}</Detail>
+      <Detail label="CV / Resume">
+        {str(s.cvPath) ? (
+          <CvButton path={str(s.cvPath)} fileName={str(s.cvFileName)} />
+        ) : str(s.cvUrl) ? (
+          <Link href={str(s.cvUrl)} />
+        ) : null}
       </Detail>
       <Detail label="LinkedIn">{str(s.linkedinUrl) && <Link href={str(s.linkedinUrl)} />}</Detail>
-      <Detail label="Portfolio">{str(s.portfolioUrl) && <Link href={str(s.portfolioUrl)} />}</Detail>
-      <Detail label="About">{str(s.message) && <p className="admin-pre">{str(s.message)}</p>}</Detail>
+      <Detail label="Portfolio / GitHub">{str(s.portfolioUrl) && <Link href={str(s.portfolioUrl)} />}</Detail>
+      <Detail label="Cover Letter">{str(s.message) && <p className="admin-pre">{str(s.message)}</p>}</Detail>
     </dl>
   ),
   files: (s) => (str(s.cvPath) ? [str(s.cvPath)] : []),
+};
+
+export const enrollmentsConfig: SubmissionsConfig = {
+  collection: 'enrollments',
+  title: 'Student Enrollments',
+  singular: 'enrollment',
+  statuses: ['new_inquiry', 'contacted', 'pending', 'confirmed', 'enrolled', 'completed', 'cancelled'],
+  row: (s) => ({
+    title: str(s.fullName) || str(s.name),
+    subtitle: [str(s.courseTitle), str(s.learningMode).toUpperCase(), str(s.city)].filter(Boolean).join(' · '),
+  }),
+  searchKeys: ['fullName', 'name', 'email', 'phone', 'courseTitle', 'learningMode', 'city', 'education', 'message'],
+  details: (s) => (
+    <dl>
+      <Detail label="Course Selected">
+        <strong>{str(s.courseTitle)}</strong>
+      </Detail>
+      <Detail label="Learning Mode">
+        <span className="badge badge--primary">{str(s.learningMode).toUpperCase()}</span>
+      </Detail>
+      <Detail label="Preferred Batch">{str(s.preferredBatch)}</Detail>
+      <Detail label="Student Name">{str(s.fullName) || str(s.name)}</Detail>
+      <Detail label="Email">
+        <a href={`mailto:${str(s.email)}`}>{str(s.email)}</a>
+      </Detail>
+      <Detail label="Phone / WhatsApp">
+        <a href={`tel:${str(s.phone)}`}>{str(s.phone)}</a>
+      </Detail>
+      <Detail label="City">{str(s.city)}</Detail>
+      <Detail label="Educational Background">{str(s.education)}</Detail>
+      {str(s.classTiming) && <Detail label="Preferred Online Timing">{str(s.classTiming)}</Detail>}
+      {str(s.timeZone) && <Detail label="Time Zone">{str(s.timeZone)}</Detail>}
+      {str(s.preferredCampus) && <Detail label="Preferred Campus">{str(s.preferredCampus)}</Detail>}
+      {str(s.hybridPreference) && <Detail label="Hybrid Session Preference">{str(s.hybridPreference)}</Detail>}
+      <Detail label="Message / Goals">
+        <p className="admin-pre">{str(s.message) || 'No additional message provided.'}</p>
+      </Detail>
+    </dl>
+  ),
 };
