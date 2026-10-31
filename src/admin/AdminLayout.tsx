@@ -24,6 +24,7 @@ import {
   X,
   User as UserIcon,
   Shield,
+  Handshake,
 } from 'lucide-react';
 import { company } from '../data/company';
 import { signOutAdmin, changeAdminPassword } from './firebase';
@@ -47,6 +48,7 @@ const nav = [
       { to: '/admin/course-categories', label: 'Course Categories', icon: Tag },
       { to: '/admin/instructors', label: 'Instructors', icon: Users },
       { to: '/admin/pages', label: 'Site pages', icon: FileText },
+      { to: '/admin/partners', label: 'Partners', icon: Handshake },
       { to: '/admin/services', label: 'Services', icon: Layers },
     ],
   },

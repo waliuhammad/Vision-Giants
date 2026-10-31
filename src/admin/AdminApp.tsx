@@ -7,6 +7,7 @@ import { AdminLayout } from './AdminLayout';
 import { SubmissionsPage } from './SubmissionsPage';
 import { ContentPage } from './ContentPage';
 import { AboutPageEditor } from './AboutPageEditor';
+import { PartnersPage } from './PartnersPage';
 import { SitePagesList, SitePageEditor } from './SitePages';
 import { inquiriesConfig, applicationsConfig, enrollmentsConfig } from './submissionsConfig';
 import { servicesConfig } from './contentConfig';
@@ -75,6 +76,7 @@ function AuthGate() {
         <Route path="instructors" element={<InstructorsManager />} />
         <Route path="pages" element={<SitePagesList />} />
         <Route path="pages/:id" element={<SitePageEditor />} />
+        <Route path="partners" element={<PartnersPage />} />
         <Route path="services" element={<ContentPage key="services" config={servicesConfig} />} />
         <Route path="*" element={<Navigate to="/admin/inquiries" replace />} />
       </Route>
