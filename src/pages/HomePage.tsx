@@ -217,25 +217,6 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Bottom Brands Ribbon / Trusted Worldwide */}
-        <div className="hph-trust-ribbon">
-          <div className="container">
-            <div className="hph-trust-head">
-              <span className="hph-trust-line" />
-              <span className="hph-trust-title">{heroData.trustHeading}</span>
-              <span className="hph-trust-line" />
-            </div>
-
-            <div className="hph-brands-row">
-              {heroData.trustBrands.map((brand, i) => (
-                <div key={i} className="hph-brand-item">
-                  <div className="hph-brand-logo-mark" aria-hidden="true" />
-                  <span className="hph-brand-text">{brand}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════

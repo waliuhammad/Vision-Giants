@@ -114,3 +114,4 @@ export function homePageHeroDataFromDoc(d: Data): HomePageHeroData {
       : defaultHomePageHeroData.trustBrands,
   };
 }
+
