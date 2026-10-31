@@ -1,3 +1,25 @@
+export interface CareerWhyCard {
+  id: string;
+  icon: 'trending' | 'users' | 'lightbulb' | 'heart' | 'trophy';
+  title: string;
+  description: string;
+}
+
+export interface CareerPerkItem {
+  id: string;
+  icon: 'salary' | 'clock' | 'learning' | 'health' | 'outings' | 'bonus';
+  label: string;
+}
+
+export interface CareersTestimonial {
+  id: string;
+  name: string;
+  role: string;
+  quote: string;
+  photo: string;
+  rating?: number;
+}
+
 export interface CareersStat {
   icon: 'users' | 'trophy' | 'briefcase' | 'globe';
   value: string;
@@ -12,17 +34,9 @@ export interface CareersTrack {
   accentColor: string;
 }
 
-export interface CareersTestimonial {
-  id: string;
-  name: string;
-  role: string;
-  quote: string;
-  photo: string;
-}
-
 export interface CareersPageData {
-  // Hero
-  heroEyebrow: string;
+  // Hero (Dark Navy)
+  heroBadgeText: string;
   heroTitleLine1: string;
   heroTitleLine2: string;
   heroDescription: string;
@@ -31,173 +45,289 @@ export interface CareersPageData {
   heroSecondaryCtaText: string;
   heroSecondaryCtaLink: string;
   heroImage: string;
-  heroExperienceBadgeYears: string;
-  heroExperienceBadgeText: string;
   heroSocialProofCount: string;
   heroSocialProofText: string;
 
-  // Stats Ribbon
+  // Extended hero fields (for CareersPage backward-compat sections)
+  heroEyebrow: string;
+  heroExperienceBadgeYears: string;
+  heroExperienceBadgeText: string;
+
+  // Stats ribbon
   stats: CareersStat[];
 
-  // Tracks Section
+  // Career Tracks
   tracksEyebrow: string;
   tracksHeading: string;
   tracks: CareersTrack[];
 
-  // Why Choose Us / Culture
-  whyEyebrow: string;
-  whyHeading: string;
-  whyDescription: string;
+  // Why section extra fields
   whyImage: string;
   whyBadge: string;
   whyChecklist: string[];
   whyCtaText: string;
   whyCtaLink: string;
 
-  // Open Positions Section
+  testimonialsEyebrow?: string;
+  testimonialsHeading?: string;
+  ctaButtonLink?: string;
+
+  // Why Work With Us (5 cards)
+  whyEyebrow: string;
+  whyHeading: string;
+  whyDescription: string;
+  whyCards: CareerWhyCard[];
+
+  // Current Opportunities
   positionsEyebrow: string;
   positionsHeading: string;
   positionsLead: string;
 
-  // Testimonials
-  testimonialsEyebrow: string;
-  testimonialsHeading: string;
-  testimonials: CareersTestimonial[];
+  // Our Culture (4-photo bento grid + employee review card)
+  cultureEyebrow: string;
+  cultureHeading: string;
+  cultureDescription: string;
+  culturePhotos: [string, string, string, string];
+  cultureTestimonials: CareersTestimonial[];
 
-  // Bottom CTA Banner
+  // More Than A Job (Benefits & Perks ribbon)
+  perksEyebrow: string;
+  perksHeading: string;
+  perksList: CareerPerkItem[];
+
+  // Bottom CTA: Don't See the Right Fit?
   ctaHeading: string;
   ctaDescription: string;
   ctaButtonText: string;
-  ctaButtonLink: string;
+
+  // Alias for compatibility
+  testimonials: CareersTestimonial[];
 }
 
 export const defaultCareersPageData: CareersPageData = {
-  heroEyebrow: 'BUILD YOUR FUTURE',
-  heroTitleLine1: 'Better Growth.',
-  heroTitleLine2: 'Brighter Future.',
+  // Hero
+  heroBadgeText: 'WE ARE HIRING',
+  heroTitleLine1: 'Build Your Future',
+  heroTitleLine2: 'With Us.',
   heroDescription:
-    'Join an elite team of engineers, designers, and innovators. Build high-stakes commercial systems with dedicated 1-on-1 mentorship, modern engineering standards, and rapid career progression.',
-  heroPrimaryCtaText: 'Explore Openings',
+    'Join a team of creative thinkers, developers, and innovators building technology that makes a difference.',
+  heroPrimaryCtaText: 'Explore Opportunities',
   heroPrimaryCtaLink: '#open-positions',
-  heroSecondaryCtaText: 'Life at Vision Giants',
-  heroSecondaryCtaLink: '#why-us',
-  heroImage: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=900&q=80',
-  heroExperienceBadgeYears: '10+',
-  heroExperienceBadgeText: 'YEARS OF EXCELLENCE',
+  heroSecondaryCtaText: 'Submit Your CV',
+  heroSecondaryCtaLink: '#submit-cv',
+  heroImage:
+    'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
   heroSocialProofCount: '50+',
-  heroSocialProofText: 'Passionate Engineers & Creators',
+  heroSocialProofText: 'Talented People Building the future together',
 
+  // Extended hero fields (for CareersPage backward-compat sections)
+  heroEyebrow: 'WE ARE HIRING',
+  heroExperienceBadgeYears: '5+',
+  heroExperienceBadgeText: 'YEARS OF EXCELLENCE',
+
+  // Stats ribbon
   stats: [
-    { icon: 'users', value: '50+', label: 'Specialist Engineers' },
-    { icon: 'trophy', value: '98%', label: 'Team Retention Rate' },
-    { icon: 'briefcase', value: '100+', label: 'Production Systems Shipped' },
-    { icon: 'globe', value: '12+', label: 'Global Markets Served' },
+    { icon: 'users', value: '50+', label: 'Talented People' },
+    { icon: 'trophy', value: '95%+', label: 'Retention Rate' },
+    { icon: 'briefcase', value: '30+', label: 'Open Roles' },
+    { icon: 'globe', value: '10+', label: 'Global Clients' },
   ],
 
-  tracksEyebrow: 'OUR CAREER TRACKS',
-  tracksHeading: 'Top Career Tracks',
+  // Career Tracks
+  tracksEyebrow: 'CAREER TRACKS',
+  tracksHeading: 'Find Your Path',
   tracks: [
     {
-      id: 'web',
-      title: 'Full-Stack Web',
-      description: 'Enterprise React, Next.js, TypeScript & Node.js cloud applications.',
+      id: 'tr-1',
+      title: 'Frontend Development',
+      description: 'Build beautiful, responsive UIs with React, TypeScript and modern CSS.',
       icon: 'code',
       accentColor: '#2563eb',
     },
     {
-      id: 'mobile',
-      title: 'Mobile Engineering',
-      description: 'High-performance Flutter and React Native cross-platform apps.',
+      id: 'tr-2',
+      title: 'Mobile Development',
+      description: 'Create cross-platform mobile apps with Flutter & React Native.',
       icon: 'smartphone',
       accentColor: '#10b981',
     },
     {
-      id: 'design',
-      title: 'UI/UX & Product',
-      description: 'Human-centric design systems, user journeys, wireframes & prototypes.',
+      id: 'tr-3',
+      title: 'UI/UX Design',
+      description: 'Design intuitive user experiences with Figma and research-driven methods.',
       icon: 'palette',
       accentColor: '#f59e0b',
     },
     {
-      id: 'cloud',
+      id: 'tr-4',
       title: 'Cloud & DevOps',
-      description: 'Automated CI/CD pipelines, Docker, Kubernetes & resilient GCP/AWS infrastructure.',
+      description: 'Architect and automate cloud infrastructure at scale.',
       icon: 'cloud',
       accentColor: '#8b5cf6',
     },
     {
-      id: 'ai',
+      id: 'tr-5',
       title: 'AI & Automation',
-      description: 'LLM agents, practical neural workflows, and predictive analytics systems.',
+      description: 'Build intelligent pipelines and agent-based AI systems.',
       icon: 'cpu',
       accentColor: '#06b6d4',
     },
   ],
 
-  whyEyebrow: 'WHY CHOOSE US',
-  whyHeading: 'We Don’t Just Hire, We Build Futures',
+  // Why Work With Us
+  whyEyebrow: 'WHY WORK WITH US',
+  whyHeading: 'Great People. Great Culture. Great Opportunities.',
   whyDescription:
-    'At Vision Giants, we believe every engineer is unique. Our transparent engineering culture, dedicated 1-on-1 mentorship, and high-impact commercial client projects empower you to achieve your greatest professional potential.',
-  whyImage: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
-  whyBadge: '100% Mentorship & Growth',
+    'We believe happy people build amazing products. Our culture is built on trust, collaboration, innovation and a shared passion for excellence.',
+  whyImage:
+    'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1000&q=80',
+  whyBadge: '100% Culture Driven',
   whyChecklist: [
-    'Experienced Engineering Leadership & Peer Code Reviews',
-    'Real Production Architecture & Modern Tech Stacks',
-    'Structured 1-on-1 Mentorship & Fast-Track Career Path',
-    'Flexible Hybrid Work Culture & Health-First Atmosphere',
+    'Experienced & Qualified Industry Practitioners',
+    'Regular Code Reviews & Challenging Projects',
+    'Personalized Mentorship & Career Development',
+    'Smart Workspaces & Flexible Working Modes',
   ],
   whyCtaText: 'Know More About Us',
-  whyCtaLink: '/about/',
+  whyCtaLink: '/about',
+  whyCards: [
+    {
+      id: 'why-1',
+      icon: 'trending',
+      title: 'Grow Your Career',
+      description: 'We support your growth with mentorship, training and challenging opportunities.',
+    },
+    {
+      id: 'why-2',
+      icon: 'users',
+      title: 'Collaborative Culture',
+      description: 'Work with passionate people in an open, friendly and inclusive environment.',
+    },
+    {
+      id: 'why-3',
+      icon: 'lightbulb',
+      title: 'Innovative Projects',
+      description: 'Work on cutting-edge technologies and products that create real impact.',
+    },
+    {
+      id: 'why-4',
+      icon: 'heart',
+      title: 'Wellness First',
+      description: 'We care about your well-being with flexible schedules and health & wellness programs.',
+    },
+    {
+      id: 'why-5',
+      icon: 'trophy',
+      title: 'Perks & Benefits',
+      description: 'Competitive salary, bonuses, learning budget and many other exciting perks.',
+    },
+  ],
 
-  positionsEyebrow: 'CAREER OPPORTUNITIES',
-  positionsHeading: 'Explore Open Positions',
-  positionsLead: 'Find your next high-impact engineering role and build software that matters.',
+  // Current Opportunities
+  positionsEyebrow: 'CURRENT OPPORTUNITIES',
+  positionsHeading: 'Open Positions',
+  positionsLead: 'Explore current job openings and find the perfect role for your skills and passion.',
 
-  testimonialsEyebrow: 'STUDENT & TEAM STORIES',
-  testimonialsHeading: 'What Our Team Says',
-  testimonials: [
+  // Our Culture
+  cultureEyebrow: 'OUR CULTURE',
+  cultureHeading: 'A Place Where You Belong',
+  cultureDescription:
+    'We are more than just a team. We are a family that celebrates wins, learns together and supports each other every step of the way.',
+  culturePhotos: [
+    'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1573496799652-408c2ac9fe98?auto=format&fit=crop&w=800&q=80',
+  ],
+  cultureTestimonials: [
     {
       id: 't-1',
-      name: 'Ananya Verma',
-      role: 'Senior Frontend Engineer',
+      name: 'Ayesha Khan',
+      role: 'Senior Developer',
       quote:
-        'The mentorship and engineering culture here helped me grow from building simple UI components to architecting mission-critical platforms. The autonomy is real.',
-      photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+        'Vision Giants has given me the platform to grow, take on new challenges and work on meaningful projects with an amazing team.',
+      photo:
+        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+      rating: 5,
     },
     {
       id: 't-2',
       name: 'Rohit Gupta',
       role: 'Mobile Team Lead',
       quote:
-        'The technical standards are outstanding. You work alongside genuine problem solvers who support each other on complex state management and performance tuning.',
-      photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+        'The technical standards and supportive team spirit are incredible. Every day you are challenged and given the freedom to innovate.',
+      photo:
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+      rating: 5,
     },
     {
       id: 't-3',
       name: 'Sneha Patel',
-      role: 'UI/UX Product Designer',
+      role: 'UI/UX Lead Designer',
       quote:
-        'Our design process is deeply collaborative. Designers work directly with developers and stakeholders to deliver interfaces that are both beautiful and functional.',
-      photo: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80',
+        'A culture that genuinely respects creativity and work-life balance. We design experiences that solve real customer problems.',
+      photo:
+        'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80',
+      rating: 5,
     },
   ],
 
-  ctaHeading: 'Ready to Build Great Things? Drop Your CV',
+  // Benefits & Perks (6 items)
+  perksEyebrow: 'MORE THAN A JOB',
+  perksHeading: 'Benefits & Perks',
+  perksList: [
+    { id: 'p-1', icon: 'salary', label: 'Competitive Salary' },
+    { id: 'p-2', icon: 'clock', label: 'Flexible Working Hours' },
+    { id: 'p-3', icon: 'learning', label: 'Learning & Development' },
+    { id: 'p-4', icon: 'health', label: 'Health Insurance & Wellness' },
+    { id: 'p-5', icon: 'outings', label: 'Team Outings & Events' },
+    { id: 'p-6', icon: 'bonus', label: 'Performance Bonuses' },
+  ],
+
+  // Bottom CTA
+  ctaHeading: "Don't See the Right Fit?",
   ctaDescription:
-    'Don’t see a role that directly matches your current stack? We are always seeking ambitious engineers and creative thinkers for upcoming client teams.',
-  ctaButtonText: 'Apply Now →',
-  ctaButtonLink: '/careers/apply/',
+    'We are always looking for talented and passionate people. Send us your CV and we will keep you in mind for future opportunities.',
+  ctaButtonText: 'Submit Your CV',
+
+  // Alias
+  testimonials: [
+    {
+      id: 't-1',
+      name: 'Ayesha Khan',
+      role: 'Senior Developer',
+      quote:
+        'Vision Giants has given me the platform to grow, take on new challenges and work on meaningful projects with an amazing team.',
+      photo:
+        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+      rating: 5,
+    },
+    {
+      id: 't-2',
+      name: 'Rohit Gupta',
+      role: 'Mobile Team Lead',
+      quote:
+        'The technical standards and supportive team spirit are incredible. Every day you are challenged and given the freedom to innovate.',
+      photo:
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+      rating: 5,
+    },
+  ],
 };
 
 type Data = Record<string, unknown>;
 
 const str = (v: unknown, fallback = '') => (typeof v === 'string' ? v : fallback);
-const strList = (v: unknown, fallback: string[] = []) =>
-  Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : fallback;
 
 export function careersPageDataFromDoc(d: Data): CareersPageData {
+  const testimonials = Array.isArray(d.cultureTestimonials) && d.cultureTestimonials.length > 0
+    ? (d.cultureTestimonials as CareersTestimonial[])
+    : Array.isArray(d.testimonials) && d.testimonials.length > 0
+    ? (d.testimonials as CareersTestimonial[])
+    : defaultCareersPageData.cultureTestimonials;
+
   return {
-    heroEyebrow: str(d.heroEyebrow, defaultCareersPageData.heroEyebrow),
+    heroBadgeText: str(d.heroBadgeText, defaultCareersPageData.heroBadgeText),
     heroTitleLine1: str(d.heroTitleLine1, defaultCareersPageData.heroTitleLine1),
     heroTitleLine2: str(d.heroTitleLine2, defaultCareersPageData.heroTitleLine2),
     heroDescription: str(d.heroDescription, defaultCareersPageData.heroDescription),
@@ -206,44 +336,64 @@ export function careersPageDataFromDoc(d: Data): CareersPageData {
     heroSecondaryCtaText: str(d.heroSecondaryCtaText, defaultCareersPageData.heroSecondaryCtaText),
     heroSecondaryCtaLink: str(d.heroSecondaryCtaLink, defaultCareersPageData.heroSecondaryCtaLink),
     heroImage: str(d.heroImage, defaultCareersPageData.heroImage),
-    heroExperienceBadgeYears: str(d.heroExperienceBadgeYears, defaultCareersPageData.heroExperienceBadgeYears),
-    heroExperienceBadgeText: str(d.heroExperienceBadgeText, defaultCareersPageData.heroExperienceBadgeText),
     heroSocialProofCount: str(d.heroSocialProofCount, defaultCareersPageData.heroSocialProofCount),
     heroSocialProofText: str(d.heroSocialProofText, defaultCareersPageData.heroSocialProofText),
-
-    stats: Array.isArray(d.stats)
-      ? (d.stats as CareersStat[])
-      : defaultCareersPageData.stats,
-
-    tracksEyebrow: str(d.tracksEyebrow, defaultCareersPageData.tracksEyebrow),
-    tracksHeading: str(d.tracksHeading, defaultCareersPageData.tracksHeading),
-    tracks: Array.isArray(d.tracks)
-      ? (d.tracks as CareersTrack[])
-      : defaultCareersPageData.tracks,
 
     whyEyebrow: str(d.whyEyebrow, defaultCareersPageData.whyEyebrow),
     whyHeading: str(d.whyHeading, defaultCareersPageData.whyHeading),
     whyDescription: str(d.whyDescription, defaultCareersPageData.whyDescription),
-    whyImage: str(d.whyImage, defaultCareersPageData.whyImage),
-    whyBadge: str(d.whyBadge, defaultCareersPageData.whyBadge),
-    whyChecklist: strList(d.whyChecklist, defaultCareersPageData.whyChecklist),
-    whyCtaText: str(d.whyCtaText, defaultCareersPageData.whyCtaText),
-    whyCtaLink: str(d.whyCtaLink, defaultCareersPageData.whyCtaLink),
+    whyCards:
+      Array.isArray(d.whyCards) && d.whyCards.length > 0
+        ? (d.whyCards as CareerWhyCard[])
+        : defaultCareersPageData.whyCards,
 
     positionsEyebrow: str(d.positionsEyebrow, defaultCareersPageData.positionsEyebrow),
     positionsHeading: str(d.positionsHeading, defaultCareersPageData.positionsHeading),
     positionsLead: str(d.positionsLead, defaultCareersPageData.positionsLead),
 
-    testimonialsEyebrow: str(d.testimonialsEyebrow, defaultCareersPageData.testimonialsEyebrow),
-    testimonialsHeading: str(d.testimonialsHeading, defaultCareersPageData.testimonialsHeading),
-    testimonials: Array.isArray(d.testimonials)
-      ? (d.testimonials as CareersTestimonial[])
-      : defaultCareersPageData.testimonials,
+    cultureEyebrow: str(d.cultureEyebrow, defaultCareersPageData.cultureEyebrow),
+    cultureHeading: str(d.cultureHeading, defaultCareersPageData.cultureHeading),
+    cultureDescription: str(d.cultureDescription, defaultCareersPageData.cultureDescription),
+    culturePhotos:
+      Array.isArray(d.culturePhotos) && d.culturePhotos.length === 4
+        ? (d.culturePhotos as [string, string, string, string])
+        : defaultCareersPageData.culturePhotos,
+    cultureTestimonials: testimonials,
+
+    perksEyebrow: str(d.perksEyebrow, defaultCareersPageData.perksEyebrow),
+    perksHeading: str(d.perksHeading, defaultCareersPageData.perksHeading),
+    perksList:
+      Array.isArray(d.perksList) && d.perksList.length > 0
+        ? (d.perksList as CareerPerkItem[])
+        : defaultCareersPageData.perksList,
 
     ctaHeading: str(d.ctaHeading, defaultCareersPageData.ctaHeading),
     ctaDescription: str(d.ctaDescription, defaultCareersPageData.ctaDescription),
     ctaButtonText: str(d.ctaButtonText, defaultCareersPageData.ctaButtonText),
-    ctaButtonLink: str(d.ctaButtonLink, defaultCareersPageData.ctaButtonLink),
+
+    testimonials: testimonials,
+
+    // Extended backward-compat fields
+    heroEyebrow: str(d.heroEyebrow, defaultCareersPageData.heroEyebrow),
+    heroExperienceBadgeYears: str(d.heroExperienceBadgeYears, defaultCareersPageData.heroExperienceBadgeYears),
+    heroExperienceBadgeText: str(d.heroExperienceBadgeText, defaultCareersPageData.heroExperienceBadgeText),
+    stats:
+      Array.isArray(d.stats) && d.stats.length > 0
+        ? (d.stats as CareersStat[])
+        : defaultCareersPageData.stats,
+    tracksEyebrow: str(d.tracksEyebrow, defaultCareersPageData.tracksEyebrow),
+    tracksHeading: str(d.tracksHeading, defaultCareersPageData.tracksHeading),
+    tracks:
+      Array.isArray(d.tracks) && d.tracks.length > 0
+        ? (d.tracks as CareersTrack[])
+        : defaultCareersPageData.tracks,
+    whyImage: str(d.whyImage, defaultCareersPageData.whyImage),
+    whyBadge: str(d.whyBadge, defaultCareersPageData.whyBadge),
+    whyChecklist:
+      Array.isArray(d.whyChecklist) && d.whyChecklist.length > 0
+        ? (d.whyChecklist as string[])
+        : defaultCareersPageData.whyChecklist,
+    whyCtaText: str(d.whyCtaText, defaultCareersPageData.whyCtaText),
+    whyCtaLink: str(d.whyCtaLink, defaultCareersPageData.whyCtaLink),
   };
 }
-

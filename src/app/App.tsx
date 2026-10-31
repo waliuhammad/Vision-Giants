@@ -28,7 +28,8 @@ export function App({ content }: { content: SiteContent }) {
     <ContentProvider initial={content}>
       <LazyMotion features={loadFeatures} strict>
         <MotionConfig reducedMotion="user">
-          <a href="#main" className="skip-link">
+          {/* suppressHydrationWarning prevents mismatch between SSR and client render */}
+          <a href="#main" className="skip-link" suppressHydrationWarning>
             Skip to content
           </a>
           <Navbar />

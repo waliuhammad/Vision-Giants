@@ -256,3 +256,4 @@ export function coursesPageDataFromDoc(data: Record<string, unknown>): CoursesPa
     demoCtaButtonText: String(data.demoCtaButtonText || defaultCoursesPageData.demoCtaButtonText),
   };
 }
+
