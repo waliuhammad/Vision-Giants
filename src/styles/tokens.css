@@ -75,7 +75,7 @@
   /* Layout */
   --container: 1200px;
   --gutter: clamp(16px, 4vw, 32px);
-  --header-h: 72px;
+  --header-h: 88px;
 
   /* Radii: precise, not pill-shaped everywhere */
   --radius-sm: 6px;

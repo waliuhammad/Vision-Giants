@@ -96,7 +96,7 @@ export const defaultAboutData: AboutPageData = {
   heroHeadline: 'Building Digital Experiences That Drive Business Growth.',
   heroDescription:
     'We are a technology-driven software development company dedicated to helping businesses grow through innovative digital solutions. Our team combines creativity, technical expertise, and strategic thinking to develop reliable, scalable, and user-friendly software.',
-  heroImage: '',
+  heroImage: '/images/about/hero.webp',
   heroImageAlt: 'Vision Giants software development team at work',
   heroCtaText: 'Contact Us',
   heroCtaLink: '/contact/',
