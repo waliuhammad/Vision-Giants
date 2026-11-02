@@ -790,37 +790,38 @@
    ========================================================= */
 .page-hero--about {
   padding-block: 0;
-  min-height: calc(100vh - var(--header-h));
   height: calc(100vh - var(--header-h));
-  max-height: none;
+  min-height: 0;
+  max-height: calc(100vh - var(--header-h));
   display: flex;
   align-items: center;
   box-sizing: border-box;
   background: var(--color-navy) !important;
   border-bottom: none !important;
+  overflow: hidden;
 }
 
 .page-hero--about .page-hero__grid {
   align-items: center;
-  gap: clamp(var(--space-4), 3.5vw, var(--space-7));
+  gap: clamp(var(--space-3), 2.5vw, var(--space-6));
   width: 100%;
-  padding-block: clamp(1.5rem, 3vh, 3rem);
+  padding-block: clamp(1rem, 2vh, 2rem);
 }
 
 .page-hero--about h1 {
-  font-size: clamp(2rem, 3.2vw, 3rem);
+  font-size: clamp(1.8rem, 3vw, 2.7rem);
   line-height: 1.15;
   letter-spacing: -0.025em;
   max-width: 15ch;
-  margin-top: 4px;
+  margin-top: 0;
   color: #ffffff;
 }
 
 .page-hero--about .lead {
-  font-size: clamp(0.92rem, 1.05vw, 1.05rem);
-  line-height: 1.6;
+  font-size: clamp(0.88rem, 1vw, 1rem);
+  line-height: 1.55;
   max-width: 48ch;
-  margin-top: var(--space-3);
+  margin-top: var(--space-2);
   margin-bottom: 0;
   color: var(--color-ink-muted);
 }
@@ -844,18 +845,18 @@
 }
 
 .page-hero--about .page-hero__actions {
-  margin-top: var(--space-4);
+  margin-top: var(--space-3);
   gap: var(--space-3);
 }
 
 .page-hero--about .about-hero__custom-image-wrap {
-  width: min(100%, 480px);
-  max-height: 400px;
+  width: min(100%, 440px);
+  max-height: clamp(260px, 52vh, 380px);
 }
 
 .page-hero--about .about-hero__custom-image {
   aspect-ratio: 4 / 3;
-  max-height: 380px;
+  max-height: clamp(240px, 48vh, 360px);
   object-fit: cover;
   border-radius: 20px;
   box-shadow: 0 16px 36px -16px rgba(11, 23, 48, 0.28);
@@ -3963,12 +3964,12 @@ select.input {
    ========================================================= */
 .courses-hero-section {
   padding-block: 0;
-  background: var(--color-background);
+  background: var(--color-navy);
   position: relative;
   overflow: hidden;
-  min-height: calc(100vh - var(--header-h) - 96px);
   height: calc(100vh - var(--header-h) - 96px);
-  max-height: none;
+  min-height: 0;
+  max-height: calc(100vh - var(--header-h) - 96px);
   display: flex;
   align-items: center;
   box-sizing: border-box;
@@ -3989,7 +3990,7 @@ select.input {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--color-primary);
+  color: #60a5fa;
   margin-bottom: var(--space-2);
 }
 
@@ -4002,25 +4003,25 @@ select.input {
 }
 
 .courses-hero-title {
-  font-size: clamp(2rem, 3.4vw, 3.2rem);
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
   font-weight: 800;
   line-height: 1.12;
   letter-spacing: -0.03em;
-  color: var(--color-navy);
-  margin-bottom: var(--space-3);
+  color: #ffffff;
+  margin-bottom: var(--space-2);
 }
 
 .courses-hero-title span {
-  color: var(--color-primary);
+  color: #60a5fa;
   display: block;
 }
 
 .courses-hero-lead {
-  font-size: clamp(0.92rem, 1.05vw, 1.05rem);
-  line-height: 1.6;
-  color: var(--color-muted);
-  max-width: 500px;
-  margin-bottom: var(--space-4);
+  font-size: clamp(0.88rem, 1vw, 1rem);
+  line-height: 1.55;
+  color: var(--color-ink-muted);
+  max-width: 480px;
+  margin-bottom: var(--space-3);
 }
 
 .courses-hero-actions {
@@ -4028,7 +4029,7 @@ select.input {
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-3);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-3);
 }
 
 .courses-social-proof {
@@ -4046,7 +4047,7 @@ select.input {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  border: 2.5px solid var(--color-background);
+  border: 2.5px solid var(--color-navy);
   margin-left: -10px;
   object-fit: cover;
   background: var(--color-surface-2);
@@ -4059,7 +4060,7 @@ select.input {
 .courses-social-proof__text {
   font-size: 0.88rem;
   font-weight: 600;
-  color: var(--color-navy);
+  color: #ffffff;
 }
 
 /* Hero Right: Portrait & Floating 20+ Badge */
@@ -4072,12 +4073,12 @@ select.input {
 
 .courses-hero-portrait {
   width: 100%;
-  max-width: 420px;
-  height: clamp(340px, 50vh, 440px);
+  max-width: 380px;
+  height: clamp(280px, 44vh, 380px);
   object-fit: cover;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-float);
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .courses-floating-badge {
@@ -4097,10 +4098,27 @@ select.input {
 }
 
 
+
+/* Courses hero watch button on dark bg */
+.courses-hero-section .btn--watch {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.courses-hero-section .btn--watch:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #ffffff;
+}
+
+/* Courses floating badge stays white */
+.courses-hero-section .courses-floating-badge {
+  background: #ffffff;
+}
+
 @media (max-height: 760px) and (min-width: 901px) {
   .courses-hero-section {
     min-height: auto;
-    padding-block: var(--space-3) var(--space-3);
+    height: auto;
+    padding-block: var(--space-2) var(--space-2);
   }
   .courses-hero-title {
     font-size: clamp(1.8rem, 2.6vw, 2.4rem);
@@ -4110,8 +4128,8 @@ select.input {
     margin-bottom: var(--space-3);
   }
   .courses-hero-portrait {
-    height: 320px;
-    max-width: 340px;
+    height: clamp(240px, 38vh, 300px);
+    max-width: 320px;
   }
 }
 
