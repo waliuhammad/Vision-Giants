@@ -42,6 +42,7 @@ const nav = [
     group: 'Website Content',
     items: [
       { to: '/admin/home-hero', label: 'Home Hero Section', icon: Layers },
+      { to: '/admin/collaboration', label: 'Home Collaboration', icon: Handshake },
       { to: '/admin/about-page', label: 'About Us page', icon: UserCheck },
       { to: '/admin/clients', label: 'Clients', icon: Building2 },
       { to: '/admin/careers', label: 'Careers / Jobs', icon: Briefcase },

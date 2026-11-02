@@ -32,6 +32,12 @@ import {
   homePageHeroDataFromDoc,
   type HomePageHeroData,
 } from '../content/homeHeroData';
+import {
+  defaultHomeCollaborationData,
+  homeCollaborationDataFromDoc,
+  type HomeCollaborationData,
+} from '../content/homeCollaborationData';
+import { HomeCollaborationSection } from '../components/ui/HomeCollaborationSection';
 import { getDb, isFirebaseConfigured } from '../config/firebase';
 
 const firestore = () => import('firebase/firestore/lite');
@@ -104,6 +110,7 @@ export default function HomePage() {
   const [featured, ...moreProjects] = projects;
 
   const [heroData, setHeroData] = useState<HomePageHeroData>(defaultHomePageHeroData);
+  const [collabData, setCollabData] = useState<HomeCollaborationData>(defaultHomeCollaborationData);
 
   useEffect(() => {
     if (!isFirebaseConfigured) return;
@@ -113,6 +120,10 @@ export default function HomePage() {
         const snap = await getDoc(doc(db, 'pages', 'home-hero'));
         if (snap.exists()) {
           setHeroData(homePageHeroDataFromDoc(snap.data()));
+        }
+        const collabSnap = await getDoc(doc(db, 'site_content', 'home_collaboration'));
+        if (collabSnap.exists()) {
+          setCollabData(homeCollaborationDataFromDoc(collabSnap.data()));
         }
       } catch (err) {
         console.warn('Could not load custom home hero content; using defaults', err);
@@ -218,6 +229,11 @@ export default function HomePage() {
         </div>
 
       </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          STRATEGIC COLLABORATION SECTION (MATCHING REFERENCE IMAGE)
+         ═══════════════════════════════════════════════════════════════ */}
+      <HomeCollaborationSection data={collabData} />
 
       {/* ═══════════════════════════════════════════════════════════════
           SERVICES SECTION

@@ -4890,3 +4890,343 @@ select.input {
     gap: var(--space-3);
   }
 }
+
+
+/* =========================================================
+   Home Collaboration Section (Under Hero)
+   ========================================================= */
+.collab-section {
+  padding: var(--space-8) 0;
+  background: var(--color-background);
+  position: relative;
+}
+
+.collab-header {
+  max-width: 680px;
+  margin: 0 auto var(--space-7);
+  text-align: center;
+}
+
+.collab-eyebrow {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #2563eb;
+  margin-bottom: var(--space-2);
+}
+
+.collab-title {
+  font-size: clamp(2rem, 3.8vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--color-navy);
+  margin-bottom: var(--space-3);
+  line-height: 1.2;
+}
+
+.collab-lead {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+  margin: 0;
+}
+
+/* Big Showcase Card */
+.collab-card {
+  display: grid;
+  grid-template-columns: 440px 1fr;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-xl, 24px);
+  box-shadow: 0 10px 30px -10px rgba(11, 23, 48, 0.06);
+  position: relative;
+  overflow: visible;
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+/* Left Brand Stage */
+.collab-brand-side {
+  position: relative;
+  background: linear-gradient(135deg, #f0f7ff 0%, #e0effe 100%);
+  border-top-left-radius: var(--radius-xl, 24px);
+  border-bottom-left-radius: var(--radius-xl, 24px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-7) var(--space-6);
+  overflow: hidden;
+  min-height: 340px;
+}
+
+.collab-mesh-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.collab-mesh-svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* White logo card on left side */
+.collab-logo-box {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  border-radius: var(--radius-lg, 16px);
+  padding: var(--space-5) var(--space-6);
+  box-shadow: 0 12px 32px -8px rgba(37, 99, 235, 0.15), 0 2px 6px rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 260px;
+  min-height: 120px;
+}
+
+.collab-custom-logo {
+  max-width: 220px;
+  max-height: 90px;
+  object-fit: contain;
+}
+
+.collab-brand-identity {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.collab-default-logo {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+}
+
+.collab-default-logo__svg {
+  width: 100%;
+  height: 100%;
+}
+
+.collab-brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.collab-brand-name {
+  font-size: 1.65rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--color-navy);
+  line-height: 1.1;
+}
+
+.collab-brand-sub {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+/* Floating Handshake Center Badge */
+.collab-bridge-badge {
+  position: absolute;
+  right: -25px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.collab-bridge-icon {
+  color: #2563eb;
+}
+
+/* Right Information Side */
+.collab-info-side {
+  padding: var(--space-7) var(--space-7) var(--space-7) calc(var(--space-7) + 12px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #ffffff;
+  border-top-right-radius: var(--radius-xl, 24px);
+  border-bottom-right-radius: var(--radius-xl, 24px);
+}
+
+.collab-pill-wrap {
+  margin-bottom: var(--space-3);
+}
+
+.collab-pill {
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: 999px;
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.collab-partner-heading {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--color-navy);
+  margin-bottom: var(--space-3);
+}
+
+.collab-desc {
+  font-size: 0.96rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+  margin-bottom: var(--space-5);
+  max-width: 520px;
+}
+
+/* 3 Pillars */
+.collab-pillars {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.collab-pillar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.collab-pillar__icon-box {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #eff6ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.collab-pillar__svg {
+  color: #2563eb;
+}
+
+.collab-pillar__content {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.collab-pillar__title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-navy);
+}
+
+.collab-pillar__sub {
+  font-size: 0.78rem;
+  color: var(--color-muted);
+}
+
+/* Button */
+.collab-action {
+  display: flex;
+  align-items: center;
+}
+
+.collab-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.65rem 1.4rem;
+  border-radius: 10px;
+  border: 1.5px solid #2563eb;
+  background: #ffffff;
+  color: #2563eb;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all var(--dur-fast) ease;
+}
+
+.collab-btn-outline:hover {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.28);
+  transform: translateY(-1px);
+}
+
+/* Footer Quote */
+.collab-footer-quote {
+  margin-top: var(--space-6);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.collab-sparkle-wrap {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.collab-sparkle-icon {
+  color: #2563eb;
+}
+
+.collab-quote-text {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-navy);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .collab-card {
+    grid-template-columns: 1fr;
+    max-width: 580px;
+  }
+  .collab-brand-side {
+    border-radius: var(--radius-xl, 24px) var(--radius-xl, 24px) 0 0;
+    min-height: 240px;
+  }
+  .collab-info-side {
+    border-radius: 0 0 var(--radius-xl, 24px) var(--radius-xl, 24px);
+    padding: var(--space-6);
+  }
+  .collab-bridge-badge {
+    right: auto;
+    bottom: -25px;
+    top: auto;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .collab-pillars {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+}

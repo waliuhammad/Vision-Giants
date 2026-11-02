@@ -8,6 +8,7 @@ import { SubmissionsPage } from './SubmissionsPage';
 import { ContentPage } from './ContentPage';
 import { AboutPageEditor } from './AboutPageEditor';
 import { HomeHeroManager } from './HomeHeroManager';
+import HomeCollaborationManager from './HomeCollaborationManager';
 import { PartnersPage } from './PartnersPage';
 import { SitePagesList, SitePageEditor } from './SitePages';
 import { inquiriesConfig, applicationsConfig, enrollmentsConfig } from './submissionsConfig';
@@ -69,6 +70,7 @@ function AuthGate() {
         <Route path="applications" element={<SubmissionsPage key="applications" config={applicationsConfig} />} />
         <Route path="enrollments" element={<SubmissionsPage key="enrollments" config={enrollmentsConfig} />} />
         <Route path="home-hero" element={<HomeHeroManager />} />
+        <Route path="collaboration" element={<HomeCollaborationManager />} />
         <Route path="about-page" element={<AboutPageEditor />} />
         <Route path="clients" element={<ClientsManager />} />
         <Route path="careers" element={<CareersManager />} />
