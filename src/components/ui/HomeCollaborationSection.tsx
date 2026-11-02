@@ -213,3 +213,4 @@ export function HomeCollaborationSection({ data }: { data: HomeCollaborationData
     </section>
   );
 }
+

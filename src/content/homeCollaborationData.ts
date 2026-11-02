@@ -81,3 +81,4 @@ export function homeCollaborationDataFromDoc(d: Data): HomeCollaborationData {
     footerQuote: str(d.footerQuote, defaultHomeCollaborationData.footerQuote),
   };
 }
+
