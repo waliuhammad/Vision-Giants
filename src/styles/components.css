@@ -3967,9 +3967,9 @@ select.input {
   background: var(--color-navy);
   position: relative;
   overflow: hidden;
-  height: calc(100vh - var(--header-h) - 96px);
+  height: calc(100vh - var(--header-h) - 78px);
   min-height: 0;
-  max-height: calc(100vh - var(--header-h) - 96px);
+  max-height: calc(100vh - var(--header-h) - 78px);
   display: flex;
   align-items: center;
   box-sizing: border-box;
@@ -4073,8 +4073,8 @@ select.input {
 
 .courses-hero-portrait {
   width: 100%;
-  max-width: 380px;
-  height: clamp(280px, 44vh, 380px);
+  max-width: 330px;
+  height: clamp(220px, 34vh, 320px);
   object-fit: cover;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-float);
@@ -4083,11 +4083,11 @@ select.input {
 
 .courses-floating-badge {
   position: absolute;
-  top: 15%;
-  right: -15px;
+  top: 12%;
+  right: -10px;
   background: #ffffff;
   border-radius: var(--radius-md);
-  padding: 14px 20px;
+  padding: 8px 14px;
   box-shadow: 0 16px 36px -8px rgba(11, 23, 48, 0.22);
   display: flex;
   flex-direction: column;
@@ -4114,27 +4114,31 @@ select.input {
   background: #ffffff;
 }
 
-@media (max-height: 760px) and (min-width: 901px) {
+@media (max-height: 800px) and (min-width: 901px) {
   .courses-hero-section {
-    min-height: auto;
-    height: auto;
-    padding-block: var(--space-2) var(--space-2);
+    height: calc(100vh - var(--header-h) - 70px);
+    max-height: calc(100vh - var(--header-h) - 70px);
+  }
+  .courses-stats-ribbon {
+    height: 70px;
+    max-height: 70px;
   }
   .courses-hero-title {
-    font-size: clamp(1.8rem, 2.6vw, 2.4rem);
+    font-size: clamp(1.6rem, 2.4vw, 2.2rem);
   }
   .courses-hero-lead {
-    font-size: 0.9rem;
-    margin-bottom: var(--space-3);
+    font-size: 0.85rem;
+    line-height: 1.45;
+    margin-bottom: var(--space-2);
   }
   .courses-hero-portrait {
-    height: clamp(240px, 38vh, 300px);
-    max-width: 320px;
+    height: clamp(200px, 30vh, 260px);
+    max-width: 280px;
   }
 }
 
 .courses-floating-badge__number {
-  font-size: 2.2rem;
+  font-size: 1.65rem;
   font-weight: 800;
   color: var(--color-navy);
   line-height: 1;
@@ -4163,7 +4167,11 @@ select.input {
 .courses-stats-ribbon {
   background: var(--color-navy, #0b1730);
   color: #ffffff;
-  padding: clamp(12px, 1.6vh, 20px) 0;
+  height: 78px;
+  max-height: 78px;
+  display: flex;
+  align-items: center;
+  padding: 0;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   box-sizing: border-box;
@@ -4199,7 +4207,7 @@ select.input {
 }
 
 .courses-stat-item__value {
-  font-size: 1.8rem;
+  font-size: 1.45rem;
   font-weight: 800;
   line-height: 1.1;
   color: #ffffff;
