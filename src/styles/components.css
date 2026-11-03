@@ -790,9 +790,9 @@
    ========================================================= */
 .page-hero--about {
   padding-block: 0;
-  height: calc(100vh - var(--header-h));
-  min-height: 0;
-  max-height: calc(100vh - var(--header-h));
+  height: 585.33px;
+  min-height: 585.33px;
+  max-height: 585.33px;
   display: flex;
   align-items: center;
   box-sizing: border-box;
@@ -854,13 +854,15 @@
 }
 
 .page-hero--about .about-hero__custom-image-wrap {
-  width: min(100%, 440px);
-  max-height: clamp(260px, 52vh, 380px);
+  width: min(100%, 460px);
+  max-height: 380px;
 }
 
 .page-hero--about .about-hero__custom-image {
   aspect-ratio: 4 / 3;
-  max-height: clamp(240px, 48vh, 360px);
+  width: 100%;
+  height: 345px;
+  max-height: 345px;
   object-fit: cover;
   border-radius: 20px;
   box-shadow: 0 16px 36px -16px rgba(11, 23, 48, 0.28);
@@ -3971,9 +3973,9 @@ select.input {
   background: var(--color-navy);
   position: relative;
   overflow: hidden;
-  height: calc(100vh - var(--header-h) - 78px);
-  min-height: 0;
-  max-height: calc(100vh - var(--header-h) - 78px);
+  height: 585.33px;
+  min-height: 585.33px;
+  max-height: 585.33px;
   display: flex;
   align-items: center;
   box-sizing: border-box;
@@ -4077,8 +4079,9 @@ select.input {
 
 .courses-hero-portrait {
   width: 100%;
-  max-width: 330px;
-  height: clamp(220px, 34vh, 320px);
+  max-width: 350px;
+  height: 380px;
+  max-height: 380px;
   object-fit: cover;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-float);
