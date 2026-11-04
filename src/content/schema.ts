@@ -14,6 +14,28 @@ import {
 } from '../data/courses';
 import type { PageTexts } from './pages';
 import { defaultAboutData, type AboutPageData } from './about';
+import type { TeamMember } from '../data/team';
+import { teamMembers } from '../data/team';
+import type { BlogPost } from '../data/blog';
+import { blogPosts } from '../data/blog';
+import type {
+  GlobalSettings,
+  NavigationSettings,
+  HeaderFooterSettings,
+  FaqItem,
+  ProcessStepItem,
+  TechnologiesContent,
+  SeoSettings,
+} from './cmsTypes';
+import {
+  defaultGlobalSettings,
+  defaultNavigationSettings,
+  defaultHeaderFooterSettings,
+  defaultFaqItems,
+  defaultProcessStepItems,
+  defaultTechnologiesContent,
+  defaultSeoSettings,
+} from './cmsDefaults';
 
 /** Content that can be managed from the admin dashboard. */
 export interface SiteContent {
@@ -28,6 +50,24 @@ export interface SiteContent {
   about: AboutPageData;
   /** Edited page text from Admin → Site pages; missing fields use the defaults in ./pages.ts. */
   pages: PageTexts;
+  /** Global settings (branding, contact details, socials) */
+  globalSettings: GlobalSettings;
+  /** Navigation links (header nav, footer company nav, primary CTA) */
+  navigation: NavigationSettings;
+  /** Header & footer configuration */
+  headerFooter: HeaderFooterSettings;
+  /** Technologies & architectural stack */
+  technologiesContent: TechnologiesContent;
+  /** Team members shown on About and Team pages */
+  teamMembers: TeamMember[];
+  /** Frequently asked questions */
+  faqs: FaqItem[];
+  /** Process timeline steps */
+  processSteps: ProcessStepItem[];
+  /** Blog articles */
+  blogPosts: BlogPost[];
+  /** SEO meta data */
+  seo: SeoSettings;
 }
 
 /** Built-in content from src/data, used until content is imported into Firestore. */
@@ -41,6 +81,15 @@ export const defaultContent: SiteContent = {
   instructors: defaultInstructors,
   about: defaultAboutData,
   pages: {},
+  globalSettings: defaultGlobalSettings,
+  navigation: defaultNavigationSettings,
+  headerFooter: defaultHeaderFooterSettings,
+  technologiesContent: defaultTechnologiesContent,
+  teamMembers,
+  faqs: defaultFaqItems,
+  processSteps: defaultProcessStepItems,
+  blogPosts,
+  seo: defaultSeoSettings,
 };
 
 export type ContentCollection = 'services' | 'projects' | 'positions' | 'clients' | 'courses' | 'course_categories' | 'instructors';

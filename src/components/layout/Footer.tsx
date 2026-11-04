@@ -11,7 +11,12 @@ import {
 import type { ReactElement, ReactNode } from 'react';
 import { company, telHref } from '../../data/company';
 import { footerCompanyNav } from '../../data/navigation';
-import { useContent } from '../../content/ContentContext';
+import {
+  useContent,
+  useGlobalSettings,
+  useNavigation,
+  useHeaderFooter,
+} from '../../content/ContentContext';
 import { Logo } from './Logo';
 
 const FOOTER_SERVICES_LIMIT = 5;
@@ -343,10 +348,50 @@ const footerStyles = `
 
 export function Footer() {
   const { services } = useContent();
+  const globalSettings = useGlobalSettings();
+  const navSettings = useNavigation();
+  const headerFooter = useHeaderFooter();
+
   const footerServices = services.slice(0, FOOTER_SERVICES_LIMIT);
   const year = new Date().getFullYear();
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // ── CMS-driven values with company.ts fallbacks ──────────────────────────
+  const description = globalSettings?.description || company.description;
+  const email = globalSettings?.email ?? company.email;
+  const phones = globalSettings?.phones?.length ? globalSettings.phones : company.phones;
+  const address = globalSettings?.address ?? company.address;
+
+  // Build social list: prefer CMS globalSettings.social object, else company.social[]
+  type SocialItem = { label: string; href: string };
+  let socialLinks: SocialItem[] = [];
+  if (globalSettings?.social && typeof globalSettings.social === 'object') {
+    const raw = globalSettings.social as Record<string, string>;
+    socialLinks = Object.entries(raw)
+      .filter(([, href]) => !!href)
+      .map(([label, href]) => ({ label, href }));
+  }
+  if (!socialLinks.length) {
+    socialLinks = company.social.filter((s) => !s.placeholder);
+  }
+
+  // Footer company nav: prefer CMS nav, fallback to static data
+  const cmsFooterNav = navSettings?.footerCompanyNav?.filter((n) => n.active !== false) ?? [];
+  const companyNav = cmsFooterNav.length ? cmsFooterNav : footerCompanyNav;
+
+  // Copyright string
+  const copyrightText =
+    headerFooter?.footer?.copyright ??
+    `© ${year} ${company.legalName}. All rights reserved.`;
+
+  // Legal links: prefer CMS, fallback to empty static array
+  const activeLegalLinks: { to: string; label: string }[] =
+    headerFooter?.footer?.legalLinks ?? legalLinks;
+
+  // Visibility flags
+  const showContactInfo = headerFooter?.footer?.showContactInfo !== false;
+  const showSocials = headerFooter?.footer?.showSocials !== false;
 
   return (
     <footer className="site-footer">
@@ -357,11 +402,11 @@ export function Footer() {
           {/* Brand + social */}
           <div className="site-footer__brand">
             <Logo />
-            <p>{company.description}</p>
+            <p>{description}</p>
 
-            {company.social.length > 0 && (
+            {showSocials && socialLinks.length > 0 && (
               <ul className="site-footer__social" aria-label="Social media">
-                {company.social.map((s) => {
+                {socialLinks.map((s) => {
                   const Icon = getSocialIcon(s.label, s.href);
                   const external = s.href.startsWith('http');
                   return (
@@ -382,11 +427,11 @@ export function Footer() {
             )}
           </div>
 
-          {/* Company */}
+          {/* Company nav */}
           <nav aria-label="Company">
             <h2>Company</h2>
             <ul>
-              {footerCompanyNav.map((item) => (
+              {companyNav.map((item) => (
                 <li key={item.to}>
                   <Link to={item.to}>{item.label}</Link>
                 </li>
@@ -412,68 +457,68 @@ export function Footer() {
           </div>
 
           {/* Contact */}
-          <div className="site-footer__contact-col">
-            <h2>Get in touch</h2>
-            <ul className="site-footer__contact">
-              {company.email && (
-                <li>
-                  <span className="site-footer__icon" aria-hidden="true">
-                    <Mail size={15} />
-                  </span>
-                  <a href={`mailto:${company.email}`}>{company.email}</a>
-                </li>
-              )}
-              {company.phones.map((p) => (
-                <li key={p}>
-                  <span className="site-footer__icon" aria-hidden="true">
-                    <Phone size={15} />
-                  </span>
-                  <a href={telHref(p)}>{p}</a>
-                </li>
-              ))}
-              {company.address && (
-                <li>
-                  <span className="site-footer__icon" aria-hidden="true">
-                    <MapPin size={15} />
-                  </span>
-                  <span>{company.address}</span>
-                </li>
-              )}
-            </ul>
+          {showContactInfo && (
+            <div className="site-footer__contact-col">
+              <h2>Get in touch</h2>
+              <ul className="site-footer__contact">
+                {email && (
+                  <li>
+                    <span className="site-footer__icon" aria-hidden="true">
+                      <Mail size={15} />
+                    </span>
+                    <a href={`mailto:${email}`}>{email}</a>
+                  </li>
+                )}
+                {phones.map((p) => (
+                  <li key={p}>
+                    <span className="site-footer__icon" aria-hidden="true">
+                      <Phone size={15} />
+                    </span>
+                    <a href={telHref(p)}>{p}</a>
+                  </li>
+                ))}
+                {address && (
+                  <li>
+                    <span className="site-footer__icon" aria-hidden="true">
+                      <MapPin size={15} />
+                    </span>
+                    <span>{address}</span>
+                  </li>
+                )}
+              </ul>
 
-            {company.address && (
-              <div className="site-footer__map">
-                <iframe
-                  title={`Map showing ${company.name} office location`}
-                  src={`https://www.google.com/maps?q=${encodeURIComponent(company.address)}&output=embed`}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              </div>
-            )}
-            {company.address && (
-              <a
-                className="site-footer__directions"
-                href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(company.address)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Get directions <ArrowUpRight size={14} aria-hidden="true" />
-              </a>
-            )}
-          </div>
+              {address && (
+                <div className="site-footer__map">
+                  <iframe
+                    title={`Map showing ${company.name} office location`}
+                    src={`https://www.google.com/maps?q=${encodeURIComponent(address)}&output=embed`}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </div>
+              )}
+              {address && (
+                <a
+                  className="site-footer__directions"
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Get directions <ArrowUpRight size={14} aria-hidden="true" />
+                </a>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Bottom bar */}
         <div className="site-footer__bottom">
-          <span>
-            © {year} {company.legalName}. All rights reserved.
-          </span>
+          <span>{copyrightText}</span>
 
-          {legalLinks.length > 0 && (
+          {activeLegalLinks.length > 0 && (
             <nav aria-label="Legal" className="site-footer__legal">
               <ul>
-                {legalLinks.map((item) => (
+                {activeLegalLinks.map((item) => (
                   <li key={item.to}>
                     <Link to={item.to}>{item.label}</Link>
                   </li>

@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router';
 import { AnimatePresence, m } from 'motion/react';
 import { Menu, X, ArrowRight } from 'lucide-react';
-import { mainNav, primaryCta } from '../../data/navigation';
+import { mainNav as fallbackMainNav, primaryCta as fallbackCta } from '../../data/navigation';
 import { Logo } from './Logo';
 import { Button } from '../ui/Button';
+import { useNavigation, useHeaderFooter } from '../../content/ContentContext';
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
@@ -14,6 +15,16 @@ export function Navbar() {
   const panelRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
   const indicatorRef = useRef<HTMLSpanElement>(null);
+
+  const navSettings = useNavigation();
+  const headerFooter = useHeaderFooter();
+
+  const activeNav = (navSettings?.headerNav && navSettings.headerNav.length > 0
+    ? navSettings.headerNav
+    : fallbackMainNav
+  ).filter((item) => item.active !== false);
+
+  const activeCta = navSettings?.primaryCta || fallbackCta;
 
   // Slide the pill indicator under the active link (hidden when no main link is active).
   useEffect(() => {
@@ -34,7 +45,7 @@ export function Navbar() {
     const ro = new ResizeObserver(place);
     ro.observe(nav);
     return () => ro.disconnect();
-  }, [pathname]);
+  }, [pathname, activeNav]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -69,70 +80,94 @@ export function Navbar() {
   const close = () => setOpen(false);
 
   return (
-    <header className={`site-header${scrolled ? ' is-scrolled' : ''}${open ? ' is-open' : ''}`}>
-      <div className="container site-header__inner">
-        <Logo onClick={close} />
-
-        <nav ref={navRef} className="nav" aria-label="Main">
-          <span ref={indicatorRef} className="nav__indicator" aria-hidden="true" />
-          {mainNav.map((item) => (
-            <NavLink key={item.to} to={item.to} className="nav__link">
-              {item.label}
-            </NavLink>
-          ))}
-        </nav>
-
-        <div className="header-actions">
-          <Button to={primaryCta.to} size="sm" className="header-cta">
-            {primaryCta.label}
-          </Button>
-          <button
-            ref={toggleRef}
-            type="button"
-            className="menu-toggle"
-            aria-expanded={open}
-            aria-controls="mobile-nav"
-            aria-label={open ? 'Close menu' : 'Open menu'}
-            onClick={() => setOpen((v) => !v)}
-          >
-            {open ? <X size={22} /> : <Menu size={22} />}
-          </button>
+    <>
+      {headerFooter?.header?.noticeBarEnabled && headerFooter.header.noticeBarText && (
+        <div
+          style={{
+            background: 'linear-gradient(90deg, #1e40af, #2563eb, #38bdf8)',
+            color: '#ffffff',
+            padding: '6px 1rem',
+            textAlign: 'center',
+            fontSize: '0.85rem',
+            fontWeight: 600,
+            letterSpacing: '0.01em',
+            position: 'relative',
+            zIndex: 101,
+          }}
+        >
+          {headerFooter.header.noticeBarText}
         </div>
-      </div>
+      )}
 
-      <AnimatePresence>
-        {open && (
-          <m.div
-            id="mobile-nav"
-            ref={panelRef}
-            className="mobile-nav"
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <nav aria-label="Mobile">
-              <ul>
-                {mainNav.map((item, i) => (
-                  <m.li
-                    key={item.to}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.03 * i + 0.05, duration: 0.25 }}
-                  >
-                    <NavLink to={item.to} className="mobile-nav__link" onClick={close}>
-                      {item.label}
-                    </NavLink>
-                  </m.li>
-                ))}
-              </ul>
-              <Button to={primaryCta.to} className="header-cta" icon={<ArrowRight size={18} />} onClick={close}>
-                {primaryCta.label}
+      <header className={`site-header${scrolled ? ' is-scrolled' : ''}${open ? ' is-open' : ''}`}>
+        <div className="container site-header__inner">
+          <Logo onClick={close} />
+
+          <nav ref={navRef} className="nav" aria-label="Main">
+            <span ref={indicatorRef} className="nav__indicator" aria-hidden="true" />
+            {activeNav.map((item) => (
+              <NavLink key={item.to} to={item.to} className="nav__link">
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
+
+          <div className="header-actions">
+            {headerFooter?.header?.showCta !== false && (
+              <Button to={activeCta.to} size="sm" className="header-cta">
+                {headerFooter?.header?.ctaText || activeCta.label}
               </Button>
-            </nav>
-          </m.div>
-        )}
-      </AnimatePresence>
-    </header>
+            )}
+            <button
+              ref={toggleRef}
+              type="button"
+              className="menu-toggle"
+              aria-expanded={open}
+              aria-controls="mobile-nav"
+              aria-label={open ? 'Close menu' : 'Open menu'}
+              onClick={() => setOpen((v) => !v)}
+            >
+              {open ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
+        </div>
+
+        <AnimatePresence>
+          {open && (
+            <m.div
+              id="mobile-nav"
+              ref={panelRef}
+              className="mobile-nav"
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <nav aria-label="Mobile">
+                <ul>
+                  {activeNav.map((item, i) => (
+                    <m.li
+                      key={item.to}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.03 * i + 0.05, duration: 0.25 }}
+                    >
+                      <NavLink to={item.to} className="mobile-nav__link" onClick={close}>
+                        {item.label}
+                      </NavLink>
+                    </m.li>
+                  ))}
+                </ul>
+                {headerFooter?.header?.showCta !== false && (
+                  <Button to={activeCta.to} className="header-cta" icon={<ArrowRight size={18} />} onClick={close}>
+                    {headerFooter?.header?.ctaText || activeCta.label}
+                  </Button>
+                )}
+              </nav>
+            </m.div>
+          )}
+        </AnimatePresence>
+      </header>
+    </>
   );
 }

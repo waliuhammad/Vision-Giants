@@ -7,10 +7,21 @@ import type { Project } from '../data/portfolio';
 import type { Position } from '../data/careers';
 import type { ClientItem } from '../data/clients';
 import type { Course, CourseCategory, Instructor } from '../data/courses';
+import type { BlogPost } from '../data/blog';
+import type { TeamMember } from '../data/team';
+import type {
+  GlobalSettings,
+  NavigationSettings,
+  HeaderFooterSettings,
+  FaqItem,
+  ProcessStepItem,
+  TechnologiesContent,
+  SeoSettings,
+} from './cmsTypes';
 
 /**
  * Loads published content from Firestore. Returns the built-in defaults when Firebase isn't
- * configured or content hasn't been imported yet (`config/public.contentManaged` is not true).
+ * configured or content hasn't been imported yet.
  *
  * Runs at build time (scripts/prerender.mjs, so pages are indexed with current content) and again
  * in the browser (so edits made in the dashboard appear without a rebuild).
@@ -22,12 +33,18 @@ export async function loadContent(): Promise<SiteContent> {
     import('firebase/firestore/lite'),
   ]);
 
-  // Page text (the `pages` collection) is loaded independently of the collections.
-  const [config, pageDocs] = await Promise.all([
-    getDoc(doc(db, 'config', 'public')),
+  // Page text (the `pages` collection) and site_content are loaded independently of collections.
+  const [pageDocs, globalSettingsSnap, navSnap, headerFooterSnap, techSnap, teamSnap, faqsProcessSnap, seoSnap] = await Promise.all([
     getDocs(collection(db, 'pages'))
       .then((snap) => snap.docs)
       .catch(() => []),
+    getDoc(doc(db, 'site_content', 'global_settings')).catch(() => null),
+    getDoc(doc(db, 'site_content', 'navigation')).catch(() => null),
+    getDoc(doc(db, 'site_content', 'header_footer')).catch(() => null),
+    getDoc(doc(db, 'site_content', 'technologies')).catch(() => null),
+    getDoc(doc(db, 'site_content', 'team_members')).catch(() => null),
+    getDoc(doc(db, 'site_content', 'faqs_process')).catch(() => null),
+    getDoc(doc(db, 'site_content', 'seo_settings')).catch(() => null),
   ]);
 
   const aboutDoc = pageDocs.find((d) => d.id === 'about');
@@ -39,7 +56,41 @@ export async function loadContent(): Promise<SiteContent> {
       .map((d) => [d.id, pageTextsFromDoc(d.id, d.data())]),
   );
 
-  if (config.get('contentManaged') !== true) return { ...defaultContent, about, pages };
+  const globalSettings: GlobalSettings = globalSettingsSnap && globalSettingsSnap.exists()
+    ? (globalSettingsSnap.data() as GlobalSettings)
+    : defaultContent.globalSettings;
+
+  const navigation: NavigationSettings = navSnap && navSnap.exists()
+    ? (navSnap.data() as NavigationSettings)
+    : defaultContent.navigation;
+
+  const headerFooter: HeaderFooterSettings = headerFooterSnap && headerFooterSnap.exists()
+    ? (headerFooterSnap.data() as HeaderFooterSettings)
+    : defaultContent.headerFooter;
+
+  const technologiesContent: TechnologiesContent = techSnap && techSnap.exists()
+    ? (techSnap.data() as TechnologiesContent)
+    : defaultContent.technologiesContent;
+
+  const teamMembers: TeamMember[] = teamSnap && teamSnap.exists() && Array.isArray((teamSnap.data() as { list?: TeamMember[] }).list)
+    ? (teamSnap.data() as { list: TeamMember[] }).list
+    : (about.teamMembers && about.teamMembers.length > 0 ? about.teamMembers : defaultContent.teamMembers);
+
+  const faqsProcessData = faqsProcessSnap && faqsProcessSnap.exists()
+    ? (faqsProcessSnap.data() as { faqs?: FaqItem[]; processSteps?: ProcessStepItem[] })
+    : null;
+
+  const faqs: FaqItem[] = faqsProcessData?.faqs && faqsProcessData.faqs.length > 0
+    ? faqsProcessData.faqs
+    : defaultContent.faqs;
+
+  const processSteps: ProcessStepItem[] = faqsProcessData?.processSteps && faqsProcessData.processSteps.length > 0
+    ? faqsProcessData.processSteps
+    : defaultContent.processSteps;
+
+  const seo: SeoSettings = seoSnap && seoSnap.exists()
+    ? (seoSnap.data() as SeoSettings)
+    : defaultContent.seo;
 
   const loadPublished = async <T,>(name: 'services' | 'projects' | 'positions' | 'courses', fallback: T[]): Promise<T[]> => {
     try {
@@ -51,6 +102,52 @@ export async function loadContent(): Promise<SiteContent> {
         .map((x) => x.item);
     } catch {
       return fallback;
+    }
+  };
+
+  const loadBlogPosts = async (): Promise<BlogPost[]> => {
+    try {
+      const snap = await getDocs(query(collection(db, 'blog_posts'), where('published', '==', true)));
+      if (snap.empty) return defaultContent.blogPosts;
+      return snap.docs
+        .map((d) => {
+          const data = d.data();
+          const p: BlogPost = {
+            id: d.id,
+            slug: (data.slug as string) || d.id,
+            title: (data.title as string) || '',
+            excerpt: (data.excerpt as string) || '',
+            category: (data.category as BlogPost['category']) || 'Web Development',
+            date: (data.date as string) || '',
+            readTime: (data.readTime as string) || '5 min read',
+            imageUrl: (data.imageUrl as string) || '',
+            featured: Boolean(data.featured),
+            tags: Array.isArray(data.tags)
+              ? data.tags
+              : typeof data.tags === 'string'
+                ? (data.tags as string).split(',').map((s) => s.trim()).filter(Boolean)
+                : [],
+            author: {
+              name: (data.authorName as string) || 'Vision Giants Team',
+              role: (data.authorRole as string) || 'Engineering',
+              avatar: (data.authorAvatar as string) || '',
+            },
+            content: {
+              lead: (data.contentLead as string) || '',
+              sections: Array.isArray(data.sections) ? (data.sections as BlogPost['content']['sections']) : [],
+              takeaways: Array.isArray(data.takeaways)
+                ? (data.takeaways as string[])
+                : typeof data.takeaways === 'string'
+                  ? (data.takeaways as string).split('\n').map((s) => s.trim()).filter(Boolean)
+                  : [],
+            },
+          };
+          return { order: Number(data.order ?? 0), post: p };
+        })
+        .sort((a, b) => a.order - b.order)
+        .map((x) => x.post);
+    } catch {
+      return defaultContent.blogPosts;
     }
   };
 
@@ -77,7 +174,7 @@ export async function loadContent(): Promise<SiteContent> {
     }
   };
 
-  const [services, projects, positions, courses, clients, categories, instructors] = await Promise.all([
+  const [services, projects, positions, courses, clients, categories, instructors, blogPostsList] = await Promise.all([
     loadPublished<Service>('services', defaultContent.services),
     loadPublished<Project>('projects', defaultContent.projects),
     loadPublished<Position>('positions', defaultContent.positions),
@@ -85,6 +182,7 @@ export async function loadContent(): Promise<SiteContent> {
     loadActive<ClientItem>('clients', defaultContent.clients),
     loadActive<CourseCategory>('course_categories', defaultContent.categories),
     loadInstructors(),
+    loadBlogPosts(),
   ]);
 
   return {
@@ -97,5 +195,14 @@ export async function loadContent(): Promise<SiteContent> {
     instructors: instructors.length > 0 ? instructors : defaultContent.instructors,
     about,
     pages,
+    globalSettings,
+    navigation,
+    headerFooter,
+    technologiesContent,
+    teamMembers,
+    faqs,
+    processSteps,
+    blogPosts: blogPostsList.length > 0 ? blogPostsList : defaultContent.blogPosts,
+    seo,
   };
 }

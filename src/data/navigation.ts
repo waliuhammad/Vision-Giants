@@ -1,6 +1,7 @@
 export interface NavItem {
   label: string;
   to: string;
+  active?: boolean;
 }
 
 /** Header navigation: the main visitor journeys in the exact requested order. */

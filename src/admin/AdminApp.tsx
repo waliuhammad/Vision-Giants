@@ -18,11 +18,22 @@ import { CareersManager } from './CareersManager';
 import { CoursesManager } from './CoursesManager';
 import { CourseCategoriesManager } from './CourseCategoriesManager';
 import { InstructorsManager } from './InstructorsManager';
+import { BlogManager } from './BlogManager';
+import { PortfolioManager } from './PortfolioManager';
+import { TeamManager } from './TeamManager';
+import { TechnologiesManager } from './TechnologiesManager';
+import { FaqsProcessManager } from './FaqsProcessManager';
+import { MediaLibrary } from './MediaLibrary';
+import { NavigationManager } from './NavigationManager';
+import { HeaderFooterManager } from './HeaderFooterManager';
+import { GlobalSettingsManager } from './GlobalSettingsManager';
+import { SeoManager } from './SeoManager';
+import { VisualPageBuilder } from './VisualPageBuilder';
 import './admin.css';
 
 export default function AdminApp() {
   useEffect(() => {
-    document.title = 'Admin';
+    document.title = 'Vision Giants CMS Admin';
   }, []);
 
   if (!isFirebaseConfigured) {
@@ -65,24 +76,47 @@ function AuthGate() {
   return (
     <Routes>
       <Route path="/admin" element={<AdminLayout user={auth.user} />}>
-        <Route index element={<Navigate to="inquiries" replace />} />
-        <Route path="inquiries" element={<SubmissionsPage key="inquiries" config={inquiriesConfig} />} />
-        <Route path="applications" element={<SubmissionsPage key="applications" config={applicationsConfig} />} />
-        <Route path="enrollments" element={<SubmissionsPage key="enrollments" config={enrollmentsConfig} />} />
-        <Route path="home-hero" element={<HomeHeroManager />} />
-        <Route path="collaboration" element={<HomeCollaborationManager />} />
-        <Route path="about-page" element={<AboutPageEditor />} />
-        <Route path="clients" element={<ClientsManager />} />
-        <Route path="careers" element={<CareersManager />} />
-        <Route path="positions" element={<Navigate to="/admin/careers" replace />} />
+        <Route index element={<Navigate to="pages" replace />} />
+
+        {/* Page Builder & Central CMS */}
+        <Route path="pages" element={<SitePagesList />} />
+        <Route path="pages/:id" element={<SitePageEditor />} />
+        <Route path="visual-builder" element={<VisualPageBuilder />} />
+
+        {/* Website Content Modules */}
+        <Route path="services" element={<ContentPage key="services" config={servicesConfig} />} />
+        <Route path="portfolio" element={<PortfolioManager />} />
         <Route path="courses" element={<CoursesManager />} />
         <Route path="course-categories" element={<CourseCategoriesManager />} />
         <Route path="instructors" element={<InstructorsManager />} />
-        <Route path="pages" element={<SitePagesList />} />
-        <Route path="pages/:id" element={<SitePageEditor />} />
+        <Route path="careers" element={<CareersManager />} />
+        <Route path="positions" element={<Navigate to="/admin/careers" replace />} />
+        <Route path="blog" element={<BlogManager />} />
+        <Route path="team" element={<TeamManager />} />
+        <Route path="technologies" element={<TechnologiesManager />} />
+        <Route path="faqs-process" element={<FaqsProcessManager />} />
+        <Route path="clients" element={<ClientsManager />} />
         <Route path="partners" element={<PartnersPage />} />
-        <Route path="services" element={<ContentPage key="services" config={servicesConfig} />} />
-        <Route path="*" element={<Navigate to="/admin/inquiries" replace />} />
+
+        {/* Dedicated Page Section Editors */}
+        <Route path="home-hero" element={<HomeHeroManager />} />
+        <Route path="collaboration" element={<HomeCollaborationManager />} />
+        <Route path="about-page" element={<AboutPageEditor />} />
+
+        {/* Global Customizer & Media */}
+        <Route path="media" element={<MediaLibrary />} />
+        <Route path="navigation" element={<NavigationManager />} />
+        <Route path="header-footer" element={<HeaderFooterManager />} />
+        <Route path="global-settings" element={<GlobalSettingsManager />} />
+        <Route path="seo" element={<SeoManager />} />
+
+        {/* Submissions & CRM */}
+        <Route path="inquiries" element={<SubmissionsPage key="inquiries" config={inquiriesConfig} />} />
+        <Route path="applications" element={<SubmissionsPage key="applications" config={applicationsConfig} />} />
+        <Route path="enrollments" element={<SubmissionsPage key="enrollments" config={enrollmentsConfig} />} />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/admin/pages" replace />} />
       </Route>
     </Routes>
   );

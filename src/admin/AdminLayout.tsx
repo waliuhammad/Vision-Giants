@@ -25,33 +25,62 @@ import {
   User as UserIcon,
   Shield,
   Handshake,
+  Sparkles,
+  Globe,
+  Menu,
+  HelpCircle,
+  Image as ImageIcon,
+  Sliders,
+  Cpu,
+  Search,
 } from 'lucide-react';
 import { company } from '../data/company';
 import { signOutAdmin, changeAdminPassword } from './firebase';
 
 const nav = [
   {
-    group: 'Submissions',
+    group: 'Page Builder & CMS',
     items: [
-      { to: '/admin/inquiries', label: 'Inquiries', icon: Inbox },
-      { to: '/admin/applications', label: 'Job Applications', icon: FileUser },
-      { to: '/admin/enrollments', label: 'Course Enrollments', icon: GraduationCap },
+      { to: '/admin/pages', label: 'Page Management', icon: FileText },
+      { to: '/admin/visual-builder', label: 'Visual Page Builder', icon: Sparkles },
     ],
   },
   {
     group: 'Website Content',
     items: [
-      { to: '/admin/home-hero', label: 'Home Hero Section', icon: Layers },
-      { to: '/admin/collaboration', label: 'Home Collaboration', icon: Handshake },
-      { to: '/admin/about-page', label: 'About Us page', icon: UserCheck },
-      { to: '/admin/clients', label: 'Clients', icon: Building2 },
-      { to: '/admin/careers', label: 'Careers / Jobs', icon: Briefcase },
-      { to: '/admin/courses', label: 'Courses', icon: BookOpen },
+      { to: '/admin/services', label: 'Services', icon: Layers },
+      { to: '/admin/portfolio', label: 'Portfolio / Projects', icon: Briefcase },
+      { to: '/admin/courses', label: 'Courses & Academy', icon: BookOpen },
       { to: '/admin/course-categories', label: 'Course Categories', icon: Tag },
       { to: '/admin/instructors', label: 'Instructors', icon: Users },
-      { to: '/admin/pages', label: 'Site pages', icon: FileText },
+      { to: '/admin/careers', label: 'Careers & Jobs', icon: Briefcase },
+      { to: '/admin/blog', label: 'Blog & Articles', icon: FileText },
+      { to: '/admin/team', label: 'Team & Mentors', icon: Users },
+      { to: '/admin/technologies', label: 'Technologies & Stack', icon: Cpu },
+      { to: '/admin/faqs-process', label: 'FAQs & Process', icon: HelpCircle },
+      { to: '/admin/clients', label: 'Clients', icon: Building2 },
       { to: '/admin/partners', label: 'Partners', icon: Handshake },
-      { to: '/admin/services', label: 'Services', icon: Layers },
+      { to: '/admin/home-hero', label: 'Home Hero Section', icon: Layers },
+      { to: '/admin/collaboration', label: 'Home Collaboration', icon: Handshake },
+      { to: '/admin/about-page', label: 'About Us Editor', icon: UserCheck },
+    ],
+  },
+  {
+    group: 'Global Customizer',
+    items: [
+      { to: '/admin/media', label: 'Media Library', icon: ImageIcon },
+      { to: '/admin/navigation', label: 'Navigation & Menus', icon: Menu },
+      { to: '/admin/header-footer', label: 'Header & Footer', icon: Sliders },
+      { to: '/admin/global-settings', label: 'Global Settings', icon: Globe },
+      { to: '/admin/seo', label: 'SEO Management', icon: Search },
+    ],
+  },
+  {
+    group: 'Submissions & CRM',
+    items: [
+      { to: '/admin/inquiries', label: 'Inquiries', icon: Inbox },
+      { to: '/admin/applications', label: 'Job Applications', icon: FileUser },
+      { to: '/admin/enrollments', label: 'Course Enrollments', icon: GraduationCap },
     ],
   },
 ];
@@ -128,7 +157,7 @@ export function AdminLayout({ user }: { user: User }) {
       <aside className="admin__sidebar">
         <div className="admin__brand">
           <AdminLogo />
-          <span className="admin__brand-tag">Admin panel</span>
+          <span className="admin__brand-tag">WordPress-Style CMS</span>
         </div>
         <nav aria-label="Admin">
           {nav.map((section) => (

@@ -43,3 +43,48 @@ export function usePageText(pageId: string) {
   const { pages } = useContent();
   return (key: string) => resolvePageText(pages, pageId, key);
 }
+
+export function useGlobalSettings() {
+  const { globalSettings } = useContent();
+  return globalSettings;
+}
+
+export function useNavigation() {
+  const { navigation } = useContent();
+  return navigation;
+}
+
+export function useHeaderFooter() {
+  const { headerFooter } = useContent();
+  return headerFooter;
+}
+
+export function useTeamMembers() {
+  const { teamMembers } = useContent();
+  return teamMembers;
+}
+
+export function useTechnologies() {
+  const { technologiesContent } = useContent();
+  return technologiesContent;
+}
+
+export function useFaqs() {
+  const { faqs } = useContent();
+  return faqs;
+}
+
+export function useProcessSteps() {
+  const { processSteps } = useContent();
+  return processSteps;
+}
+
+export function useBlogPosts() {
+  const { blogPosts } = useContent();
+  return blogPosts;
+}
+
+export function useSeo(pageId: string) {
+  const { seo } = useContent();
+  return seo[pageId] ?? seo.home;
+}
