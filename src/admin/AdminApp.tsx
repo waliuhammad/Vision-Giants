@@ -4,9 +4,16 @@ import { isFirebaseConfigured } from '../config/firebase';
 import { useAdminAuth, signOutAdmin } from './firebase';
 import { LoginPage } from './LoginPage';
 import { AdminLayout } from './AdminLayout';
+import { DashboardOverview } from './DashboardOverview';
+import { SectionsManager } from './SectionsManager';
+import { UsersManager } from './UsersManager';
+import { ActivityLogs } from './ActivityLogs';
+import { FooterManager } from './FooterManager';
+import { SecuritySettings } from './SecuritySettings';
 import { SubmissionsPage } from './SubmissionsPage';
 import { ContentPage } from './ContentPage';
 import { AboutPageEditor } from './AboutPageEditor';
+import { ServicesPageEditor } from './ServicesPageEditor';
 import { HomeHeroManager } from './HomeHeroManager';
 import HomeCollaborationManager from './HomeCollaborationManager';
 import { PartnersPage } from './PartnersPage';
@@ -33,7 +40,7 @@ import './admin.css';
 
 export default function AdminApp() {
   useEffect(() => {
-    document.title = 'Vision Giants CMS Admin';
+    document.title = 'Vision Giants CMS & Admin Panel';
   }, []);
 
   if (!isFirebaseConfigured) {
@@ -76,12 +83,31 @@ function AuthGate() {
   return (
     <Routes>
       <Route path="/admin" element={<AdminLayout user={auth.user} />}>
-        <Route index element={<Navigate to="pages" replace />} />
+        {/* Central Dashboard Overview as the default index */}
+        <Route index element={<DashboardOverview />} />
 
-        {/* Page Builder & Central CMS */}
+        {/* 13-item Core CMS Modules */}
         <Route path="pages" element={<SitePagesList />} />
         <Route path="pages/:id" element={<SitePageEditor />} />
         <Route path="visual-builder" element={<VisualPageBuilder />} />
+        <Route path="builder" element={<Navigate to="/admin/visual-builder" replace />} />
+        <Route path="sections" element={<SectionsManager />} />
+        <Route path="media" element={<MediaLibrary />} />
+        <Route path="global-settings" element={<GlobalSettingsManager />} />
+        <Route path="navigation" element={<NavigationManager />} />
+        <Route path="header-nav" element={<Navigate to="/admin/navigation" replace />} />
+        <Route path="footer" element={<FooterManager />} />
+        <Route path="header-footer" element={<HeaderFooterManager />} />
+        <Route path="seo" element={<SeoManager />} />
+        <Route path="users" element={<UsersManager />} />
+        <Route path="activity-logs" element={<ActivityLogs />} />
+        <Route path="security" element={<SecuritySettings />} />
+
+        {/* Submissions & CRM */}
+        <Route path="inquiries" element={<SubmissionsPage key="inquiries" config={inquiriesConfig} />} />
+        <Route path="applications" element={<SubmissionsPage key="applications" config={applicationsConfig} />} />
+        <Route path="enrollments" element={<SubmissionsPage key="enrollments" config={enrollmentsConfig} />} />
+        <Route path="submissions" element={<Navigate to="/admin/inquiries" replace />} />
 
         {/* Website Content Modules */}
         <Route path="services" element={<ContentPage key="services" config={servicesConfig} />} />
@@ -102,21 +128,10 @@ function AuthGate() {
         <Route path="home-hero" element={<HomeHeroManager />} />
         <Route path="collaboration" element={<HomeCollaborationManager />} />
         <Route path="about-page" element={<AboutPageEditor />} />
-
-        {/* Global Customizer & Media */}
-        <Route path="media" element={<MediaLibrary />} />
-        <Route path="navigation" element={<NavigationManager />} />
-        <Route path="header-footer" element={<HeaderFooterManager />} />
-        <Route path="global-settings" element={<GlobalSettingsManager />} />
-        <Route path="seo" element={<SeoManager />} />
-
-        {/* Submissions & CRM */}
-        <Route path="inquiries" element={<SubmissionsPage key="inquiries" config={inquiriesConfig} />} />
-        <Route path="applications" element={<SubmissionsPage key="applications" config={applicationsConfig} />} />
-        <Route path="enrollments" element={<SubmissionsPage key="enrollments" config={enrollmentsConfig} />} />
+        <Route path="services-page" element={<ServicesPageEditor />} />
 
         {/* Fallback */}
-        <Route path="*" element={<Navigate to="/admin/pages" replace />} />
+        <Route path="*" element={<Navigate to="/admin" replace />} />
       </Route>
     </Routes>
   );

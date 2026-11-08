@@ -63,6 +63,7 @@ export const blogPosts: BlogPost[] = [
     date: 'Oct 18, 2026',
     readTime: '6 min read',
     featured: true,
+    imageUrl: '/images/blog/blog-hero.jpg',
     author: {
       name: 'James Wilson',
       role: 'Chief Technology Officer',
@@ -117,6 +118,7 @@ export async function middleware(request: Request) {
     category: 'AI & Technology',
     date: 'Oct 12, 2026',
     readTime: '5 min read',
+    imageUrl: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80',
     author: {
       name: 'David Miller',
       role: 'Lead Software Engineer',
@@ -152,6 +154,7 @@ export async function middleware(request: Request) {
     category: 'Mobile App Development',
     date: 'Oct 05, 2026',
     readTime: '8 min read',
+    imageUrl: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80',
     author: {
       name: 'Lisa Thompson',
       role: 'Customer Success & Tech Delivery',
@@ -187,6 +190,7 @@ export async function middleware(request: Request) {
     category: 'UI/UX Design',
     date: 'Sep 28, 2026',
     readTime: '4 min read',
+    imageUrl: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80',
     author: {
       name: 'Laura Davis',
       role: 'Chief Operating Officer',
@@ -222,6 +226,7 @@ export async function middleware(request: Request) {
     category: 'Programming Tutorials',
     date: 'Sep 21, 2026',
     readTime: '7 min read',
+    imageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80',
     author: {
       name: 'Tom White',
       role: 'Head of Product & Architect',
@@ -262,6 +267,7 @@ function dispatchOrder(userId: UserId, orderId: OrderId) {
     category: 'Business & Digital Growth',
     date: 'Sep 14, 2026',
     readTime: '5 min read',
+    imageUrl: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=800&q=80',
     author: {
       name: 'Jillie Bernard',
       role: 'Founder & CEO',
@@ -297,6 +303,7 @@ function dispatchOrder(userId: UserId, orderId: OrderId) {
     category: 'Web Development',
     date: 'Sep 07, 2026',
     readTime: '4 min read',
+    imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80',
     author: {
       name: 'Sarah Williams',
       role: 'Director of Sales & Growth',
@@ -327,6 +334,7 @@ function dispatchOrder(userId: UserId, orderId: OrderId) {
     category: 'UI/UX Design',
     date: 'Aug 29, 2026',
     readTime: '6 min read',
+    imageUrl: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=800&q=80',
     author: {
       name: 'Emily Johnson',
       role: 'Marketing & UX Specialist',

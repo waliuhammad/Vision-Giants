@@ -81,25 +81,25 @@ export function Navbar() {
 
   return (
     <>
-      {headerFooter?.header?.noticeBarEnabled && headerFooter.header.noticeBarText && (
-        <div
-          style={{
-            background: 'linear-gradient(90deg, #1e40af, #2563eb, #38bdf8)',
-            color: '#ffffff',
-            padding: '6px 1rem',
-            textAlign: 'center',
-            fontSize: '0.85rem',
-            fontWeight: 600,
-            letterSpacing: '0.01em',
-            position: 'relative',
-            zIndex: 101,
-          }}
-        >
-          {headerFooter.header.noticeBarText}
-        </div>
-      )}
-
       <header className={`site-header${scrolled ? ' is-scrolled' : ''}${open ? ' is-open' : ''}`}>
+        {headerFooter?.header?.noticeBarEnabled && headerFooter.header.noticeBarText && (
+          <div
+            style={{
+              background: 'linear-gradient(90deg, #1e40af, #2563eb, #38bdf8)',
+              color: '#ffffff',
+              padding: '6px 1rem',
+              textAlign: 'center',
+              fontSize: '0.85rem',
+              fontWeight: 600,
+              letterSpacing: '0.01em',
+              pointerEvents: 'auto',
+              width: '100%',
+            }}
+          >
+            {headerFooter.header.noticeBarText}
+          </div>
+        )}
+
         <div className="container site-header__inner">
           <Logo onClick={close} />
 

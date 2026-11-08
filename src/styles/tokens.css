@@ -48,6 +48,16 @@
   --ambient-blue: radial-gradient(closest-side, rgba(44, 67, 119, 0.16), rgba(44, 67, 119, 0.05) 55%, transparent);
   --focus-ring: 0 0 0 3px rgba(44, 67, 119, 0.28);
 
+  /* Unified Hero Navy Theme (Website-Wide Consistency) */
+  --hero-bg-navy: #0b1736;
+  --hero-bg-navy-secondary: #102448;
+  --hero-bg-gradient: linear-gradient(135deg, #0b1736 0%, #102448 60%, #0d1c3e 100%);
+  --hero-text-title: #ffffff;
+  --hero-text-lead: rgba(226, 232, 240, 0.88);
+  --hero-text-muted: rgba(203, 213, 225, 0.75);
+  --hero-border: rgba(255, 255, 255, 0.08);
+  --hero-accent-blue: #60a5fa;
+
   /* Typography */
   --font-heading: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-body: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;

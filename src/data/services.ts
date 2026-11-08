@@ -47,6 +47,9 @@ export interface Service {
   deliverables: string[];
   icon: ServiceIconName;
   platforms?: ServicePlatform[];
+  image?: string;
+  isFeatured?: boolean;
+  order?: number;
 }
 
 export const services: Service[] = [
@@ -173,7 +176,7 @@ export const services: Service[] = [
 ];
 
 /**
- * Card photos in public/images/services/<service id>.webp (800×500, from Unsplash, free for
+ * Card photos in public/images/services/<service id>.webp (from Unsplash, free for
  * commercial use). Services without a photo here show their icon only.
  */
 const servicePhotos = new Set([
@@ -191,8 +194,11 @@ const servicePhotos = new Set([
   'game-development',
 ]);
 
-export const getServiceImage = (id: string): string | undefined =>
-  servicePhotos.has(id) ? `/images/services/${id}.webp` : undefined;
+export const getServiceImage = (idOrService: string | Service): string | undefined => {
+  if (typeof idOrService === 'object' && idOrService?.image) return idOrService.image;
+  const id = typeof idOrService === 'string' ? idOrService : idOrService?.id;
+  return servicePhotos.has(id) ? `/images/services/${id}.webp` : undefined;
+};
 
 export const getServiceById = (id: string): Service | undefined =>
   services.find((s) => s.id === id);

@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
+import { Link } from 'react-router';
 import {
   ArrowRight,
   BarChart2,
@@ -31,7 +32,6 @@ import {
 } from '../content/careersPageData';
 import { Button } from '../components/ui/Button';
 import { Reveal } from '../components/animations/Reveal';
-import { ApplicationForm } from '../components/ui/ApplicationForm';
 import { getDb, isFirebaseConfigured } from '../config/firebase';
 
 const firestore = () => import('firebase/firestore/lite');
@@ -40,24 +40,24 @@ const firestore = () => import('firebase/firestore/lite');
 function WhyIcon({ name }: { name: string }) {
   switch (name) {
     case 'trending': return <TrendingUp size={32} />;
-    case 'users':    return <Users size={32} />;
+    case 'users': return <Users size={32} />;
     case 'lightbulb': return <Lightbulb size={32} />;
-    case 'heart':    return <HeartHandshake size={32} />;
-    case 'trophy':   return <Trophy size={32} />;
-    default:         return <Star size={32} />;
+    case 'heart': return <HeartHandshake size={32} />;
+    case 'trophy': return <Trophy size={32} />;
+    default: return <Star size={32} />;
   }
 }
 
 /* ── Perk icon resolver ── */
 function PerkIcon({ name }: { name: string }) {
   switch (name) {
-    case 'salary':   return <DollarSign size={28} />;
-    case 'clock':    return <Clock size={28} />;
+    case 'salary': return <DollarSign size={28} />;
+    case 'clock': return <Clock size={28} />;
     case 'learning': return <GraduationCap size={28} />;
-    case 'health':   return <Shield size={28} />;
-    case 'outings':  return <Globe size={28} />;
-    case 'bonus':    return <Gift size={28} />;
-    default:         return <Star size={28} />;
+    case 'health': return <Shield size={28} />;
+    case 'outings': return <Globe size={28} />;
+    case 'bonus': return <Gift size={28} />;
+    default: return <Star size={28} />;
   }
 }
 
@@ -76,11 +76,11 @@ function DeptIcon({ dept }: { dept: string }) {
 const DEPT_COLORS: Record<string, string> = {
   engineering: '#2563eb',
   development: '#2563eb',
-  mobile:      '#10b981',
-  design:      '#f59e0b',
-  marketing:   '#f97316',
-  support:     '#ec4899',
-  sales:       '#8b5cf6',
+  mobile: '#10b981',
+  design: '#f59e0b',
+  marketing: '#f97316',
+  support: '#ec4899',
+  sales: '#8b5cf6',
 };
 function deptColor(dept: string) {
   const key = dept?.toLowerCase() ?? '';
@@ -123,7 +123,6 @@ export default function CareersPage() {
   /* ── Filters ── */
   const [deptFilter, setDeptFilter] = useState('all');
   const [selectedJob, setSelectedJob] = useState<Position | null>(null);
-  const [applyingJob, setApplyingJob] = useState<Position | null>(null);
   const [testimonialIdx, setTestimonialIdx] = useState(0);
 
   const departments = useMemo(() => {
@@ -175,9 +174,6 @@ export default function CareersPage() {
                 <Button href={pageData.heroPrimaryCtaLink} icon={<ArrowRight size={17} />}>
                   {pageData.heroPrimaryCtaText}
                 </Button>
-                <a href={pageData.heroSecondaryCtaLink} className="crp-btn-outline">
-                  {pageData.heroSecondaryCtaText}
-                </a>
               </div>
 
               {/* Social proof */}
@@ -291,14 +287,13 @@ export default function CareersPage() {
                       )}
 
                       <div className="crp-job-card__footer">
-                        <button
-                          type="button"
+                        <Link
+                          to={`/careers/apply?position=${job.id}`}
                           className="crp-apply-link"
                           style={{ color }}
-                          onClick={() => setApplyingJob(job)}
                         >
                           Apply Now <ArrowRight size={13} />
-                        </button>
+                        </Link>
                       </div>
                     </div>
                   </Reveal>
@@ -430,16 +425,15 @@ export default function CareersPage() {
               <h2 className="crp-cta__heading">{pageData.ctaHeading}</h2>
               <p className="crp-cta__desc">{pageData.ctaDescription}</p>
             </div>
-            <button
-              type="button"
+            <Link
+              to="/careers/apply"
               className="crp-cta__btn"
-              onClick={() => setApplyingJob({ id: 'open', title: 'Open Application' } as Position)}
             >
               <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" />
               </svg>
               {pageData.ctaButtonText}
-            </button>
+            </Link>
             {/* Decorative CV illustration */}
             <div className="crp-cta__illustration" aria-hidden="true">
               <div className="crp-cv-card">
@@ -509,40 +503,13 @@ export default function CareersPage() {
 
             <div className="admin-modal-foot" style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
               <Button variant="outline" onClick={() => setSelectedJob(null)}>Close</Button>
-              <Button variant="primary" onClick={() => { const j = selectedJob; setSelectedJob(null); setApplyingJob(j); }}>
+              <Link
+                to={`/careers/apply?position=${encodeURIComponent(selectedJob.id)}`}
+                className="btn btn--primary"
+                onClick={() => setSelectedJob(null)}
+              >
                 Apply for this Position
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ═══════════════════════════════════════════════════════════════
-          MODAL: APPLICATION FORM
-         ═══════════════════════════════════════════════════════════════ */}
-      {applyingJob && (
-        <div
-          className="admin-modal-backdrop"
-          onClick={() => setApplyingJob(null)}
-          role="dialog"
-          aria-modal="true"
-        >
-          <div
-            className="admin-modal-card"
-            style={{ maxWidth: '640px' }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="admin-modal-head">
-              <div>
-                <span className="badge badge--neutral" style={{ marginBottom: 4 }}>Job Application</span>
-                <h2 style={{ fontSize: '1.3rem', margin: 0 }}>Apply: {applyingJob.title}</h2>
-              </div>
-              <button type="button" className="btn-icon" onClick={() => setApplyingJob(null)} aria-label="Close">
-                <X size={18} />
-              </button>
-            </div>
-            <div className="admin-modal-body" style={{ maxHeight: '72vh', overflowY: 'auto' }}>
-              <ApplicationForm positions={applyingJob ? [applyingJob] : openPositions} />
+              </Link>
             </div>
           </div>
         </div>

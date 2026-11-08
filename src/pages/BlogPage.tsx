@@ -10,7 +10,6 @@ import { BlogNewsletter } from '../components/blog/BlogNewsletter';
 import { BlogPostDialog } from '../components/blog/BlogPostDialog';
 import { Button } from '../components/ui/Button';
 import { Reveal } from '../components/animations/Reveal';
-import { NetworkVisual } from '../components/visuals/IsoVisuals';
 import { usePageText } from '../content/ContentContext';
 
 const ITEMS_PER_PAGE = 6;
@@ -96,13 +95,33 @@ export default function BlogPage() {
 
   return (
     <div className="blog-page">
-      {/* Compact, impactful Hero Section */}
+      {/* Compact, impactful Hero Section with aesthetic editorial photo */}
       <PageHero
         crumb="Blog"
         eyebrow={t('heroEyebrow')}
         title={t('heroTitle')}
         lead={t('heroLead')}
-        visual={<NetworkVisual />}
+        visual={
+          <div className="blog-hero__custom-image-wrap">
+            {/* Top-left live stat chip */}
+            <div className="blog-hero__stat">
+              <span className="blog-hero__stat-dot" aria-hidden="true" />
+              <span>8 New Articles</span>
+            </div>
+            <img
+              src="/images/blog/blog-hero.jpg"
+              alt="Professional workspace with laptop, coffee and notebook — blog and insights hub"
+              className="blog-hero__custom-image"
+              width={520}
+              height={390}
+            />
+            {/* Bottom-right badge pill */}
+            <div className="blog-hero__badge">
+              <BookOpen size={14} style={{ color: 'var(--color-primary)' }} />
+              <span>Insights &amp; Articles</span>
+            </div>
+          </div>
+        }
       />
 
       <div className="container blog-page__container">

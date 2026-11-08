@@ -1,18 +1,20 @@
-import { useState, type FormEvent } from 'react';
-import { NavLink, Outlet } from 'react-router';
+import { useState, useEffect, type FormEvent } from 'react';
+import { NavLink, Outlet, useLocation } from 'react-router';
 import type { User } from 'firebase/auth';
 import {
-  Inbox,
-  FileUser,
-  GraduationCap,
+  LayoutDashboard,
   FileText,
-  UserCheck,
-  Building2,
-  Briefcase,
-  BookOpen,
-  Tag,
-  Users,
+  Sparkles,
   Layers,
+  ImageIcon,
+  Globe,
+  Menu,
+  Sliders,
+  Inbox,
+  Search,
+  Users,
+  Clock,
+  Lock,
   LogOut,
   ExternalLink,
   KeyRound,
@@ -24,87 +26,67 @@ import {
   X,
   User as UserIcon,
   Shield,
+  Briefcase,
+  BookOpen,
+  ChevronLeft,
+  ChevronRight,
+  Menu as MenuIcon,
   Handshake,
-  Sparkles,
-  Globe,
-  Menu,
-  HelpCircle,
-  Image as ImageIcon,
-  Sliders,
   Cpu,
-  Search,
+  Building2,
 } from 'lucide-react';
 import { company } from '../data/company';
 import { signOutAdmin, changeAdminPassword } from './firebase';
 
-const nav = [
-  {
-    group: 'Page Builder & CMS',
-    items: [
-      { to: '/admin/pages', label: 'Page Management', icon: FileText },
-      { to: '/admin/visual-builder', label: 'Visual Page Builder', icon: Sparkles },
-    ],
-  },
-  {
-    group: 'Website Content',
-    items: [
-      { to: '/admin/services', label: 'Services', icon: Layers },
-      { to: '/admin/portfolio', label: 'Portfolio / Projects', icon: Briefcase },
-      { to: '/admin/courses', label: 'Courses & Academy', icon: BookOpen },
-      { to: '/admin/course-categories', label: 'Course Categories', icon: Tag },
-      { to: '/admin/instructors', label: 'Instructors', icon: Users },
-      { to: '/admin/careers', label: 'Careers & Jobs', icon: Briefcase },
-      { to: '/admin/blog', label: 'Blog & Articles', icon: FileText },
-      { to: '/admin/team', label: 'Team & Mentors', icon: Users },
-      { to: '/admin/technologies', label: 'Technologies & Stack', icon: Cpu },
-      { to: '/admin/faqs-process', label: 'FAQs & Process', icon: HelpCircle },
-      { to: '/admin/clients', label: 'Clients', icon: Building2 },
-      { to: '/admin/partners', label: 'Partners', icon: Handshake },
-      { to: '/admin/home-hero', label: 'Home Hero Section', icon: Layers },
-      { to: '/admin/collaboration', label: 'Home Collaboration', icon: Handshake },
-      { to: '/admin/about-page', label: 'About Us Editor', icon: UserCheck },
-    ],
-  },
-  {
-    group: 'Global Customizer',
-    items: [
-      { to: '/admin/media', label: 'Media Library', icon: ImageIcon },
-      { to: '/admin/navigation', label: 'Navigation & Menus', icon: Menu },
-      { to: '/admin/header-footer', label: 'Header & Footer', icon: Sliders },
-      { to: '/admin/global-settings', label: 'Global Settings', icon: Globe },
-      { to: '/admin/seo', label: 'SEO Management', icon: Search },
-    ],
-  },
-  {
-    group: 'Submissions & CRM',
-    items: [
-      { to: '/admin/inquiries', label: 'Inquiries', icon: Inbox },
-      { to: '/admin/applications', label: 'Job Applications', icon: FileUser },
-      { to: '/admin/enrollments', label: 'Course Enrollments', icon: GraduationCap },
-    ],
-  },
+// 13-item comprehensive admin navigation hierarchy
+const mainNav = [
+  { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
+  { to: '/admin/pages', label: 'Website Pages', icon: FileText },
+  { to: '/admin/visual-builder', label: 'Visual Page Editor', icon: Sparkles },
+  { to: '/admin/sections', label: 'Sections Manager', icon: Layers },
+  { to: '/admin/media', label: 'Media Library', icon: ImageIcon },
+  { to: '/admin/global-settings', label: 'Global Settings', icon: Globe },
+  { to: '/admin/navigation', label: 'Header & Navigation', icon: Menu },
+  { to: '/admin/footer', label: 'Footer Manager', icon: Sliders },
+  { to: '/admin/inquiries', label: 'Forms & Submissions', icon: Inbox },
+  { to: '/admin/seo', label: 'SEO Management', icon: Search },
+  { to: '/admin/users', label: 'User Management', icon: Users },
+  { to: '/admin/activity-logs', label: 'Activity Logs', icon: Clock },
+  { to: '/admin/security', label: 'Security & Password', icon: Lock },
 ];
 
-/**
- * The site's logo (components/layout/Logo) as a plain link: the admin app has its own router,
- * so a router Link to "/" would stay inside it instead of opening the website.
- */
-export function AdminLogo() {
+const contentModules = [
+  { to: '/admin/services', label: 'Services Catalog', icon: Layers },
+  { to: '/admin/portfolio', label: 'Portfolio Projects', icon: Briefcase },
+  { to: '/admin/courses', label: 'Academy Courses', icon: BookOpen },
+  { to: '/admin/careers', label: 'Careers & Jobs', icon: Briefcase },
+  { to: '/admin/blog', label: 'Blog & Articles', icon: FileText },
+  { to: '/admin/team', label: 'Team Members', icon: Users },
+  { to: '/admin/technologies', label: 'Technologies', icon: Cpu },
+  { to: '/admin/clients', label: 'Clients & Brands', icon: Building2 },
+  { to: '/admin/partners', label: 'Strategic Partners', icon: Handshake },
+];
+
+export function AdminLogo({ collapsed }: { collapsed?: boolean }) {
   const suffix = company.legalName.slice(company.name.length).trim();
   return (
-    <a href="/" className="logo" aria-label={`${company.legalName} website`}>
-      <span className="logo__mark" aria-hidden="true">
-        <img src="/logo-mark.png" alt="" width="148" height="98" />
+    <a href="/" className="logo" aria-label={`${company.legalName} website`} style={{ gap: collapsed ? 0 : 8 }}>
+      <span className="logo__mark" aria-hidden="true" style={{ width: collapsed ? 32 : 36, height: collapsed ? 32 : 36 }}>
+        <img src="/logo-mark.png" alt="" width="148" height="98" style={{ objectFit: 'contain' }} />
       </span>
-      <span className="logo__text">
-        <span className="logo__name">{company.name}</span>
-        {suffix && <span className="logo__suffix">{suffix}</span>}
-      </span>
+      {!collapsed && (
+        <span className="logo__text" style={{ fontSize: '0.95rem' }}>
+          <span className="logo__name">{company.name}</span>
+          {suffix && <span className="logo__suffix">{suffix}</span>}
+        </span>
+      )}
     </a>
   );
 }
 
 export function AdminLayout({ user }: { user: User }) {
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -114,6 +96,12 @@ export function AdminLayout({ user }: { user: User }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
+  const location = useLocation();
+
+  // Close mobile drawer on route navigation
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
 
   const onPasswordSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -153,30 +141,97 @@ export function AdminLayout({ user }: { user: User }) {
   };
 
   return (
-    <div className="admin">
-      <aside className="admin__sidebar">
-        <div className="admin__brand">
-          <AdminLogo />
-          <span className="admin__brand-tag">WordPress-Style CMS</span>
+    <div className={`admin ${collapsed ? 'admin--collapsed' : ''}`}>
+      {/* Mobile Top Header */}
+      <div className="admin-mobile-bar">
+        <button
+          type="button"
+          className="btn btn--plain"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Toggle Navigation Drawer"
+        >
+          <MenuIcon size={22} />
+        </button>
+        <AdminLogo collapsed={false} />
+        <a href="/" target="_blank" rel="noopener noreferrer" className="btn btn--plain btn--sm" title="View Site">
+          <ExternalLink size={18} />
+        </a>
+      </div>
+
+      {/* Backdrop for mobile drawer */}
+      {mobileMenuOpen && (
+        <div
+          className="admin-mobile-backdrop"
+          onClick={() => setMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Main Sidebar */}
+      <aside className={`admin__sidebar ${mobileMenuOpen ? 'admin__sidebar--open' : ''}`}>
+        <div className="admin__brand" style={{ position: 'relative' }}>
+          <AdminLogo collapsed={collapsed} />
+          {!collapsed && <span className="admin__brand-tag">Visual CMS</span>}
+
+          {/* Collapse Sidebar Toggle Button */}
+          <button
+            type="button"
+            className="admin-sidebar-toggle"
+            onClick={() => setCollapsed(!collapsed)}
+            title={collapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+          >
+            {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+          </button>
         </div>
-        <nav aria-label="Admin">
-          {nav.map((section) => (
-            <div key={section.group} className="admin__nav-group">
-              <p className="admin__nav-title">{section.group}</p>
-              {section.items.map(({ to, label, icon: Icon }) => (
-                <NavLink key={to} to={to} className="admin__nav-link">
-                  <Icon size={17} aria-hidden="true" />
-                  {label}
-                </NavLink>
-              ))}
-            </div>
-          ))}
+
+        <nav aria-label="Admin" style={{ overflowY: 'auto', flex: 1, paddingRight: 4 }}>
+          {/* Main 13 Management Links */}
+          <div className="admin__nav-group">
+            {!collapsed && <p className="admin__nav-title">Management</p>}
+            {mainNav.map(({ to, label, icon: Icon, end }) => (
+              <NavLink
+                key={to}
+                to={to}
+                end={end}
+                className="admin__nav-link"
+                title={collapsed ? label : undefined}
+              >
+                <Icon size={17} aria-hidden="true" style={{ flexShrink: 0 }} />
+                {!collapsed && <span>{label}</span>}
+              </NavLink>
+            ))}
+          </div>
+
+          {/* Specific Content Modules */}
+          <div className="admin__nav-group">
+            {!collapsed && <p className="admin__nav-title">Content Modules</p>}
+            {contentModules.map(({ to, label, icon: Icon }) => (
+              <NavLink
+                key={to}
+                to={to}
+                className="admin__nav-link"
+                title={collapsed ? label : undefined}
+              >
+                <Icon size={17} aria-hidden="true" style={{ flexShrink: 0 }} />
+                {!collapsed && <span>{label}</span>}
+              </NavLink>
+            ))}
+          </div>
         </nav>
+
+        {/* Footer Account & Utilities */}
         <div className="admin__account">
-          <a href="/" className="admin__nav-link" target="_blank" rel="noopener noreferrer">
-            <ExternalLink size={17} aria-hidden="true" />
-            View website
+          <a
+            href="/"
+            className="admin__nav-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            title={collapsed ? 'View live website' : undefined}
+          >
+            <ExternalLink size={17} aria-hidden="true" style={{ flexShrink: 0 }} />
+            {!collapsed && <span>View website</span>}
           </a>
+
           <button
             type="button"
             className="admin__nav-link"
@@ -185,30 +240,42 @@ export function AdminLayout({ user }: { user: User }) {
               setError('');
               setNotice('');
             }}
+            title={collapsed ? 'Change password' : undefined}
           >
-            <KeyRound size={17} aria-hidden="true" />
-            Change password
+            <KeyRound size={17} aria-hidden="true" style={{ flexShrink: 0 }} />
+            {!collapsed && <span>Change password</span>}
           </button>
-          <button type="button" className="admin__nav-link" onClick={() => signOutAdmin()}>
-            <LogOut size={17} aria-hidden="true" />
-            Sign out
+
+          <button
+            type="button"
+            className="admin__nav-link"
+            onClick={() => signOutAdmin()}
+            title={collapsed ? 'Sign out' : undefined}
+          >
+            <LogOut size={17} aria-hidden="true" style={{ flexShrink: 0 }} />
+            {!collapsed && <span>Sign out</span>}
           </button>
-          <div className="admin__account-info">
-            {user.displayName && (
-              <p className="admin__username" title={user.displayName}>
-                <UserIcon size={13} aria-hidden="true" />
-                <span>{user.displayName}</span>
+
+          {!collapsed && (
+            <div className="admin__account-info">
+              {user.displayName && (
+                <p className="admin__username" title={user.displayName}>
+                  <UserIcon size={13} aria-hidden="true" />
+                  <span>{user.displayName}</span>
+                </p>
+              )}
+              <p className="admin__email" title={user.email ?? ''}>
+                {user.email}
               </p>
-            )}
-            <p className="admin__email" title={user.email ?? ''}>
-              {user.email}
-            </p>
-            <span className="admin__badge">
-              <Shield size={11} aria-hidden="true" /> Administrator
-            </span>
-          </div>
+              <span className="admin__badge">
+                <Shield size={11} aria-hidden="true" /> Administrator
+              </span>
+            </div>
+          )}
         </div>
       </aside>
+
+      {/* Main Work Area */}
       <main className="admin__main">
         <div className="bg-grid" aria-hidden="true" />
         <Outlet />
@@ -239,92 +306,93 @@ export function AdminLayout({ user }: { user: User }) {
                 <div className="input-with-action">
                   <input
                     id="current-password"
-                    className="input"
                     type={showCurrentPassword ? 'text' : 'password'}
-                    required
-                    autoComplete="current-password"
-                    placeholder="Enter existing password"
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
+                    required
+                    autoComplete="current-password"
+                    className="input"
                   />
                   <button
                     type="button"
-                    className="action-inside-input"
-                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                    title={showCurrentPassword ? 'Hide password' : 'Show password'}
+                    className="btn btn--plain btn--sm"
+                    onClick={() => setShowCurrentPassword((prev) => !prev)}
+                    aria-label={showCurrentPassword ? 'Hide current password' : 'Show current password'}
                   >
-                    {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    {showCurrentPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
               </div>
 
               <div className="field">
-                <label htmlFor="new-password">New Password (min 8 characters)</label>
+                <label htmlFor="new-password">New Password (at least 8 characters)</label>
                 <div className="input-with-action">
                   <input
                     id="new-password"
-                    className="input"
                     type={showNewPassword ? 'text' : 'password'}
-                    required
-                    autoComplete="new-password"
-                    placeholder="Enter strong new password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                    minLength={8}
+                    autoComplete="new-password"
+                    className="input"
                   />
                   <button
                     type="button"
-                    className="action-inside-input"
-                    onClick={() => setShowNewPassword(!showNewPassword)}
-                    title={showNewPassword ? 'Hide password' : 'Show password'}
+                    className="btn btn--plain btn--sm"
+                    onClick={() => setShowNewPassword((prev) => !prev)}
+                    aria-label={showNewPassword ? 'Hide new password' : 'Show new password'}
                   >
-                    {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    {showNewPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
               </div>
 
               <div className="field">
-                <label htmlFor="confirm-new-password">Confirm New Password</label>
+                <label htmlFor="confirm-password">Confirm New Password</label>
                 <input
-                  id="confirm-new-password"
-                  className="input"
-                  type={showNewPassword ? 'text' : 'password'}
-                  required
-                  autoComplete="new-password"
-                  placeholder="Repeat new password"
+                  id="confirm-password"
+                  type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  autoComplete="new-password"
+                  className="input"
                 />
               </div>
 
-              <div aria-live="polite">
-                {error && (
-                  <p className="alert alert--error">
-                    <CircleAlert size={18} aria-hidden="true" />
-                    <span>{error}</span>
-                  </p>
-                )}
-                {notice && (
-                  <p className="alert alert--success">
-                    <CircleCheck size={18} aria-hidden="true" />
-                    <span>{notice}</span>
-                  </p>
-                )}
-              </div>
+              {error && (
+                <p className="alert alert--error" role="alert">
+                  <CircleAlert size={18} aria-hidden="true" />
+                  <span>{error}</span>
+                </p>
+              )}
+
+              {notice && (
+                <p className="alert alert--success" role="status">
+                  <CircleCheck size={18} aria-hidden="true" />
+                  <span>{notice}</span>
+                </p>
+              )}
 
               <div className="admin-modal__actions">
                 <button
                   type="button"
-                  className="btn btn--outline btn--sm"
+                  className="btn btn--plain"
                   onClick={() => setShowPasswordModal(false)}
                   disabled={busy}
                 >
                   Cancel
                 </button>
-                <button type="submit" className="btn btn--primary btn--sm" disabled={busy}>
-                  {busy ? 'Updating…' : 'Update Password'}
-                  <span aria-hidden="true">
-                    {busy ? <LoaderCircle size={16} className="spin" /> : <KeyRound size={16} />}
-                  </span>
+                <button type="submit" className="btn btn--primary" disabled={busy}>
+                  {busy ? (
+                    <>
+                      <LoaderCircle size={16} className="spin" aria-hidden="true" />
+                      Updating…
+                    </>
+                  ) : (
+                    'Update password'
+                  )}
                 </button>
               </div>
             </form>

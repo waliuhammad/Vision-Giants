@@ -14,7 +14,7 @@ export const firebaseConfig = {
   apiKey: env.VITE_FIREBASE_API_KEY,
   authDomain: env.VITE_FIREBASE_AUTH_DOMAIN,
   projectId: env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET,
+  storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET || (env.VITE_FIREBASE_PROJECT_ID ? `${env.VITE_FIREBASE_PROJECT_ID}.appspot.com` : undefined),
   messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: env.VITE_FIREBASE_APP_ID,
 };
@@ -32,6 +32,34 @@ export function getFirebaseApp(): Promise<FirebaseApp> {
   if (!isFirebaseConfigured) return Promise.reject(new Error('Firebase is not configured'));
   appPromise ??= import('firebase/app').then(({ initializeApp, getApps }) => getApps()[0] ?? initializeApp(firebaseConfig));
   return appPromise;
+}
+
+let storagePromise: Promise<import('firebase/storage').FirebaseStorage> | undefined;
+export function getStorage(): Promise<import('firebase/storage').FirebaseStorage> {
+  storagePromise ??= Promise.all([getFirebaseApp(), import('firebase/storage')]).then(([app, fs]) => {
+    const storage = fs.getStorage(app);
+    if (useEmulators) fs.connectStorageEmulator(storage, '127.0.0.1', 9199);
+    return storage;
+  });
+  return storagePromise;
+}
+
+/** Uploads applicant CV to Firebase Storage under applications/ and returns its public download URL and storage path. */
+export async function uploadCvFile(file: File): Promise<{ downloadUrl: string; storagePath: string }> {
+  const [storage, { ref, uploadBytes, getDownloadURL }] = await Promise.all([
+    getStorage(),
+    import('firebase/storage'),
+  ]);
+  const safeName = file.name.replace(/[^\w.\- ]+/g, '_').slice(-100);
+  const uniqueId = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36);
+  const storagePath = `applications/${uniqueId}/${safeName}`;
+  const fileRef = ref(storage, storagePath);
+  const snapshot = await uploadBytes(fileRef, file, {
+    contentType: file.type || 'application/pdf',
+    customMetadata: { originalName: file.name },
+  });
+  const downloadUrl = await getDownloadURL(snapshot.ref);
+  return { downloadUrl, storagePath };
 }
 
 let dbPromise: Promise<Firestore> | undefined;

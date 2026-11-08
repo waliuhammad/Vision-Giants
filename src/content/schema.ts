@@ -14,6 +14,7 @@ import {
 } from '../data/courses';
 import type { PageTexts } from './pages';
 import { defaultAboutData, type AboutPageData } from './about';
+import { defaultServicesPageData, type ServicesPageData } from './servicesPageData';
 import type { TeamMember } from '../data/team';
 import { teamMembers } from '../data/team';
 import type { BlogPost } from '../data/blog';
@@ -48,6 +49,8 @@ export interface SiteContent {
   instructors: Instructor[];
   /** Dedicated About Us page data model with full section management & team CRUD. */
   about: AboutPageData;
+  /** Dedicated Services page data model with full section management. */
+  servicesPage: ServicesPageData;
   /** Edited page text from Admin → Site pages; missing fields use the defaults in ./pages.ts. */
   pages: PageTexts;
   /** Global settings (branding, contact details, socials) */
@@ -80,6 +83,7 @@ export const defaultContent: SiteContent = {
   categories: defaultCourseCategories,
   instructors: defaultInstructors,
   about: defaultAboutData,
+  servicesPage: defaultServicesPageData,
   pages: {},
   globalSettings: defaultGlobalSettings,
   navigation: defaultNavigationSettings,
@@ -115,6 +119,9 @@ export const fromDoc = {
     description: str(d.description),
     deliverables: strList(d.deliverables),
     icon: oneOf(d.icon, Object.keys(serviceIcons) as ServiceIconName[], 'code'),
+    ...(str(d.image) ? { image: str(d.image) } : {}),
+    ...(typeof d.isFeatured === 'boolean' ? { isFeatured: d.isFeatured } : {}),
+    ...(typeof d.order === 'number' ? { order: d.order } : {}),
   }),
   projects: (id: string, d: Data): Project => ({
     id,

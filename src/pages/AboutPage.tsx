@@ -25,7 +25,7 @@ import { SectionHeading } from '../components/ui/SectionHeading';
 import { ServiceCard } from '../components/ui/ServiceCard';
 import { TeamCard } from '../components/ui/TeamCard';
 import { Reveal } from '../components/animations/Reveal';
-import { CubeVisual } from '../components/visuals/IsoVisuals';
+// CubeVisual replaced with real team photo — import removed
 import { Highlight } from '../components/ui/Highlight';
 
 const iconMap: Record<string, LucideIcon> = {
@@ -104,7 +104,20 @@ export default function AboutPage() {
                   />
                 </div>
               ) : (
-                <CubeVisual />
+                <div className="about-hero__custom-image-wrap">
+                  <img
+                    src="/images/about/hero.jpg"
+                    alt="Vision Giants team collaborating in a modern office"
+                    className="about-hero__custom-image"
+                    loading="eager"
+                    width={560}
+                    height={420}
+                  />
+                  <div className="about-hero__badge">
+                    <span className="about-hero__badge-dot" aria-hidden="true" />
+                    <span>Team of Experts</span>
+                  </div>
+                </div>
               )}
             </div>
           </div>

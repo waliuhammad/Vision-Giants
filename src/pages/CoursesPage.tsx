@@ -10,7 +10,6 @@ import {
   Cloud,
   Code,
   Palette,
-  Play,
   Search,
   Sparkles,
   Smartphone,
@@ -177,14 +176,6 @@ export default function CoursesPage() {
                     {pageData.heroPrimaryCtaText}
                   </Button>
 
-                  <button
-                    type="button"
-                    className="btn--watch"
-                    onClick={() => setVideoModalOpen(true)}
-                  >
-                    <Play size={16} fill="currentColor" />
-                    <span>{pageData.heroSecondaryCtaText}</span>
-                  </button>
                 </div>
               </Reveal>
 

@@ -38,6 +38,11 @@ export function ContentProvider({ initial, children }: { initial: SiteContent; c
 
 export const useContent = () => useContext(ContentContext);
 
+export function useServicesPage() {
+  const { servicesPage } = useContent();
+  return servicesPage;
+}
+
 /** Lookup for one page's editable text: `t('heroTitle')` gives the saved edit or the default. */
 export function usePageText(pageId: string) {
   const { pages } = useContent();

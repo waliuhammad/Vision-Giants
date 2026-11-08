@@ -77,6 +77,8 @@ export const servicesConfig: ContentConfig = {
     { key: 'short', label: 'Short description', kind: 'textarea', required: true, help: 'Shown on service cards.' },
     { key: 'description', label: 'Full description', kind: 'textarea', required: true },
     { key: 'deliverables', label: 'Typical deliverables', kind: 'lines', help: 'One per line.' },
+    { key: 'image', label: 'Custom card image URL', kind: 'text', help: 'Optional photo URL. If omitted, uses default service photo.' },
+    { key: 'isFeatured', label: 'Highlight this card (Featured Service)', kind: 'checkbox', help: 'Renders this card with the signature accent highlight style.' },
   ],
 };
 

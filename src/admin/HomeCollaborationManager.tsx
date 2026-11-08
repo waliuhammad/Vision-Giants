@@ -4,37 +4,24 @@ import {
   CheckCircle2,
   AlertCircle,
   ExternalLink,
-  Plus,
-  Trash2,
-  Rocket,
-  Users,
-  Target,
-  Zap,
-  Shield,
-  Award,
+  Building2,
+  Globe,
+  Info,
 } from 'lucide-react';
 import { getAdminDb } from './firebase';
 import {
   defaultHomeCollaborationData,
   homeCollaborationDataFromDoc,
   type HomeCollaborationData,
-  type CollaborationPillar,
+  type CollaborationPartner,
 } from '../content/homeCollaborationData';
 import { HomeCollaborationSection } from '../components/ui/HomeCollaborationSection';
 
 const firestore = () => import('firebase/firestore/lite');
 
-const availableIcons = [
-  { value: 'rocket', label: 'Rocket (Innovation)', icon: Rocket },
-  { value: 'users', label: 'Users (Shared Expertise)', icon: Users },
-  { value: 'target', label: 'Target (Client Success)', icon: Target },
-  { value: 'zap', label: 'Zap (Fast / Agile)', icon: Zap },
-  { value: 'shield', label: 'Shield (Security / Trust)', icon: Shield },
-  { value: 'award', label: 'Award (Quality / Excellence)', icon: Award },
-] as const;
-
 export default function HomeCollaborationManager() {
   const [data, setData] = useState<HomeCollaborationData>(defaultHomeCollaborationData);
+  const [activePartnerIdx, setActivePartnerIdx] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
@@ -86,27 +73,10 @@ export default function HomeCollaborationManager() {
     }
   };
 
-  const updatePillar = (index: number, patch: Partial<CollaborationPillar>) => {
-    const next = [...data.pillars];
+  const updatePartner = (index: number, patch: Partial<CollaborationPartner>) => {
+    const next = [...data.partners];
     next[index] = { ...next[index], ...patch };
-    setData({ ...data, pillars: next });
-  };
-
-  const addPillar = () => {
-    if (data.pillars.length >= 4) return;
-    const newPillar: CollaborationPillar = {
-      id: `p-${Date.now()}`,
-      icon: 'rocket',
-      title: 'New Pillar',
-      subtitle: 'Value',
-    };
-    setData({ ...data, pillars: [...data.pillars, newPillar] });
-  };
-
-  const removePillar = (index: number) => {
-    if (data.pillars.length <= 1) return;
-    const next = data.pillars.filter((_, i) => i !== index);
-    setData({ ...data, pillars: next });
+    setData({ ...data, partners: next });
   };
 
   if (loading) {
@@ -117,14 +87,16 @@ export default function HomeCollaborationManager() {
     );
   }
 
+  const activePartner = data.partners[activePartnerIdx] || data.partners[0];
+
   return (
     <div className="admin-page">
       <header className="admin-page__head">
         <div>
           <p className="eyebrow">Website Content</p>
-          <h1>Home Collaboration Section</h1>
+          <h1>Our Collaboration Partners</h1>
           <p className="muted">
-            Manage the &ldquo;Our Collaboration / Stronger Together, Greater Impact&rdquo; section displayed right below the Home page Hero.
+            Manage the &ldquo;Our Collaboration Partners&rdquo; section showcasing your 3 collaborating software houses directly below the Home page Hero.
           </p>
         </div>
         <div className="admin-actions">
@@ -147,7 +119,7 @@ export default function HomeCollaborationManager() {
       {savedSuccess && (
         <div className="alert alert--success" style={{ marginBottom: 'var(--space-4)' }}>
           <CheckCircle2 size={18} />
-          <span>Collaboration section updated successfully!</span>
+          <span>Collaboration partners section updated successfully!</span>
         </div>
       )}
 
@@ -159,10 +131,10 @@ export default function HomeCollaborationManager() {
       )}
 
       <form onSubmit={handleSave} className="admin-form">
-        {/* Section Heading & Copy */}
+        {/* 1. Section Heading & Copy */}
         <section className="card" style={{ padding: 'var(--space-5)', marginBottom: 'var(--space-5)' }}>
           <h2 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: 'var(--space-4)', color: 'var(--color-navy)' }}>
-            1. Section Header & Copy
+            1. Section Heading & Subtitle
           </h2>
           <div className="grid grid--2" style={{ gap: 'var(--space-4)' }}>
             <div className="field">
@@ -172,249 +144,244 @@ export default function HomeCollaborationManager() {
                 className="input"
                 value={data.eyebrow}
                 onChange={(e) => setData({ ...data, eyebrow: e.target.value })}
-                placeholder="OUR COLLABORATION"
+                placeholder="STRATEGIC PARTNERSHIPS"
                 required
               />
             </div>
             <div className="field">
-              <label htmlFor="collab-badge">Partner Pill Badge</label>
+              <label htmlFor="collab-title-input">Section Title</label>
               <input
-                id="collab-badge"
+                id="collab-title-input"
                 className="input"
-                value={data.badge}
-                onChange={(e) => setData({ ...data, badge: e.target.value })}
-                placeholder="STRATEGIC PARTNER"
+                value={data.title}
+                onChange={(e) => setData({ ...data, title: e.target.value })}
+                placeholder="Our Collaboration Partners"
                 required
               />
             </div>
           </div>
 
           <div className="field" style={{ marginTop: 'var(--space-4)' }}>
-            <label htmlFor="collab-title-input">Section Title</label>
+            <label htmlFor="collab-lead-input">Subtitle / Description</label>
             <input
-              id="collab-title-input"
-              className="input"
-              value={data.title}
-              onChange={(e) => setData({ ...data, title: e.target.value })}
-              placeholder="Stronger Together, Greater Impact"
-              required
-            />
-          </div>
-
-          <div className="field" style={{ marginTop: 'var(--space-4)' }}>
-            <label htmlFor="collab-lead-input">Introductory Subtitle / Lead</label>
-            <textarea
               id="collab-lead-input"
               className="input"
-              rows={2}
               value={data.lead}
               onChange={(e) => setData({ ...data, lead: e.target.value })}
-              placeholder="We collaborate with innovative organizations..."
+              placeholder="Building stronger digital experiences through meaningful partnerships and collaboration."
               required
             />
           </div>
         </section>
 
-        {/* Partner Details */}
-        <section className="card" style={{ padding: 'var(--space-5)', marginBottom: 'var(--space-5)' }}>
-          <h2 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: 'var(--space-4)', color: 'var(--color-navy)' }}>
-            2. Strategic Partner Details
-          </h2>
-
-          <div className="grid grid--2" style={{ gap: 'var(--space-4)' }}>
-            <div className="field">
-              <label htmlFor="partner-name">Partner Name</label>
-              <input
-                id="partner-name"
-                className="input"
-                value={data.partnerName}
-                onChange={(e) => setData({ ...data, partnerName: e.target.value })}
-                placeholder="TechNova Solutions"
-                required
-              />
-            </div>
-            <div className="field">
-              <label htmlFor="partner-subtitle">Partner Sub-Label</label>
-              <input
-                id="partner-subtitle"
-                className="input"
-                value={data.partnerSubtitle || ''}
-                onChange={(e) => setData({ ...data, partnerSubtitle: e.target.value })}
-                placeholder="SOLUTIONS"
-              />
-            </div>
-          </div>
-
-          <div className="field" style={{ marginTop: 'var(--space-4)' }}>
-            <label htmlFor="partner-logo">Custom Partner Logo Image URL (Optional)</label>
-            <input
-              id="partner-logo"
-              className="input"
-              value={data.partnerLogo || ''}
-              onChange={(e) => setData({ ...data, partnerLogo: e.target.value })}
-              placeholder="Leave blank to use the high-res 3D isometric TechNova logo"
-            />
-            <small className="muted">If empty, a pristine 3D geometric hexagon matching the reference is displayed.</small>
-          </div>
-
-          <div className="field" style={{ marginTop: 'var(--space-4)' }}>
-            <label htmlFor="partner-desc">Collaboration Description</label>
-            <textarea
-              id="partner-desc"
-              className="input"
-              rows={3}
-              value={data.description}
-              onChange={(e) => setData({ ...data, description: e.target.value })}
-              placeholder="This collaboration enables us to deliver advanced technology solutions..."
-              required
-            />
-          </div>
-
-          <div className="grid grid--2" style={{ gap: 'var(--space-4)', marginTop: 'var(--space-4)' }}>
-            <div className="field">
-              <label htmlFor="btn-text">Button Text</label>
-              <input
-                id="btn-text"
-                className="input"
-                value={data.buttonText}
-                onChange={(e) => setData({ ...data, buttonText: e.target.value })}
-                placeholder="Visit Partner Website"
-              />
-            </div>
-            <div className="field">
-              <label htmlFor="btn-url">Partner Website URL</label>
-              <input
-                id="btn-url"
-                className="input"
-                value={data.buttonUrl}
-                onChange={(e) => setData({ ...data, buttonUrl: e.target.value })}
-                placeholder="https://technova.example.com"
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* Collaboration Pillars */}
+        {/* 2. Four Collaboration Partners Tabs */}
         <section className="card" style={{ padding: 'var(--space-5)', marginBottom: 'var(--space-5)' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-4)' }}>
             <h2 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0, color: 'var(--color-navy)' }}>
-              3. Partnership Pillars (Up to 3-4 items)
+              2. Collaboration Partners (3 Software Houses)
             </h2>
-            {data.pillars.length < 4 && (
-              <button type="button" className="btn btn--outline btn--sm" onClick={addPillar}>
-                <Plus size={14} />
-                <span>Add Pillar</span>
-              </button>
-            )}
+            <span style={{ fontSize: '0.85rem', color: 'var(--color-muted)' }}>
+              3 of 3 partners configured
+            </span>
           </div>
 
-          <div className="grid grid--3" style={{ gap: 'var(--space-4)' }}>
-            {data.pillars.map((pillar, idx) => (
-              <div
-                key={pillar.id}
-                style={{
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-md)',
-                  padding: 'var(--space-4)',
-                  background: 'var(--color-surface-2)',
-                  position: 'relative',
-                }}
+          {/* Partner Select Tabs */}
+          <div style={{ display: 'flex', gap: '8px', marginBottom: 'var(--space-5)', flexWrap: 'wrap' }}>
+            {data.partners.map((p, idx) => (
+              <button
+                key={p.id || idx}
+                type="button"
+                onClick={() => setActivePartnerIdx(idx)}
+                className={`btn ${activePartnerIdx === idx ? 'btn--primary' : 'btn--outline'} btn--sm`}
+                style={{ borderRadius: 'var(--radius-pill)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-3)' }}>
-                  <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#2563eb' }}>Pillar #{idx + 1}</span>
-                  {data.pillars.length > 1 && (
-                    <button
-                      type="button"
-                      className="admin-icon-btn"
-                      onClick={() => removePillar(idx)}
-                      title="Remove pillar"
-                    >
-                      <Trash2 size={15} style={{ color: 'var(--color-danger)' }} />
-                    </button>
-                  )}
-                </div>
+                <Building2 size={14} />
+                <span>Partner {idx + 1}: {p.name || `Partner ${idx + 1}`}</span>
+              </button>
+            ))}
+          </div>
 
-                <div className="field" style={{ marginBottom: 'var(--space-3)' }}>
-                  <label htmlFor={`pillar-icon-${idx}`}>Icon</label>
-                  <select
-                    id={`pillar-icon-${idx}`}
-                    className="input"
-                    value={pillar.icon}
-                    onChange={(e) => updatePillar(idx, { icon: e.target.value as CollaborationPillar['icon'] })}
-                  >
-                    {availableIcons.map((item) => (
-                      <option key={item.value} value={item.value}>
-                        {item.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+          {/* Active Partner Editor Form */}
+          {activePartner && (
+            <div
+              style={{
+                background: 'var(--color-surface-2)',
+                borderRadius: 'var(--radius-md)',
+                padding: 'var(--space-5)',
+                border: '1px solid var(--border)',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: 'var(--space-4)' }}>
+                <span
+                  style={{
+                    background: 'var(--color-primary)',
+                    color: '#fff',
+                    borderRadius: '50%',
+                    width: '24px',
+                    height: '24px',
+                    display: 'grid',
+                    placeItems: 'center',
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                  }}
+                >
+                  {activePartnerIdx + 1}
+                </span>
+                <strong style={{ fontSize: '1.05rem', color: 'var(--color-navy)' }}>
+                  Editing Partner {activePartnerIdx + 1}
+                </strong>
+              </div>
 
-                <div className="field" style={{ marginBottom: 'var(--space-3)' }}>
-                  <label htmlFor={`pillar-title-${idx}`}>Primary Word</label>
+              <div className="grid grid--2" style={{ gap: 'var(--space-4)' }}>
+                <div className="field">
+                  <label htmlFor={`partner-name-${activePartnerIdx}`}>Company Name</label>
                   <input
-                    id={`pillar-title-${idx}`}
+                    id={`partner-name-${activePartnerIdx}`}
                     className="input"
-                    value={pillar.title}
-                    onChange={(e) => updatePillar(idx, { title: e.target.value })}
-                    placeholder="e.g. Innovation"
+                    value={activePartner.name}
+                    onChange={(e) => updatePartner(activePartnerIdx, { name: e.target.value })}
+                    placeholder="e.g. Apex Software Systems"
                     required
                   />
                 </div>
 
                 <div className="field">
-                  <label htmlFor={`pillar-sub-${idx}`}>Secondary Word</label>
+                  <label htmlFor={`partner-url-${activePartnerIdx}`}>
+                    Official Website URL
+                  </label>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <input
+                      id={`partner-url-${activePartnerIdx}`}
+                      className="input"
+                      value={activePartner.websiteUrl}
+                      onChange={(e) => updatePartner(activePartnerIdx, { websiteUrl: e.target.value })}
+                      placeholder="https://company.example.com"
+                      required
+                    />
+                    {activePartner.websiteUrl && (
+                      <a
+                        href={activePartner.websiteUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn--outline btn--sm"
+                        title="Test link in new tab"
+                        style={{ flexShrink: 0 }}
+                      >
+                        <Globe size={15} />
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid--2" style={{ gap: 'var(--space-4)', marginTop: 'var(--space-4)' }}>
+                <div className="field">
+                  <label htmlFor={`partner-logo-${activePartnerIdx}`}>
+                    Company Logo URL
+                  </label>
                   <input
-                    id={`pillar-sub-${idx}`}
+                    id={`partner-logo-${activePartnerIdx}`}
                     className="input"
-                    value={pillar.subtitle}
-                    onChange={(e) => updatePillar(idx, { subtitle: e.target.value })}
-                    placeholder="e.g. Driven"
-                    required
+                    value={activePartner.logo}
+                    onChange={(e) => updatePartner(activePartnerIdx, { logo: e.target.value })}
+                    placeholder="https://... or /images/partners/logo.png"
+                  />
+                  <small className="muted" style={{ display: 'block', marginTop: '4px' }}>
+                    Leave empty to show the elegant placeholder tech emblem.
+                  </small>
+                </div>
+
+                <div className="field">
+                  <label htmlFor={`partner-tagline-${activePartnerIdx}`}>
+                    Specialization Tag / Tagline (Optional)
+                  </label>
+                  <input
+                    id={`partner-tagline-${activePartnerIdx}`}
+                    className="input"
+                    value={activePartner.tagline || ''}
+                    onChange={(e) => updatePartner(activePartnerIdx, { tagline: e.target.value })}
+                    placeholder="e.g. Enterprise Cloud & DevOps"
                   />
                 </div>
               </div>
-            ))}
-          </div>
+
+              {/* Logo Preview */}
+              {activePartner.logo && (
+                <div style={{ marginTop: 'var(--space-3)', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--color-muted)' }}>Logo Preview:</span>
+                  <div
+                    style={{
+                      background: '#fff',
+                      border: '1px solid var(--border)',
+                      borderRadius: '8px',
+                      padding: '8px 16px',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      maxHeight: '48px',
+                    }}
+                  >
+                    <img
+                      src={activePartner.logo}
+                      alt={activePartner.name}
+                      style={{ maxHeight: '32px', maxWidth: '120px', objectFit: 'contain' }}
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div className="field" style={{ marginTop: 'var(--space-4)' }}>
+                <label htmlFor={`partner-desc-${activePartnerIdx}`}>
+                  Short Company Description
+                </label>
+                <textarea
+                  id={`partner-desc-${activePartnerIdx}`}
+                  className="input"
+                  rows={3}
+                  value={activePartner.description}
+                  onChange={(e) => updatePartner(activePartnerIdx, { description: e.target.value })}
+                  placeholder="Explain the company's services, expertise, or core specializations..."
+                  required
+                />
+              </div>
+            </div>
+          )}
         </section>
 
-        {/* Footer Quote */}
-        <section className="card" style={{ padding: 'var(--space-5)', marginBottom: 'var(--space-5)' }}>
-          <h2 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: 'var(--space-4)', color: 'var(--color-navy)' }}>
-            4. Bottom Quote & Tagline
-          </h2>
-          <div className="field">
-            <label htmlFor="collab-quote">Bottom Quote</label>
-            <input
-              id="collab-quote"
-              className="input"
-              value={data.footerQuote}
-              onChange={(e) => setData({ ...data, footerQuote: e.target.value })}
-              placeholder="One goal. One vision. A better tomorrow."
-            />
-          </div>
-        </section>
-
-        {/* Live Section Preview */}
-        <section className="card" style={{ padding: 'var(--space-5)', marginBottom: 'var(--space-5)' }}>
-          <h2 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: 'var(--space-3)', color: 'var(--color-navy)' }}>
-            Live Preview
-          </h2>
-          <p className="muted" style={{ marginBottom: 'var(--space-4)' }}>
-            This is how the collaboration section looks on the public Home page:
-          </p>
-          <div style={{ border: '1px dashed var(--border-strong)', borderRadius: 'var(--radius-lg)', padding: 'var(--space-4)', background: '#ffffff' }}>
-            <HomeCollaborationSection data={data} />
-          </div>
-        </section>
-
-        <div className="admin-actions" style={{ justifyContent: 'flex-end', marginBottom: 'var(--space-7)' }}>
-          <button type="submit" className="btn btn--primary" disabled={saving}>
-            <span>{saving ? 'Saving…' : 'Save Changes'}</span>
+        {/* Submit Bar */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)' }}>
+          <button
+            type="submit"
+            className="btn btn--primary"
+            disabled={saving}
+          >
+            <span>{saving ? 'Saving Changes…' : 'Save All Changes'}</span>
             <Save size={16} />
           </button>
         </div>
       </form>
+
+      {/* Live Preview */}
+      <section style={{ marginTop: 'var(--space-8)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: 'var(--space-4)' }}>
+          <Info size={16} style={{ color: 'var(--color-primary)' }} />
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0, color: 'var(--color-navy)' }}>
+            Live Section Preview
+          </h2>
+        </div>
+        <div
+          style={{
+            border: '2px dashed var(--border-strong)',
+            borderRadius: 'var(--radius-lg)',
+            overflow: 'hidden',
+            background: 'var(--color-background)',
+          }}
+        >
+          <HomeCollaborationSection data={data} />
+        </div>
+      </section>
     </div>
   );
 }

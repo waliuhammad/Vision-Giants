@@ -1409,3 +1409,98 @@ button.admin-row:hover,
   box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.35);
   background: rgba(99, 102, 241, 0.04);
 }
+
+
+/* ---- Collapsible & Responsive Sidebar ---- */
+.admin-mobile-bar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: #0b1736;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.admin-sidebar-toggle {
+  position: absolute;
+  top: 50%;
+  right: -10px;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-surface-2);
+  border: 1px solid var(--border-strong);
+  color: var(--color-muted);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  z-index: 20;
+  transition: all 0.2s ease;
+}
+.admin-sidebar-toggle:hover {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+}
+
+.admin--collapsed {
+  grid-template-columns: 68px minmax(0, 1fr) !important;
+}
+.admin--collapsed .admin__sidebar {
+  padding: var(--space-4) var(--space-2);
+  align-items: center;
+}
+.admin--collapsed .admin__brand {
+  padding: 0 0 var(--space-3);
+  justify-items: center;
+  width: 100%;
+}
+.admin--collapsed .admin__nav-link {
+  justify-content: center;
+  padding: 10px 0;
+}
+.admin--collapsed .admin__account {
+  width: 100%;
+}
+.admin--collapsed .admin-sidebar-toggle {
+  right: -10px;
+}
+
+@media (max-width: 900px) {
+  .admin-mobile-bar {
+    display: flex;
+  }
+  .admin {
+    display: block;
+  }
+  .admin__sidebar {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 270px;
+    height: 100vh;
+    z-index: 1100;
+    background: #0b1736 !important;
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.6);
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .admin__sidebar--open {
+    transform: translateX(0) !important;
+  }
+  .admin-mobile-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
+    z-index: 1050;
+  }
+  .admin-sidebar-toggle {
+    display: none;
+  }
+}

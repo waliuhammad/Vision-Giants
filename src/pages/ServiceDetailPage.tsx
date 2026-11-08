@@ -14,7 +14,7 @@ import { SectionHeading } from '../components/ui/SectionHeading';
 import { ServiceCard } from '../components/ui/ServiceCard';
 import { CTASection } from '../components/ui/CTASection';
 import { Reveal } from '../components/animations/Reveal';
-import { LayersVisual } from '../components/visuals/IsoVisuals';
+// LayersVisual replaced with per-service photos — import removed
 import NotFoundPage from './NotFoundPage';
 
 /* Tighter vertical spacing. Change these two values to fine-tune. */
@@ -59,7 +59,28 @@ export function ServiceDetailPage() {
             </Button>
           </>
         }
-        visual={<LayersVisual />}
+        visual={
+          <div className="page-hero-photo-wrap">
+            <img
+              src={`/images/services/${service.id}.jpg`}
+              alt={`${service.title} — professional service visual`}
+              className="page-hero-photo"
+              loading="eager"
+              width={560}
+              height={420}
+              onError={(e) => {
+                // Graceful fallback to a generic service image if specific one missing
+                (e.currentTarget as HTMLImageElement).src = '/images/services/software-development.jpg';
+              }}
+            />
+            <div className="page-hero-photo__badge">
+              <span className="page-hero-photo__icon" aria-hidden="true">
+                <Icon size={14} />
+              </span>
+              <span>{service.title}</span>
+            </div>
+          </div>
+        }
       />
 
       {/* Overview + deliverables */}

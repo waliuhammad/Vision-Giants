@@ -6,7 +6,7 @@ import { SectionHeading } from '../components/ui/SectionHeading';
 import { TechnologyCard } from '../components/ui/TechnologyCard';
 import { CTASection } from '../components/ui/CTASection';
 import { Reveal } from '../components/animations/Reveal';
-import { StackVisual } from '../components/visuals/IsoVisuals';
+// StackVisual replaced with real tech photo — import removed
 import { TechLogo } from '../components/visuals/TechLogos';
 import { usePageText } from '../content/ContentContext';
 
@@ -36,7 +36,22 @@ export default function TechnologiesPage() {
             Discuss Your Stack
           </Button>
         }
-        visual={<StackVisual />}
+        visual={
+          <div className="page-hero-photo-wrap">
+            <img
+              src="/images/technologies/hero.jpg"
+              alt="Developer working with multi-screen tech setup showcasing modern technology stack"
+              className="page-hero-photo"
+              loading="eager"
+              width={560}
+              height={400}
+            />
+            <div className="page-hero-photo__badge">
+              <span className="page-hero-photo__dot" aria-hidden="true" />
+              <span>Modern Tech Stack</span>
+            </div>
+          </div>
+        }
       />
 
       <section className="section section--tight" aria-labelledby="core-title">

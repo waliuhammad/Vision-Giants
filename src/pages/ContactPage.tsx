@@ -2,7 +2,7 @@ import { Link } from 'react-router';
 import { Mail, Phone, MapPin, Info } from 'lucide-react';
 import { company, telHref } from '../data/company';
 import { ContactForm } from '../components/ui/ContactForm';
-import { EnvelopeVisual } from '../components/visuals/IsoVisuals';
+// EnvelopeVisual replaced with real photo — import removed
 import { usePageText } from '../content/ContentContext';
 import { Highlight } from '../components/ui/Highlight';
 
@@ -67,7 +67,20 @@ export default function ContactPage() {
           )}
 
           <div className="contact__visual enter" aria-hidden="true">
-            <EnvelopeVisual />
+            <div className="contact-photo-wrap">
+              <img
+                src="/images/contact/hero.jpg"
+                alt="Professional working on laptop in a bright modern workspace"
+                className="contact-photo"
+                loading="lazy"
+                width={560}
+                height={420}
+              />
+              <div className="contact-photo__chip">
+                <Mail size={13} aria-hidden="true" />
+                <span>We reply within 24h</span>
+              </div>
+            </div>
           </div>
         </div>
 

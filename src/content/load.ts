@@ -2,6 +2,7 @@ import { getDb, isFirebaseConfigured } from '../config/firebase';
 import { defaultContent, fromDoc, type SiteContent } from './schema';
 import { pageTextsFromDoc, type PageTexts } from './pages';
 import { aboutDataFromDoc } from './about';
+import { servicesPageDataFromDoc } from './servicesPageData';
 import type { Service } from '../data/services';
 import type { Project } from '../data/portfolio';
 import type { Position } from '../data/careers';
@@ -49,6 +50,9 @@ export async function loadContent(): Promise<SiteContent> {
 
   const aboutDoc = pageDocs.find((d) => d.id === 'about');
   const about = aboutDoc ? aboutDataFromDoc(aboutDoc.data()) : defaultContent.about;
+
+  const servicesPageDoc = pageDocs.find((d) => d.id === 'services-page' || d.id === 'services');
+  const servicesPage = servicesPageDoc ? servicesPageDataFromDoc(servicesPageDoc.data()) : defaultContent.servicesPage;
 
   const pages: PageTexts = Object.fromEntries(
     pageDocs
@@ -194,6 +198,7 @@ export async function loadContent(): Promise<SiteContent> {
     categories: categories.length > 0 ? categories : defaultContent.categories,
     instructors: instructors.length > 0 ? instructors : defaultContent.instructors,
     about,
+    servicesPage,
     pages,
     globalSettings,
     navigation,
