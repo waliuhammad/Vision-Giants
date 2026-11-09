@@ -24,5 +24,20 @@ export const partners: Partner[] = [
     logo: '/partners/j-electronics.png',
     website: 'https://www.jelectronics.store/',
   },
+  {
+    id: 'code-noor',
+    name: 'Code Noor',
+    type: 'Software Development & Technology',
+    description: 'Our Spain-based software house partner, collaborating to deliver innovative software development and technology solutions.',
+    logo: '',
+    website: '',
+  },
+  {
+    id: 'vision-giants-learning',
+    name: 'Vision Giants Learning',
+    type: 'IT Training & Education',
+    description: 'Our learning and training partner, focused on empowering individuals with practical IT skills, technical knowledge, and professional development.',
+    logo: '',
+    website: '',
+  },
 ];
-

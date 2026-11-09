@@ -26,7 +26,7 @@ export const company: Company = {
   tagline: 'Software Development Studio',
   description:
     'We design and develop web applications, mobile apps and custom software that help businesses work better and grow.',
-  email: null,
+  email: 'info@vgiants.com',
   phones: ['+92 308 0058600', '+92 317 6572690'],
   address: 'Vision Giants, Near Zavia School, Gulgasht, Multan, Pakistan',
   // WhatsApp format: https://wa.me/923001234567 (country code + number, digits only).

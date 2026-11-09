@@ -214,7 +214,7 @@ export function GlobalSettingsManager() {
                 value={data.email}
                 onChange={(e) => setData({ ...data, email: e.target.value })}
                 className="input"
-                placeholder="info@visiongiants.com"
+                placeholder="info@vgiants.com"
               />
             </div>
 
@@ -227,7 +227,7 @@ export function GlobalSettingsManager() {
                 value={data.supportEmail || ''}
                 onChange={(e) => setData({ ...data, supportEmail: e.target.value })}
                 className="input"
-                placeholder="support@visiongiants.com"
+                placeholder="support@vgiants.com"
               />
             </div>
 

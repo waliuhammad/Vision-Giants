@@ -74,9 +74,8 @@ export const defaultServicesPageData: ServicesPageData = {
   // 3. Why Choose Us
   whyChooseUsBadge: 'Why Choose Us?',
   whyChooseUsHeading: 'Why Choose Us for Your Personal Transformation Journey?',
-  whyChooseUsImage:
-    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1000&q=80',
-  whyChooseUsImageAlt: 'Professional mentor and advisor smiling at desk',
+  whyChooseUsImage: '/images/services/why-choose-us.jpg',
+  whyChooseUsImageAlt: 'Vision Giants strategic consulting and transformation team in collaboration',
   whyChooseUsReasons: [
     {
       id: 'certified-coaching',

@@ -29,7 +29,7 @@ export interface HomePageHeroData {
   expertBadgeCount: string;
   expertBadgeLabel: string;
   // Right floating holographic services menu
-  menuItems: { label: string; icon: 'code' | 'smartphone' | 'palette' | 'cloud' }[];
+  menuItems: { label: string; icon: string }[];
   // Bottom capabilities (3 items)
   capabilities: HomeCapability[];
   // Trusted by banner
@@ -51,9 +51,10 @@ export const defaultHomePageHeroData: HomePageHeroData = {
   expertBadgeLabel: 'Expert Developers',
   menuItems: [
     { label: 'Web Development', icon: 'code' },
-    { label: 'Mobile Applications', icon: 'smartphone' },
-    { label: 'UI/UX Design', icon: 'palette' },
-    { label: 'Cloud Solutions', icon: 'cloud' },
+    { label: 'Mobile Application Development', icon: 'smartphone' },
+    { label: 'Software Solution', icon: 'layers' },
+    { label: 'Robotics', icon: 'bot' },
+    { label: 'Social Media Marketing', icon: 'share' },
   ],
   capabilities: [
     {
@@ -102,7 +103,7 @@ export function homePageHeroDataFromDoc(d: Data): HomePageHeroData {
     backgroundImage: str(d.backgroundImage, defaultHomePageHeroData.backgroundImage),
     expertBadgeCount: str(d.expertBadgeCount, defaultHomePageHeroData.expertBadgeCount),
     expertBadgeLabel: str(d.expertBadgeLabel, defaultHomePageHeroData.expertBadgeLabel),
-    menuItems: Array.isArray(d.menuItems) && d.menuItems.length > 0
+    menuItems: Array.isArray(d.menuItems) && d.menuItems.length > 0 && !d.menuItems.some((m: any) => m?.label === 'Cloud Solutions')
       ? (d.menuItems as HomePageHeroData['menuItems'])
       : defaultHomePageHeroData.menuItems,
     capabilities: Array.isArray(d.capabilities) && d.capabilities.length > 0

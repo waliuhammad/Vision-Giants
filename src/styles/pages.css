@@ -1594,6 +1594,53 @@ dialog.modal[open] {
   margin-top: var(--space-6);
   gap: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
 }
+
+/* Leader / CEO featured centered card */
+.team-leader-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-7);
+}
+
+.team-leader-card {
+  width: 100%;
+  max-width: 320px;
+}
+
+.team-leader-card .team-card {
+  border: 2px solid var(--color-primary);
+  box-shadow: 0 10px 30px rgba(44, 67, 119, 0.15);
+  background: var(--color-surface);
+}
+
+/* Secondary compact team members */
+.team-members-grid--secondary {
+  margin-top: 0;
+  gap: clamp(1rem, 1rem + 0.5vw, 1.5rem);
+}
+
+.team-member-compact-card {
+  width: 100%;
+}
+
+.team-member-compact-card .team-card {
+  padding: 10px;
+  font-size: 0.94rem;
+}
+
+.team-member-compact-card .team-card__media {
+  aspect-ratio: 1 / 1;
+  margin-bottom: var(--space-2);
+}
+
+.team-member-compact-card .team-card__name {
+  font-size: 1rem;
+}
+
+.team-member-compact-card .team-card__role {
+  font-size: 0.78rem;
+}
 .team-card {
   display: flex;
   flex-direction: column;

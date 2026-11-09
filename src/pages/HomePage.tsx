@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router';
 import {
   ArrowRight,
@@ -14,6 +14,8 @@ import {
   Layers,
   ShieldCheck,
   CheckCircle2,
+  Bot,
+  Share2,
 } from 'lucide-react';
 import { technologies } from '../data/technologies';
 import type { Project } from '../data/portfolio';
@@ -93,11 +95,25 @@ function MenuIcon({ name }: { name: string }) {
     case 'code':
       return <Code size={18} />;
     case 'smartphone':
+    case 'mobile':
       return <Smartphone size={18} />;
+    case 'layers':
+    case 'software':
+      return <Layers size={18} />;
+    case 'bot':
+    case 'robot':
+    case 'robotics':
+      return <Bot size={18} />;
+    case 'share':
+    case 'social':
+    case 'marketing':
+      return <Share2 size={18} />;
     case 'palette':
       return <Palette size={18} />;
     case 'cloud':
       return <Cloud size={18} />;
+    case 'cpu':
+      return <Cpu size={18} />;
     default:
       return <Code size={18} />;
   }
@@ -111,6 +127,11 @@ export default function HomePage() {
 
   const [heroData, setHeroData] = useState<HomePageHeroData>(defaultHomePageHeroData);
   const [collabData, setCollabData] = useState<HomeCollaborationData>(defaultHomeCollaborationData);
+
+  const homeTechnologies = useMemo(
+    () => technologies.filter((t) => t.featured).slice(0, 8),
+    []
+  );
 
   useEffect(() => {
     if (!isFirebaseConfigured) return;
@@ -330,7 +351,7 @@ export default function HomePage() {
             lead={t('techLead')}
           />
           <ul className="tech-strip__list">
-            {technologies.map((t, i) => (
+            {homeTechnologies.map((t, i) => (
               <Reveal as="li" key={t.id} delay={i * 70}>
                 <TechLogo id={t.id} className="tech-strip__logo" />
                 <span>
@@ -341,7 +362,7 @@ export default function HomePage() {
             ))}
           </ul>
           <Link to="/technologies/" className="text-link">
-            See how we use them <ArrowRight size={16} aria-hidden="true" />
+            View all technologies & tools <ArrowRight size={16} aria-hidden="true" />
           </Link>
         </div>
       </section>

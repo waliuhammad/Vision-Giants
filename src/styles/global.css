@@ -414,10 +414,72 @@ h1.enter,
   box-shadow: 0 20px 45px -10px rgba(11, 23, 54, 0.3), 0 0 0 1px rgba(11, 23, 54, 0.08) !important;
 }
 
+/* 3D Robot Head Chatbot Trigger Bubble */
 .chat-window-wrapper .chat-window-toggle {
-  box-shadow: 0 8px 24px -4px rgba(11, 23, 54, 0.35) !important;
+  width: 64px !important;
+  height: 64px !important;
+  border-radius: 50% !important;
+  background-color: #0b1736 !important;
+  background-image: url('/chatbot-avatar-128.png') !important;
+  background-size: 84% 84% !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  border: 2px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 10px 28px -4px rgba(11, 23, 54, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
   cursor: pointer !important;
   pointer-events: auto !important;
+  position: relative !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, background-color 0.2s ease !important;
+}
+
+.chat-window-wrapper .chat-window-toggle:hover {
+  transform: scale(1.08) translateY(-2px) !important;
+  box-shadow: 0 16px 36px -4px rgba(37, 99, 235, 0.5), 0 0 0 2px rgba(96, 165, 250, 0.4) !important;
+  background-color: #0f2048 !important;
+}
+
+/* Hide the default generic chat SVG icon when closed */
+.chat-window-wrapper .chat-window-toggle svg {
+  opacity: 0 !important;
+  transition: opacity 0.2s ease, transform 0.2s ease !important;
+}
+
+/* When the chat window is OPEN, switch toggle to clear close chevron */
+.chat-window-wrapper:has(.chat-window:not([style*="display: none"])) .chat-window-toggle,
+.chat-window-wrapper .chat-window:not([style*="display: none"]) ~ .chat-window-toggle {
+  background-image: none !important;
+  background-color: #0b1736 !important;
+}
+
+.chat-window-wrapper:has(.chat-window:not([style*="display: none"])) .chat-window-toggle svg,
+.chat-window-wrapper .chat-window:not([style*="display: none"]) ~ .chat-window-toggle svg {
+  opacity: 1 !important;
+  color: #ffffff !important;
+  width: 30px !important;
+  height: 30px !important;
+}
+
+/* Robot avatar inside Chat Window Header */
+.chat-layout .chat-header h1 {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.chat-layout .chat-header h1::before {
+  content: "" !important;
+  display: inline-block !important;
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 50% !important;
+  background: url('/chatbot-avatar-128.png') center/contain no-repeat #0b1736 !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+  flex-shrink: 0 !important;
 }
 
 /* Mobile: prevent the chat window from overflowing the viewport */

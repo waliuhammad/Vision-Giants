@@ -4,7 +4,6 @@ import {
   Award,
   BookOpen,
   Building2,
-  Calendar,
   CheckCircle2,
   Clock,
   Cloud,
@@ -538,62 +537,6 @@ export default function CoursesPage() {
               </button>
             </div>
           )}
-        </div>
-      </section>
-
-      {/* ====================================================================
-          6. STUDENT SUCCESS STORIES (WHAT OUR STUDENTS SAY)
-          ==================================================================== */}
-      <section className="courses-testimonials-section" aria-labelledby="testimonials-section-title">
-        <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: 'var(--space-6)' }}>
-            <span className="courses-dash-eyebrow">{pageData.testimonialsEyebrow}</span>
-            <h2 id="testimonials-section-title" className="courses-section-head__title" style={{ marginTop: 6 }}>
-              {pageData.testimonialsHeading}
-            </h2>
-          </div>
-
-          <div className="courses-testimonials-grid">
-            {pageData.testimonials.map((t, idx) => (
-              <Reveal key={t.id} delay={idx * 80}>
-                <article className="courses-testimonial-card">
-                  <img src={t.photo} alt={t.name} className="courses-testimonial-card__avatar" />
-                  <div className="courses-testimonial-card__content">
-                    <p className="courses-testimonial-card__quote">“{t.quote}”</p>
-                    <span className="courses-testimonial-card__name">{t.name}</span>
-                    <span className="courses-testimonial-card__outcome">{t.outcome}</span>
-                  </div>
-                </article>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ====================================================================
-          7. BOOK A FREE DEMO CLASS CTA RIBBON
-          ==================================================================== */}
-      <section className="courses-cta-ribbon-section" aria-label="Book Demo Class">
-        <div className="container">
-          <div className="courses-cta-ribbon">
-            <div className="courses-cta-ribbon__left">
-              <div className="courses-cta-ribbon__icon-wrap">
-                <Calendar size={28} />
-              </div>
-              <div>
-                <h3 className="courses-cta-ribbon__title">{pageData.demoCtaHeading}</h3>
-                <p className="courses-cta-ribbon__desc">{pageData.demoCtaDescription}</p>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              className="btn--amber"
-              onClick={() => openEnroll()}
-            >
-              {pageData.demoCtaButtonText}
-            </button>
-          </div>
         </div>
       </section>
 

@@ -6,7 +6,6 @@ import {
   Check,
   ChevronDown,
   Heart,
-  Play,
   Plus,
   ShieldCheck,
   Star,
@@ -44,7 +43,6 @@ export default function ServicesPage() {
   const { services } = useContent();
   const servicesPage = useServicesPage();
   const [showAllServices, setShowAllServices] = useState(false);
-  const [isVideoActive, setIsVideoActive] = useState(false);
 
   const vis = servicesPage.visibility;
 
@@ -167,7 +165,7 @@ export default function ServicesPage() {
             </Reveal>
 
             <div className="services-why-grid">
-              {/* Left Column: Advisor / Mentor Photo with Play Button */}
+              {/* Left Column: Strategic Transformation Image */}
               <Reveal delay={100}>
                 <div className="services-why__image-wrap">
                   <img
@@ -176,14 +174,6 @@ export default function ServicesPage() {
                     className="services-why__image"
                     loading="lazy"
                   />
-                  <button
-                    type="button"
-                    className="services-why__play-btn"
-                    aria-label="Explore transformation overview"
-                    onClick={() => setIsVideoActive(!isVideoActive)}
-                  >
-                    <Play size={20} fill="currentColor" style={{ marginLeft: '2px' }} />
-                  </button>
                 </div>
               </Reveal>
 

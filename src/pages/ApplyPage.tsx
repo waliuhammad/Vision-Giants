@@ -227,7 +227,7 @@ export default function ApplyPage() {
                   <span className="apply-help-label">Have questions before applying?</span>
                   <p className="apply-help-text">
                     Reach our talent acquisition team directly at{' '}
-                    <a href="mailto:careers@visiongiants.com">careers@visiongiants.com</a>
+                    <a href="mailto:info@vgiants.com">info@vgiants.com</a>
                   </p>
                 </div>
               </div>

@@ -1,7 +1,23 @@
+
 import type { LucideIcon } from 'lucide-react';
 import {
-  CodeXml, Smartphone, Cpu, ShoppingCart, Palette, Cloud, Database, ShieldCheck,
-  Bot, ChartLine, Wrench, Globe, Share2, Brain, Film, Search, Gamepad2,
+  CodeXml,
+  Smartphone,
+  Cpu,
+  ShoppingCart,
+  Palette,
+  Cloud,
+  Database,
+  ShieldCheck,
+  Bot,
+  ChartLine,
+  Wrench,
+  Globe,
+  Share2,
+  Brain,
+  Film,
+  Search,
+  Gamepad2,
 } from 'lucide-react';
 
 export interface ServicePlatform {
@@ -33,12 +49,10 @@ export const serviceIcons = {
 
 export type ServiceIconName = keyof typeof serviceIcons;
 
-export const getServiceIcon = (name: string): LucideIcon => serviceIcons[name as ServiceIconName] ?? CodeXml;
+export const getServiceIcon = (name: string): LucideIcon =>
+  serviceIcons[name as ServiceIconName] ?? CodeXml;
 
-/**
- * Built-in service catalogue, used until content is imported into the admin dashboard
- * (after which services are managed there). Confirm each offering before publishing.
- */
+/** Service interface */
 export interface Service {
   id: string;
   title: string;
@@ -52,58 +66,81 @@ export interface Service {
   order?: number;
 }
 
+/**
+ * Built-in service catalogue.
+ * Services are arranged according to the requested display order.
+ */
+
 export const services: Service[] = [
+  // 1. Website Development
   {
     id: 'website-development',
     title: 'Website Development',
     short: 'Fast, responsive and SEO-friendly websites that convert visitors into customers.',
     description:
       'We design and build business sites, portals and landing pages with clean code, mobile-first layouts and strong performance.',
-    deliverables: ['Responsive website design', 'CMS integration', 'Speed and security optimisation', 'Hosting and maintenance'],
+    deliverables: [
+      'Responsive website design',
+      'CMS integration',
+      'Speed and security optimisation',
+      'Hosting and maintenance',
+    ],
     icon: 'globe',
+    order: 1,
   },
-  {
-    id: 'robotics',
-    title: 'Robotics',
-    short: 'Custom robotic solutions for automation, education and industry.',
-    description:
-      'Our team builds robots with sensors, controllers and software that automate repetitive or hazardous tasks, from prototype to deployment.',
-    deliverables: ['Robot design and prototyping', 'Microcontroller programming', 'Sensor and motor integration', 'Training and documentation'],
-    icon: 'robot',
-  },
+
+  // 2. App Development
   {
     id: 'app-development',
     title: 'App Development',
     short: 'Native and cross-platform mobile apps for Android and iOS.',
     description:
       'We take your app from idea to store release, covering design, development, testing and updates, with smooth and intuitive experiences.',
-    deliverables: ['Android and iOS apps', 'Cross-platform (Flutter / React Native)', 'API and backend integration', 'Play Store and App Store publishing'],
-    icon: 'mobile',
-  },
-  {
-    id: 'ecommerce',
-    title: 'Ecommerce',
-    short: 'Online stores and marketplace management on Amazon, eBay, Shopify and Etsy.',
-    description:
-      'We set up, manage and grow your online store, on your own website or on the world’s biggest marketplaces.',
-    deliverables: ['Store setup and design', 'Product listing and catalogue management', 'Payment and shipping integration', 'Marketplace growth and ads'],
-    icon: 'cart',
-    platforms: [
-      { name: 'Amazon', text: 'Seller account setup, FBA/FBM guidance, optimised listings, A+ content, PPC advertising and inventory management.' },
-      { name: 'eBay', text: 'Store setup, bulk listings, competitive pricing strategy, order handling and seller performance improvement.' },
-      { name: 'Shopify', text: 'Custom Shopify stores, theme customisation, app integration, checkout optimisation and ongoing support.' },
-      { name: 'Etsy', text: 'Shop setup, SEO-optimised listings, branding, product photography direction and order management for handmade and creative products.' },
+    deliverables: [
+      'Android and iOS apps',
+      'Cross-platform (Flutter / React Native)',
+      'API and backend integration',
+      'Play Store and App Store publishing',
     ],
+    icon: 'mobile',
+    order: 2,
   },
+
+  // 3. Software Development
   {
-    id: 'social-media-marketing',
-    title: 'Social Media Marketing',
-    short: 'Strategy, content and paid campaigns that grow your audience.',
+    id: 'software-development',
+    title: 'Software Development',
+    short: 'Custom desktop, web and enterprise software built around your workflows.',
     description:
-      'We plan, create and manage your social presence across all major platforms so your brand stays visible and consistent.',
-    deliverables: ['Content calendar and strategy', 'Post and reel creation', 'Paid ad campaigns', 'Monthly analytics reports'],
-    icon: 'share',
+      'We build reliable, scalable software such as ERPs, management systems and internal tools that fit how your team works.',
+    deliverables: [
+      'Requirement analysis',
+      'Custom software development',
+      'Database design',
+      'Testing, deployment and support',
+    ],
+    icon: 'code',
+    order: 3,
   },
+
+  // 4. Robotics
+  {
+    id: 'robotics',
+    title: 'Robotics',
+    short: 'Custom robotic solutions for automation, education and industry.',
+    description:
+      'Our team builds robots with sensors, controllers and software that automate repetitive or hazardous tasks, from prototype to deployment.',
+    deliverables: [
+      'Robot design and prototyping',
+      'Microcontroller programming',
+      'Sensor and motor integration',
+      'Training and documentation',
+    ],
+    icon: 'robot',
+    order: 4,
+  },
+
+  // 5. Artificial Intelligence
   {
     id: 'artificial-intelligence',
     title: 'Artificial Intelligence',
@@ -118,87 +155,193 @@ export const services: Service[] = [
       'Process automation and data insights',
     ],
     icon: 'brain',
+    order: 5,
   },
+
+  // 6. Social Media Marketing
+  {
+    id: 'social-media-marketing',
+    title: 'Social Media Marketing',
+    short: 'Strategy, content and paid campaigns that grow your audience.',
+    description:
+      'We plan, create and manage your social presence across all major platforms so your brand stays visible and consistent.',
+    deliverables: [
+      'Content calendar and strategy',
+      'Post and reel creation',
+      'Paid ad campaigns',
+      'Monthly analytics reports',
+    ],
+    icon: 'share',
+    order: 6,
+  },
+
+  // 7. Internet of Things (IoT)
   {
     id: 'iot',
     title: 'Internet of Things (IoT)',
     short: 'Connected devices and smart systems that automate operations in real time.',
     description:
       'From sensors to dashboards, we build complete IoT systems for homes, farms, factories and cities.',
-    deliverables: ['Device and sensor integration', 'Cloud connectivity (MQTT / HTTP)', 'Real-time monitoring dashboards', 'Smart automation systems'],
+    deliverables: [
+      'Device and sensor integration',
+      'Cloud connectivity (MQTT / HTTP)',
+      'Real-time monitoring dashboards',
+      'Smart automation systems',
+    ],
     icon: 'cpu',
+    order: 7,
   },
-  {
-    id: 'software-development',
-    title: 'Software Development',
-    short: 'Custom desktop, web and enterprise software built around your workflows.',
-    description:
-      'We build reliable, scalable software such as ERPs, management systems and internal tools that fit how your team works.',
-    deliverables: ['Requirement analysis', 'Custom software development', 'Database design', 'Testing, deployment and support'],
-    icon: 'code',
-  },
-  {
-    id: 'video-editing',
-    title: 'Video Editing',
-    short: 'Professional editing for ads, reels, YouTube and corporate videos.',
-    description:
-      'We turn raw footage into polished videos with smooth cuts, colour grading, sound and motion graphics.',
-    deliverables: ['Reels and short-form videos', 'YouTube and long-form editing', 'Motion graphics and titles', 'Colour grading and sound design'],
-    icon: 'film',
-  },
-  {
-    id: 'graphic-design',
-    title: 'Graphic Design',
-    short: 'Logos, branding and marketing creatives with a professional look.',
-    description:
-      'We create visual identities and marketing materials that stay consistent across print and digital.',
-    deliverables: ['Logo and brand identity', 'Social media creatives', 'Brochures, flyers and banners', 'Packaging and print design'],
-    icon: 'palette',
-  },
-  {
-    id: 'seo',
-    title: 'SEO',
-    short: 'Rank higher on Google with technical, on-page and content SEO.',
-    description:
-      'We audit your site, fix what holds it back and build authority so the right customers find you.',
-    deliverables: ['Site audit and keyword research', 'On-page and technical SEO', 'Content and link building', 'Ranking and traffic reports'],
-    icon: 'search',
-  },
+
+  // 8. Game Development
   {
     id: 'game-development',
     title: 'Game Development',
     short: 'Engaging 2D and 3D games for mobile, PC and web.',
     description:
       'We take your game from concept to launch, covering design, programming, art integration, testing and publishing.',
-    deliverables: ['2D and 3D game development', 'Unity and Unreal Engine projects', 'Game art, animation and sound integration', 'Testing and store publishing'],
+    deliverables: [
+      '2D and 3D game development',
+      'Unity and Unreal Engine projects',
+      'Game art, animation and sound integration',
+      'Testing and store publishing',
+    ],
     icon: 'gamepad',
+    order: 8,
+  },
+
+  // 9. Ecommerce
+  {
+    id: 'ecommerce',
+    title: 'Ecommerce',
+    short: 'Online stores and marketplace management on Amazon, eBay, Shopify and Etsy.',
+    description:
+      'We set up, manage and grow your online store, on your own website or on the world’s biggest marketplaces.',
+    deliverables: [
+      'Store setup and design',
+      'Product listing and catalogue management',
+      'Payment and shipping integration',
+      'Marketplace growth and ads',
+    ],
+    icon: 'cart',
+    platforms: [
+      {
+        name: 'Amazon',
+        text: 'Seller account setup, FBA/FBM guidance, optimised listings, A+ content, PPC advertising and inventory management.',
+      },
+      {
+        name: 'eBay',
+        text: 'Store setup, bulk listings, competitive pricing strategy, order handling and seller performance improvement.',
+      },
+      {
+        name: 'Shopify',
+        text: 'Custom Shopify stores, theme customisation, app integration, checkout optimisation and ongoing support.',
+      },
+      {
+        name: 'Etsy',
+        text: 'Shop setup, SEO-optimised listings, branding, product photography direction and order management for handmade and creative products.',
+      },
+    ],
+    order: 9,
+  },
+
+  // 10. Video Editing
+  {
+    id: 'video-editing',
+    title: 'Video Editing',
+    short: 'Professional editing for ads, reels, YouTube and corporate videos.',
+    description:
+      'We turn raw footage into polished videos with smooth cuts, colour grading, sound and motion graphics.',
+    deliverables: [
+      'Reels and short-form videos',
+      'YouTube and long-form editing',
+      'Motion graphics and titles',
+      'Colour grading and sound design',
+    ],
+    icon: 'film',
+    order: 10,
+  },
+
+  // 11. Graphic Design
+  {
+    id: 'graphic-design',
+    title: 'Graphic Design',
+    short: 'Logos, branding and marketing creatives with a professional look.',
+    description:
+      'We create visual identities and marketing materials that stay consistent across print and digital.',
+    deliverables: [
+      'Logo and brand identity',
+      'Social media creatives',
+      'Brochures, flyers and banners',
+      'Packaging and print design',
+    ],
+    icon: 'palette',
+    order: 11,
+  },
+
+  // 12. SEO
+  {
+    id: 'seo',
+    title: 'SEO',
+    short: 'Rank higher on Google with technical, on-page and content SEO.',
+    description:
+      'We audit your site, fix what holds it back and build authority so the right customers find you.',
+    deliverables: [
+      'Site audit and keyword research',
+      'On-page and technical SEO',
+      'Content and link building',
+      'Ranking and traffic reports',
+    ],
+    icon: 'search',
+    order: 12,
   },
 ];
 
 /**
- * Card photos in public/images/services/<service id>.webp (from Unsplash, free for
- * commercial use). Services without a photo here show their icon only.
+ * Card photos in public/images/services/<service id>.webp
+ * Services without a photo here show their icon only.
  */
+
 const servicePhotos = new Set([
   'website-development',
-  'robotics',
   'app-development',
-  'ecommerce',
-  'social-media-marketing',
-  'artificial-intelligence',
-  'iot',
   'software-development',
+  'robotics',
+  'artificial-intelligence',
+  'social-media-marketing',
+  'iot',
+  'game-development',
+  'ecommerce',
   'video-editing',
   'graphic-design',
   'seo',
-  'game-development',
 ]);
 
-export const getServiceImage = (idOrService: string | Service): string | undefined => {
-  if (typeof idOrService === 'object' && idOrService?.image) return idOrService.image;
-  const id = typeof idOrService === 'string' ? idOrService : idOrService?.id;
-  return servicePhotos.has(id) ? `/images/services/${id}.webp` : undefined;
+/** Get service image */
+export const getServiceImage = (
+  idOrService: string | Service
+): string | undefined => {
+  if (typeof idOrService === 'object' && idOrService?.image) {
+    return idOrService.image;
+  }
+
+  const id =
+    typeof idOrService === 'string'
+      ? idOrService
+      : idOrService?.id;
+
+  return servicePhotos.has(id)
+    ? `/images/services/${id}.webp`
+    : undefined;
 };
 
-export const getServiceById = (id: string): Service | undefined =>
-  services.find((s) => s.id === id);
+/** Get service by ID */
+export const getServiceById = (
+  id: string
+): Service | undefined =>
+  services.find((service) => service.id === id);
+
+/** Get services sorted by display order */
+export const getOrderedServices = (): Service[] =>
+  [...services].sort(
+    (a, b) => (a.order ?? 999) - (b.order ?? 999)
+  );

@@ -67,9 +67,9 @@ export function HomeHeroManager() {
     setData((prev) => ({ ...prev, ...patch }));
   };
 
-  const updateMenuItem = (index: number, label: string) => {
+  const updateMenuItem = (index: number, label: string, icon?: string) => {
     const next = [...data.menuItems];
-    next[index] = { ...next[index], label };
+    next[index] = { ...next[index], label, ...(icon ? { icon } : {}) };
     updateField({ menuItems: next });
   };
 
@@ -265,17 +265,34 @@ export function HomeHeroManager() {
             </div>
           </div>
 
-          <h4 style={{ fontSize: '0.95rem', marginBottom: '10px' }}>Holographic Glass Menu Items (4 Services)</h4>
+          <h4 style={{ fontSize: '0.95rem', marginBottom: '10px' }}>Holographic Glass Menu Items (Services Banner)</h4>
           <div className="grid grid--2">
             {data.menuItems.map((item, idx) => (
               <div key={idx} className="field">
-                <label style={{ fontSize: '0.82rem' }}>Service #{idx + 1} ({item.icon})</label>
-                <input
-                  type="text"
-                  className="input"
-                  value={item.label}
-                  onChange={(e) => updateMenuItem(idx, e.target.value)}
-                />
+                <label style={{ fontSize: '0.82rem' }}>Service #{idx + 1}</label>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <input
+                    type="text"
+                    className="input"
+                    value={item.label}
+                    onChange={(e) => updateMenuItem(idx, e.target.value, item.icon)}
+                    style={{ flex: 1 }}
+                  />
+                  <select
+                    className="input"
+                    value={item.icon}
+                    onChange={(e) => updateMenuItem(idx, item.label, e.target.value)}
+                    style={{ width: '135px' }}
+                  >
+                    <option value="code">Code (Web)</option>
+                    <option value="smartphone">Mobile</option>
+                    <option value="layers">Layers (Software)</option>
+                    <option value="bot">Robot (Robotics)</option>
+                    <option value="share">Share (Social Media)</option>
+                    <option value="palette">Design</option>
+                    <option value="cloud">Cloud</option>
+                  </select>
+                </div>
               </div>
             ))}
           </div>

@@ -106,14 +106,30 @@ export async function loadContent(): Promise<SiteContent> {
     ? (seoSnap.data() as SeoSettings)
     : defaultContent.seo;
 
-  const loadPublished = async <T,>(name: 'services' | 'projects' | 'positions' | 'courses', fallback: T[]): Promise<T[]> => {
+  const loadPublished = async <T extends { id: string },>(name: 'services' | 'projects' | 'positions' | 'courses', fallback: T[]): Promise<T[]> => {
     try {
       const snap = await getDocs(query(collection(db, name), where('published', '==', true)));
       if (snap.empty) return fallback;
-      return snap.docs
-        .map((d) => ({ order: Number(d.get('order') ?? d.get('displayOrder')) || 0, item: fromDoc[name](d.id, d.data()) as T }))
+      const remote = snap.docs
+        .map((d) => ({ order: Number(d.get('order') ?? d.get('displayOrder')) || 0, item: (fromDoc[name](d.id, d.data()) as unknown) as T }))
         .sort((a, b) => a.order - b.order)
         .map((x) => x.item);
+
+      // Merge: Keep remote modifications, but preserve codebase defaults that haven't been saved to Firestore yet
+      const remoteIds = new Set(remote.map((r) => r.id));
+      const missingFromRemote = fallback.filter((f) => !remoteIds.has(f.id));
+      if (name === 'projects' || name === 'courses') {
+        // Default list items preserve their intended position (e.g. new projects & courses prioritized first)
+        const combined = [...remote, ...missingFromRemote];
+        const fallbackOrderMap = new Map(fallback.map((item, index) => [item.id, index]));
+        combined.sort((a, b) => {
+          const indexA = fallbackOrderMap.has(a.id) ? fallbackOrderMap.get(a.id)! : 9999;
+          const indexB = fallbackOrderMap.has(b.id) ? fallbackOrderMap.get(b.id)! : 9999;
+          return indexA - indexB;
+        });
+        return combined;
+      }
+      return [...remote, ...missingFromRemote];
     } catch {
       return fallback;
     }
@@ -165,14 +181,18 @@ export async function loadContent(): Promise<SiteContent> {
     }
   };
 
-  const loadActive = async <T,>(name: 'clients' | 'course_categories', fallback: T[]): Promise<T[]> => {
+  const loadActive = async <T extends { id: string },>(name: 'clients' | 'course_categories', fallback: T[]): Promise<T[]> => {
     try {
       const snap = await getDocs(query(collection(db, name), where('active', '==', true)));
       if (snap.empty) return fallback;
-      return snap.docs
-        .map((d) => ({ order: Number(d.get('order')) || 0, item: fromDoc[name](d.id, d.data()) as T }))
+      const remote = snap.docs
+        .map((d) => ({ order: Number(d.get('order')) || 0, item: (fromDoc[name](d.id, d.data()) as unknown) as T }))
         .sort((a, b) => a.order - b.order)
         .map((x) => x.item);
+
+      const remoteIds = new Set(remote.map((r) => r.id));
+      const missingFromRemote = fallback.filter((f) => !remoteIds.has(f.id));
+      return [...remote, ...missingFromRemote];
     } catch {
       return fallback;
     }

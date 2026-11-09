@@ -11,6 +11,7 @@ import {
 import type { ReactElement, ReactNode } from 'react';
 import { company, telHref } from '../../data/company';
 import { footerCompanyNav } from '../../data/navigation';
+import { partners as collaborationPartners } from '../../data/partners';
 import {
   useContent,
   useGlobalSettings,
@@ -71,22 +72,11 @@ const Instagram = createIcon(
   </>
 );
 
-const Github = createIcon(
-  <>
-    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-    <path d="M9 18c-4.51 2-5-2-7-2" />
-  </>
-);
 
 // TikTok's note mark, drawn as an outline to match the other icons.
 const Tiktok = createIcon(
   <path d="M16 3a5 5 0 0 0 5 5v3a8 8 0 0 1-5-1.7V15a6 6 0 1 1-6-6v3.2a2.8 2.8 0 1 0 2.8 2.8V3z" />
 );
-
-const Twitter = createIcon(
-  <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
-);
-
 const Whatsapp = createIcon(
   <>
     <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
@@ -118,8 +108,6 @@ function getSocialIcon(label: string, href: string): IconComponent {
   if (key.includes('facebook')) return Facebook;
   if (key.includes('instagram')) return Instagram;
   if (key.includes('tiktok')) return Tiktok;
-  if (key.includes('github')) return Github;
-  if (key.includes('twitter') || key.includes('x.com')) return Twitter;
   return GlobeIcon;
 }
 
@@ -226,6 +214,59 @@ const footerStyles = `
   border-color: var(--color-primary);
   color: #fff;
   transform: translateY(-2px);
+}
+
+/* Collaboration logos in footer */
+.site-footer__collab {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.site-footer__collab-title {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  margin-bottom: 0.65rem;
+}
+.site-footer__collab-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.site-footer__collab-item {
+  display: inline-flex;
+}
+.site-footer__collab-link,
+.site-footer__collab-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 6px 12px;
+  height: 42px;
+  min-width: 84px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  text-decoration: none;
+}
+.site-footer__collab-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+  border-color: rgba(96, 165, 250, 0.6);
+}
+.site-footer__collab-img {
+  max-height: 28px;
+  max-width: 95px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
 }
 
 /* Services "view all" */
@@ -376,6 +417,13 @@ export function Footer() {
     socialLinks = company.social.filter((s) => !s.placeholder);
   }
 
+  // Only keep social links we have a recognisable icon for (no globe fallback entries)
+  const knownSocialKeys = ['linkedin', 'facebook', 'instagram', 'tiktok', 'whatsapp', 'wa.me', 'mailto:', 'email', 'youtube'];
+  socialLinks = socialLinks.filter(({ label, href }) => {
+    const key = `${label} ${href}`.toLowerCase();
+    return knownSocialKeys.some((k) => key.includes(k));
+  });
+
   // Footer company nav: prefer CMS nav, fallback to static data
   const cmsFooterNav = navSettings?.footerCompanyNav?.filter((n) => n.active !== false) ?? [];
   const companyNav = cmsFooterNav.length ? cmsFooterNav : footerCompanyNav;
@@ -392,6 +440,8 @@ export function Footer() {
   // Visibility flags
   const showContactInfo = headerFooter?.footer?.showContactInfo !== false;
   const showSocials = headerFooter?.footer?.showSocials !== false;
+
+  const collabPartners = collaborationPartners.filter((p) => Boolean(p.logo));
 
   return (
     <footer className="site-footer">
@@ -424,6 +474,50 @@ export function Footer() {
                   );
                 })}
               </ul>
+            )}
+
+            {collabPartners.length > 0 && (
+              <div className="site-footer__collab">
+                <span className="site-footer__collab-title">Our Collaboration</span>
+                <div className="site-footer__collab-list" aria-label="Our collaboration partners">
+                  {collabPartners.map((partner) => {
+                    const hasLink = Boolean(partner.website);
+                    const content = (
+                      <img
+                        src={partner.logo}
+                        alt={`${partner.name} logo`}
+                        className="site-footer__collab-img"
+                        loading="lazy"
+                      />
+                    );
+
+                    return (
+                      <div key={partner.id} className="site-footer__collab-item">
+                        {hasLink ? (
+                          <a
+                            href={partner.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="site-footer__collab-link"
+                            title={`Visit ${partner.name}`}
+                            aria-label={partner.name}
+                          >
+                            {content}
+                          </a>
+                        ) : (
+                          <div
+                            className="site-footer__collab-badge"
+                            title={partner.name}
+                            aria-label={partner.name}
+                          >
+                            {content}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             )}
           </div>
 

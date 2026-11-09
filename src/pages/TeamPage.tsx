@@ -37,13 +37,35 @@ export default function TeamPage() {
             align="center"
           />
 
-          <div className="grid grid--4 team-members-grid">
-            {teamMembers.map((member, i) => (
-              <Reveal key={member.id} delay={(i % 4) * 80 + 50}>
-                <TeamCard member={member} />
-              </Reveal>
-            ))}
-          </div>
+          {/* Leader (CEO) Centered at Top */}
+          {(() => {
+            const ceo = teamMembers.find((m) => m.id === 'jalal-khan') || teamMembers[0];
+            const otherMembers = teamMembers.filter((m) => m.id !== ceo.id);
+            return (
+              <>
+                {ceo && (
+                  <div className="team-leader-wrap">
+                    <Reveal delay={50}>
+                      <div className="team-leader-card">
+                        <TeamCard member={ceo} />
+                      </div>
+                    </Reveal>
+                  </div>
+                )}
+
+                {/* Rest of the Team Grid Below */}
+                <div className="grid grid--4 team-members-grid team-members-grid--secondary">
+                  {otherMembers.map((member, i) => (
+                    <Reveal key={member.id} delay={(i % 4) * 80 + 50}>
+                      <div className="team-member-compact-card">
+                        <TeamCard member={member} />
+                      </div>
+                    </Reveal>
+                  ))}
+                </div>
+              </>
+            );
+          })()}
         </div>
       </section>
 

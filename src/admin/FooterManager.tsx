@@ -37,7 +37,7 @@ const defaultFooterSettings: FooterSettings = {
   tagline: 'Building digital experiences that move businesses forward. Custom websites, mobile apps, and scalable cloud solutions.',
   copyright: `© ${new Date().getFullYear()} Vision Giants Software (Pvt) Ltd. All rights reserved.`,
   officeAddress: 'Commercial Zone, DHA Phase 5, Lahore, Pakistan',
-  contactEmail: 'contact@visiongiants.com',
+  contactEmail: 'info@vgiants.com',
   contactPhone: '+92 300 1234567',
   businessHours: 'Monday – Friday: 9:00 AM – 6:00 PM PKT',
   newsletterEnabled: true,
