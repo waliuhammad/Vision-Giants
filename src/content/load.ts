@@ -76,9 +76,19 @@ export async function loadContent(): Promise<SiteContent> {
     ? (techSnap.data() as TechnologiesContent)
     : defaultContent.technologiesContent;
 
-  const teamMembers: TeamMember[] = teamSnap && teamSnap.exists() && Array.isArray((teamSnap.data() as { list?: TeamMember[] }).list)
+  const rawTeamList: TeamMember[] = teamSnap && teamSnap.exists() && Array.isArray((teamSnap.data() as { list?: TeamMember[] }).list)
     ? (teamSnap.data() as { list: TeamMember[] }).list
     : (about.teamMembers && about.teamMembers.length > 0 ? about.teamMembers : defaultContent.teamMembers);
+
+  const teamMembers: TeamMember[] = rawTeamList.map((m) => {
+    const match = defaultContent.teamMembers.find(
+      (dm) => dm.id === m.id || dm.name.toLowerCase().trim() === m.name.toLowerCase().trim()
+    );
+    return {
+      ...m,
+      image: m.image && !m.image.startsWith('data:') ? m.image : match?.image || m.image,
+    };
+  });
 
   const faqsProcessData = faqsProcessSnap && faqsProcessSnap.exists()
     ? (faqsProcessSnap.data() as { faqs?: FaqItem[]; processSteps?: ProcessStepItem[] })

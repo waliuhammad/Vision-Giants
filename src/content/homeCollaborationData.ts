@@ -1,3 +1,5 @@
+import { partners as rawPartners, type Partner } from '../data/partners';
+
 export interface CollaborationPartner {
   id: string;
   name: string;
@@ -16,42 +18,16 @@ export interface HomeCollaborationData {
 
 export const defaultHomeCollaborationData: HomeCollaborationData = {
   eyebrow: 'STRATEGIC PARTNERSHIPS',
-  title: 'Our Collaboration Partners',
-  lead: 'Building stronger digital experiences through meaningful partnerships and collaboration.',
-  partners: [
-    {
-      id: 'partner-1',
-      name: 'Partner Software House 1',
-      logo: '',
-      websiteUrl: 'https://example.com',
-      description: 'Specialized in enterprise web architecture, cloud infrastructure, and mission-critical software solutions.',
-      tagline: 'Enterprise & Cloud',
-    },
-    {
-      id: 'partner-2',
-      name: 'Partner Software House 2',
-      logo: '',
-      websiteUrl: 'https://example.com',
-      description: 'Experts in scalable mobile app development, cross-platform engineering, and intuitive UI/UX design.',
-      tagline: 'Mobile & UI/UX',
-    },
-    {
-      id: 'partner-3',
-      name: 'Partner Software House 3',
-      logo: '',
-      websiteUrl: 'https://example.com',
-      description: 'Pioneering artificial intelligence systems, predictive analytics, and automated workflow intelligence.',
-      tagline: 'AI & Data Intelligence',
-    },
-    {
-      id: 'partner-4',
-      name: 'Partner Software House 4',
-      logo: '',
-      websiteUrl: 'https://example.com',
-      description: 'Specialized in enterprise DevOps automation, cloud security hardening, and resilient infrastructure.',
-      tagline: 'DevOps & Cloud Security',
-    },
-  ],
+  title: 'Our Collaboration',
+  lead: 'Proud to work with partners who share our vision.',
+  partners: rawPartners.map((p: Partner) => ({
+    id: p.id,
+    name: p.name,
+    logo: p.logo || '',
+    websiteUrl: p.website || '',
+    description: p.description,
+    tagline: p.type || '',
+  })),
 };
 
 type Data = Record<string, unknown>;
@@ -63,12 +39,12 @@ export function homeCollaborationDataFromDoc(d: Data): HomeCollaborationData {
     const item = typeof p === 'object' && p !== null ? (p as Data) : {};
     const fallback = defaultHomeCollaborationData.partners[idx] || defaultHomeCollaborationData.partners[0];
     return {
-      id: str(item.id, `partner-${idx + 1}`),
-      name: str(item.name, fallback.name),
-      logo: str(item.logo, fallback.logo),
-      websiteUrl: str(item.websiteUrl, fallback.websiteUrl),
-      description: str(item.description, fallback.description),
-      tagline: str(item.tagline, fallback.tagline),
+      id: str(item.id, fallback?.id || `partner-${idx + 1}`),
+      name: str(item.name, fallback?.name || ''),
+      logo: str(item.logo, fallback?.logo || ''),
+      websiteUrl: str(item.websiteUrl, fallback?.websiteUrl || ''),
+      description: str(item.description, fallback?.description || ''),
+      tagline: str(item.tagline, fallback?.tagline || ''),
     };
   });
 

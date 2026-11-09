@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" width="400" height="120" fill="none">
+  <defs>
+    <!-- Background Gradient for Icon -->
+    <linearGradient id="aiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+
+    <!-- Node Glow -->
+    <radialGradient id="nodeGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Text Gradient -->
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Left Icon: Futuristic Hexagon + AI Neural Network Brain -->
+  <g transform="translate(16, 12)">
+    <!-- Hexagon Outer Border -->
+    <polygon points="48,4 88,27 88,73 48,96 8,73 8,27" 
+             stroke="url(#aiGrad)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"
+             fill="#f8fafc"/>
+
+    <!-- Circuit Connection Lines -->
+    <path d="M48,22 L48,44 M48,44 L28,56 M48,44 L68,56 M28,56 L28,74 M68,56 L68,74 M48,44 L48,78" 
+          stroke="url(#aiGrad)" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- Neural Nodes -->
+    <circle cx="48" cy="22" r="5.5" fill="#06b6d4"/>
+    <circle cx="48" cy="44" r="6" fill="#3b82f6"/>
+    <circle cx="28" cy="56" r="4.5" fill="#6366f1"/>
+    <circle cx="68" cy="56" r="4.5" fill="#06b6d4"/>
+    <circle cx="28" cy="74" r="4.5" fill="#3b82f6"/>
+    <circle cx="68" cy="74" r="4.5" fill="#6366f1"/>
+    <circle cx="48" cy="78" r="5" fill="#06b6d4"/>
+
+    <!-- Center Pulse Core -->
+    <circle cx="48" cy="44" r="14" fill="url(#nodeGlow)"/>
+    <circle cx="48" cy="44" r="3" fill="#ffffff"/>
+  </g>
+
+  <!-- Brand Typography -->
+  <g transform="translate(126, 42)">
+    <!-- "FUTURE" -->
+    <text x="0" y="24" 
+          font-family="system-ui, -apple-system, 'Inter', 'Segoe UI', Roboto, sans-serif" 
+          font-size="28" 
+          font-weight="900" 
+          letter-spacing="0.04em" 
+          fill="url(#textGrad)">FUTURE</text>
+
+    <!-- "AI" Highlight -->
+    <text x="122" y="24" 
+          font-family="system-ui, -apple-system, 'Inter', 'Segoe UI', Roboto, sans-serif" 
+          font-size="28" 
+          font-weight="900" 
+          letter-spacing="0.04em" 
+          fill="#2563eb">AI</text>
+
+    <!-- "SKILLS" Subtitle with Tech Track Spacing -->
+    <text x="2" y="48" 
+          font-family="system-ui, -apple-system, 'Inter', 'Segoe UI', Roboto, sans-serif" 
+          font-size="14" 
+          font-weight="700" 
+          letter-spacing="0.32em" 
+          fill="#64748b">SKILLS</text>
+
+    <!-- Small Tech Accent Dot -->
+    <circle cx="152" cy="44" r="3" fill="#06b6d4"/>
+  </g>
+</svg>

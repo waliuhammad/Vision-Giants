@@ -6,7 +6,7 @@
 
 html {
   -webkit-text-size-adjust: 100%;
-  scroll-padding-top: calc(var(--header-h) + 16px);
+  scroll-padding-top: var(--nav-clearance);
   overflow-x: clip;
 }
 
@@ -355,5 +355,82 @@ h1.enter,
   .js .reveal {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* ============================================================
+   n8n Chat Widget – Vision Giants Brand Overrides
+   The widget appends itself to <body>; we override its CSS
+   custom properties here so it matches our Navy Blue theme.
+   ============================================================ */
+:root {
+  /* Primary & secondary theme colours (both double-hyphen and single-hyphen keys for compatibility) */
+  --chat--color--primary:            #0b1736;
+  --chat--color-primary:             #0b1736;
+  --chat--color--primary-shade-50:   #102448;
+  --chat--color-primary-shade-50:    #102448;
+  --chat--color--primary--shade-100: #173260;
+  --chat--color-primary-shade-100:   #173260;
+  --chat--color--secondary:          #2563eb;
+  --chat--color-secondary:           #2563eb;
+  --chat--color-secondary-shade-50:  #1d4ed8;
+
+  /* Toggle bubble */
+  --chat--toggle--background:        #0b1736;
+  --chat--toggle--hover--background: #1d4ed8;
+  --chat--toggle--active--background:#1e40af;
+  --chat--toggle--color:             #ffffff;
+  --chat--toggle--size:              60px;
+
+  /* Chat window */
+  --chat--window--width:             380px;
+  --chat--window--height:            580px;
+  --chat--window--z-index:           99999;
+  --chat--border-radius:             16px;
+  --chat--window--border-radius:     16px;
+
+  /* Header */
+  --chat--header--background:        #0b1736;
+  --chat--header--color:             #ffffff;
+
+  /* Messages */
+  --chat--message--bot--background:  #f1f5f9;
+  --chat--message--bot--color:       #0f172a;
+  --chat--message--user--background: #0b1736;
+  --chat--message--user--color:      #ffffff;
+
+  /* Send button */
+  --chat--color-font:                #0b1736;
+}
+
+/* Make sure the widget always sits above the fixed navbar (z-index: 1000) */
+#n8n-chat,
+.n8n-chat,
+.chat-window-wrapper {
+  z-index: 99999 !important;
+}
+
+.chat-window-wrapper .chat-window {
+  box-shadow: 0 20px 45px -10px rgba(11, 23, 54, 0.3), 0 0 0 1px rgba(11, 23, 54, 0.08) !important;
+}
+
+.chat-window-wrapper .chat-window-toggle {
+  box-shadow: 0 8px 24px -4px rgba(11, 23, 54, 0.35) !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+/* Mobile: prevent the chat window from overflowing the viewport */
+@media (max-width: 640px) {
+  :root {
+    --chat--window--width:  calc(100vw - 24px) !important;
+    --chat--window--height: calc(100dvh - 100px) !important;
+  }
+
+  .chat-window-wrapper {
+    right: 12px !important;
+    bottom: 12px !important;
+    max-width: calc(100vw - 24px) !important;
+    max-height: calc(100dvh - 24px) !important;
   }
 }

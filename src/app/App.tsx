@@ -7,6 +7,7 @@ import { PageTransition } from '../components/animations/PageTransition';
 import { ContentProvider } from '../content/ContentContext';
 import type { SiteContent } from '../content/schema';
 import { AppRoutes } from './routes';
+import { ChatWidget } from '../components/ui/ChatWidget';
 
 const loadFeatures = () => import('./motionFeatures').then((mod) => mod.default);
 
@@ -37,6 +38,8 @@ export function App({ content }: { content: SiteContent }) {
             <AppRoutes />
           </PageTransition>
           <Footer />
+          {/* Floating n8n chat widget – appears on every public page */}
+          <ChatWidget />
         </MotionConfig>
       </LazyMotion>
     </ContentProvider>

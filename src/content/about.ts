@@ -284,27 +284,62 @@ export function aboutDataFromDoc(data: Record<string, unknown>): AboutPageData {
       }).filter((w) => w.title)
     : defaultAboutData.whyList;
 
-  const teamList = Array.isArray(data.teamMembers)
+  const parsedTeamList = Array.isArray(data.teamMembers)
     ? data.teamMembers.map((item, index) => {
         const row = (item && typeof item === 'object' ? item : {}) as Record<string, unknown>;
         const socials = (row.socials && typeof row.socials === 'object' ? row.socials : {}) as Record<string, unknown>;
+        const memberName = str(row.name);
+        const memberId = str(row.id) || `tm-${index}`;
+        const defaultMatch = defaultAboutData.teamMembers.find(
+          (dm) => dm.id === memberId || dm.name.toLowerCase().trim() === memberName.toLowerCase().trim()
+        );
+        let memberImg = str(row.image) || undefined;
+        if (defaultMatch?.image && (!memberImg || memberImg.startsWith('data:'))) {
+          memberImg = defaultMatch.image;
+        }
+
         return {
-          id: str(row.id) || `tm-${index}`,
-          name: str(row.name),
-          role: str(row.role),
-          bio: str(row.bio),
-          image: str(row.image) || undefined,
+          id: memberId,
+          name: memberName,
+          role: str(row.role) || defaultMatch?.role || '',
+          bio: str(row.bio) || defaultMatch?.bio || '',
+          image: memberImg,
           socials: {
-            linkedin: str(socials.linkedin) || undefined,
-            twitter: str(socials.twitter) || undefined,
-            website: str(socials.website) || undefined,
-            instagram: str(socials.instagram) || undefined,
-            facebook: str(socials.facebook) || undefined,
-            github: str(socials.github) || undefined,
+            linkedin: str(socials.linkedin) || defaultMatch?.socials?.linkedin || undefined,
+            twitter: str(socials.twitter) || defaultMatch?.socials?.twitter || undefined,
+            website: str(socials.website) || defaultMatch?.socials?.website || undefined,
+            instagram: str(socials.instagram) || defaultMatch?.socials?.instagram || undefined,
+            facebook: str(socials.facebook) || defaultMatch?.socials?.facebook || undefined,
+            github: str(socials.github) || defaultMatch?.socials?.github || undefined,
           },
         } as TeamMember;
-      }).filter((m) => m.name)
-    : defaultAboutData.teamMembers;
+      }).filter((m) => m.name && m.id !== 'lisa-thompson')
+    : [];
+
+  // Merge so all real team members are always present with their pictures
+  const teamList = defaultAboutData.teamMembers.map((defMember) => {
+    const custom = parsedTeamList.find(
+      (m) => m.id === defMember.id || m.name.toLowerCase().trim() === defMember.name.toLowerCase().trim()
+    );
+    if (custom) {
+      return {
+        ...defMember,
+        ...custom,
+        image: defMember.image || custom.image,
+      };
+    }
+    return defMember;
+  });
+
+  // Append any new custom members created via CMS admin
+  parsedTeamList.forEach((custom) => {
+    const exists = teamList.some(
+      (m) => m.id === custom.id || m.name.toLowerCase().trim() === custom.name.toLowerCase().trim()
+    );
+    if (!exists) {
+      teamList.push(custom);
+    }
+  });
 
   const clientsList = Array.isArray(data.clientsList)
     ? data.clientsList.map((item, index) => {

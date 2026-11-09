@@ -87,6 +87,12 @@
   --container: 1200px;
   --gutter: clamp(16px, 4vw, 32px);
   --header-h: 88px;
+  /* Floating pill navbar tokens */
+  --navbar-height: var(--header-h);
+  --navbar-top-offset: 0px;
+  --navbar-gap: clamp(1.75rem, 2.5vw, 3rem);
+  --hero-pt: calc(var(--navbar-height) + var(--navbar-top-offset) + var(--navbar-gap));
+  --nav-clearance: calc(var(--navbar-height) + 1.5rem);
 
   /* Radii: precise, not pill-shaped everywhere */
   --radius-sm: 6px;

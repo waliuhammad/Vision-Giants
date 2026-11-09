@@ -14,7 +14,7 @@ export interface TeamMember {
   bio: string;
   /**
    * Leave empty or undefined for the clean placeholder avatar.
-   * When ready, provide an image URL or local asset path (e.g. '/team/lisa.jpg').
+   * When ready, provide an image URL or local asset path (e.g. '/team/jalal-khan.jpg').
    */
   image?: string;
   socials?: TeamSocials;
@@ -22,88 +22,104 @@ export interface TeamMember {
 
 export const teamMembers: TeamMember[] = [
   {
-    id: 'lisa-thompson',
-    name: 'Lisa Thompson',
-    role: 'Customer Success Manager',
-    bio: 'Dedicated to ensuring customer satisfaction and success, with a proactive approach to client support and retention.',
-    socials: {
-      linkedin: 'https://linkedin.com',
-    },
-  },
-  {
-    id: 'laura-davis',
-    name: 'Laura Davis',
-    role: 'COO',
-    bio: 'Operations specialist with a background in scaling startups, ensuring smooth and efficient company operations.',
-    socials: {
-      linkedin: 'https://linkedin.com',
-      website: 'https://example.com',
-    },
-  },
-  {
-    id: 'tom-white',
-    name: 'Tom White',
-    role: 'Head of Product',
-    bio: 'Passionate product manager focused on delivering user-centric solutions that meet market needs.',
-    socials: {
-      linkedin: 'https://linkedin.com',
-      twitter: 'https://x.com',
-      website: 'https://example.com',
-    },
-  },
-  {
-    id: 'james-wilson',
-    name: 'James Wilson',
-    role: 'CTO',
-    bio: 'Technical guru with a passion for developing scalable and secure cloud-based applications.',
-    socials: {
-      linkedin: 'https://linkedin.com',
-      twitter: 'https://x.com',
-    },
-  },
-  {
-    id: 'sarah-williams',
-    name: 'Sarah Williams',
-    role: 'Director of Sales',
-    bio: 'Sales strategist with a proven track record of expanding market reach and driving revenue growth.',
-    socials: {
-      linkedin: 'https://linkedin.com',
-      twitter: 'https://x.com',
-      facebook: 'https://facebook.com',
-      instagram: 'https://instagram.com',
-    },
-  },
-  {
-    id: 'david-miller',
-    name: 'David Miller',
-    role: 'Lead Software Engineer',
-    bio: 'Senior developer with a knack for building robust software architectures and mentoring engineering teams.',
-    socials: {
-      linkedin: 'https://linkedin.com',
-      twitter: 'https://x.com',
-      website: 'https://example.com',
-    },
-  },
-  {
-    id: 'emily-johnson',
-    name: 'Emily Johnson',
-    role: 'Marketing',
-    bio: 'Marketing expert specializing in digital strategies and brand growth for SaaS products.',
-    socials: {
-      linkedin: 'https://linkedin.com',
-      twitter: 'https://x.com',
-      instagram: 'https://instagram.com',
-    },
-  },
-  {
-    id: 'jillie-bernard',
-    name: 'Jillie Bernard',
+    id: 'jalal-khan',
+    name: 'Jalal Khan',
     role: 'Founder & CEO',
-    bio: 'Visionary leader with over 15 years of experience in the tech industry, driving innovative SaaS solutions.',
+    bio: 'Visionary leader driving the company forward with a strong focus on innovation, quality software and long-term client success.',
+    image: '/team/jalal-khan.jpg',
     socials: {
       linkedin: 'https://linkedin.com',
       twitter: 'https://x.com',
       website: 'https://example.com',
+    },
+  },
+  {
+    id: 'laiba-khan',
+    name: 'Laiba Khan',
+    role: 'Marketing Lead',
+    bio: 'Marketing expert specializing in digital strategy, brand building and growth campaigns for our software products and clients.',
+    image: '/team/laiba-khan.jpg',
+    socials: {
+      linkedin: 'https://linkedin.com',
+      instagram: 'https://instagram.com',
+      facebook: 'https://facebook.com',
+    },
+  },
+  {
+    id: 'rao-ali',
+    name: 'Rao Ali',
+    role: 'Project Manager',
+    bio: 'Keeps projects on time and on budget, coordinating between clients and the development team with clear communication.',
+    image: '/team/rao-ali.jpg',
+    socials: {
+      linkedin: 'https://linkedin.com',
+      twitter: 'https://x.com',
+    },
+  },
+  {
+    id: 'm-ali-zafar',
+    name: 'M Ali Zafar',
+    role: 'Business Development Manager',
+    bio: 'Builds client relationships and identifies new opportunities, turning ideas into long-term partnerships.',
+    image: '/team/m-ali-zafar.jpg',
+    socials: {
+      linkedin: 'https://linkedin.com',
+      website: 'https://example.com',
+    },
+  },
+  {
+    id: 'maryam',
+    name: 'Maryam',
+    role: 'Graphic Designer',
+    bio: 'Creative designer crafting eye-catching visuals, branding and interfaces that make our products stand out.',
+    image: '/team/maryam.jpg',
+    socials: {
+      linkedin: 'https://linkedin.com',
+      instagram: 'https://instagram.com',
+    },
+  },
+  {
+    id: 'amama-aziz',
+    name: 'Amama Aziz',
+    role: 'HR & Operations Manager',
+    bio: 'Looks after people and processes, building a supportive culture and keeping daily operations running smoothly.',
+    image: '/team/amama-aziz.jpg',
+    socials: {
+      linkedin: 'https://linkedin.com',
+    },
+  },
+  {
+    id: 'amash-aziz',
+    name: 'Amash Aziz',
+    role: 'QA Engineer',
+    bio: 'Detail-oriented tester ensuring every release is stable, secure and polished before it reaches our clients.',
+    image: '/team/amash-aziz.jpg',
+    socials: {
+      linkedin: 'https://linkedin.com',
+      github: 'https://github.com',
+    },
+  },
+  {
+    id: 'mubasil',
+    name: 'Mubasil',
+    role: 'App Developer',
+    bio: 'Mobile app developer building fast, smooth and user-friendly applications for Android and iOS.',
+    image: '/team/mubasil.jpg',
+    socials: {
+      linkedin: 'https://linkedin.com',
+      github: 'https://github.com',
+    },
+  },
+  {
+    id: 'wali',
+    name: 'Wali',
+    role: 'Full Stack Developer',
+    bio: 'Full stack developer delivering scalable web solutions from polished front-ends to robust back-end systems.',
+    image: '/team/wali.jpg',
+    socials: {
+      linkedin: 'https://linkedin.com',
+      github: 'https://github.com',
+      twitter: 'https://x.com',
     },
   },
 ];
@@ -117,11 +133,11 @@ export const heroArcMembers: {
   rotation: number;
   offsetY: number;
 }[] = [
-  { id: 'arc-1', name: 'Laura Davis', role: 'COO', rotation: -30, offsetY: 70 },
-  { id: 'arc-2', name: 'Lisa Thompson', role: 'Customer Success', rotation: -20, offsetY: 35 },
-  { id: 'arc-3', name: 'Tom White', role: 'Head of Product', rotation: -10, offsetY: 10 },
-  { id: 'arc-4', name: 'Jillie Bernard', role: 'Founder & CEO', rotation: 0, offsetY: 0 },
-  { id: 'arc-5', name: 'James Wilson', role: 'CTO', rotation: 10, offsetY: 10 },
-  { id: 'arc-6', name: 'David Miller', role: 'Lead Engineer', rotation: 20, offsetY: 35 },
-  { id: 'arc-7', name: 'Sarah Williams', role: 'Director of Sales', rotation: 30, offsetY: 70 },
-];
+    { id: 'arc-1', name: 'Laiba Khan', role: 'Marketing Lead', image: '/team/laiba-khan.jpg', rotation: -30, offsetY: 70 },
+    { id: 'arc-2', name: 'Rao Ali', role: 'Project Manager', image: '/team/rao-ali.jpg', rotation: -20, offsetY: 35 },
+    { id: 'arc-3', name: 'Wali', role: 'Full Stack Developer', image: '/team/wali.jpg', rotation: -10, offsetY: 10 },
+    { id: 'arc-4', name: 'Jalal Khan', role: 'Founder & CEO', image: '/team/jalal-khan.jpg', rotation: 0, offsetY: 0 },
+    { id: 'arc-5', name: 'Mubasil', role: 'App Developer', image: '/team/mubasil.jpg', rotation: 10, offsetY: 10 },
+    { id: 'arc-6', name: 'Maryam', role: 'Graphic Designer', image: '/team/maryam.jpg', rotation: 20, offsetY: 35 },
+    { id: 'arc-7', name: 'M Ali Zafar', role: 'Business Development', image: '/team/m-ali-zafar.jpg', rotation: 30, offsetY: 70 },
+  ];

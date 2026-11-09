@@ -42,7 +42,7 @@ const ALL_SECTIONS: SectionItem[] = [
     pageTitle: 'Home Page',
     pagePath: '/',
     fieldsCount: 4,
-    description: 'Showcases 4 partner software houses with clickable logos, links, and capability tags.',
+    description: 'Showcases strategic collaboration partners with logos, links, and capability tags.',
     dedicatedUrl: '/admin/collaboration',
     dedicatedLabel: 'Partners Manager',
   },

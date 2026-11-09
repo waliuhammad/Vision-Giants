@@ -397,7 +397,7 @@
 /* Hero Banner with Notched Breadcrumb Tab */
 .services-hero-banner {
   max-width: 1240px;
-  margin: 1.5rem auto 0;
+  margin: var(--hero-pt) auto 0;
   padding: 0 var(--gutter);
 }
 
@@ -1160,7 +1160,9 @@ dialog.modal[open] {
 .contact {
   position: relative;
   overflow: hidden;
-  padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem) var(--section-y);
+  padding-top: var(--hero-pt);
+  padding-bottom: var(--section-y);
+  scroll-margin-top: calc(var(--navbar-height) + var(--navbar-gap));
   background: var(--hero-bg-gradient, linear-gradient(135deg, #0b1736 0%, #102448 60%, #0d1c3e 100%));
   border-bottom: 1px solid var(--hero-border, rgba(255, 255, 255, 0.08));
   color: #ffffff;
@@ -1337,6 +1339,7 @@ dialog.modal[open] {
   place-items: center;
   min-height: 60vh;
   text-align: center;
+  padding-top: var(--hero-pt);
 }
 .not-found__code {
   font-family: var(--font-heading);
@@ -1353,12 +1356,24 @@ dialog.modal[open] {
    ========================================================= */
 .team-hero {
   position: relative;
-  padding-top: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  /*
+   * FIX: The navbar is position:fixed so it takes NO space in the page flow.
+   * We must manually push the section content below it.
+   * --nav-clearance = --header-h (88px) + 1.5rem gap.
+   * An extra clamp() layer adds breathing room on tall screens.
+   */
+  padding-top: calc(var(--navbar-height) + var(--navbar-top-offset) + clamp(2.5rem, 4vw, 4rem));
   padding-bottom: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
-  overflow: hidden;
+  /* overflow hidden ONLY on the section wrapper – arc cards need overflow:visible */
+  overflow-x: hidden;
+  overflow-y: visible;
   background: var(--hero-bg-gradient, linear-gradient(135deg, #0b1736 0%, #102448 60%, #0d1c3e 100%));
   border-bottom: 1px solid var(--hero-border, rgba(255, 255, 255, 0.08));
   color: #ffffff;
+  /* Use min-height so content can grow; never crop with a fixed height */
+  min-height: 100svh;
+  /* scroll-margin so anchor links (#team-hero) land below the navbar */
+  scroll-margin-top: var(--nav-clearance);
 }
 .team-hero::before {
   content: '';
@@ -1388,7 +1403,7 @@ dialog.modal[open] {
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.025em;
-  margin-bottom: var(--space-4);
+  margin-bottom: clamp(1rem, 1.5vw, 1.5rem);
   text-align: center;
 }
 .team-hero__lead {
@@ -1405,11 +1420,16 @@ dialog.modal[open] {
   position: relative;
   width: 100%;
   max-width: 1100px;
-  margin: clamp(2.5rem, 1.5rem + 3vw, 4.5rem) auto 0;
+  margin: clamp(3rem, 2rem + 3vw, 5rem) auto 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 380px;
+  /* overflow:visible lets rotated arc cards show without clipping.
+     Horizontal overflow is hidden on the section wrapper (.team-hero). */
+  overflow: visible;
+  min-height: 400px;
+  /* Bottom padding absorbs the max offsetY (70px) of the outermost cards */
+  padding-bottom: 90px;
 }
 .team-arc-glow {
   position: absolute;
@@ -1464,6 +1484,7 @@ dialog.modal[open] {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 20%;
 }
 .team-arc-card__placeholder {
   width: 100%;
@@ -1532,26 +1553,32 @@ dialog.modal[open] {
   text-overflow: ellipsis;
 }
 
-/* On desktop the whole hero (title, lead and the card fan) fits in one screen: sizes follow the
-   viewport height so the fan is never pushed below the fold on short laptop screens. */
+/* Desktop: hero fills the viewport. We DON'T reset padding-top here — the base rule
+   already sets the correct navbar clearance. We override only visual sizing. */
 @media (min-width: 769px) {
   .team-hero {
-    min-height: calc(100svh - var(--header-h));
+    /*
+     * min-height: 100svh is set on the base rule.
+     * On desktop we keep the content top-aligned under the navbar — do NOT
+     * use justify-content: center which would collide text with the fixed bar.
+     */
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding-block: clamp(1rem, 4vh, 3rem);
+    justify-content: flex-start;
+    padding-bottom: clamp(2.5rem, 4vh, 4.5rem);
   }
   .team-hero__title {
     font-size: min(var(--fs-display), 8.5vh);
-    margin-bottom: min(var(--space-4), 2vh);
+    margin-bottom: min(1.5rem, 2vh);
   }
   .team-hero__lead {
     font-size: min(var(--fs-lead), 3.2vh);
   }
   .team-arc-wrapper {
-    margin-top: clamp(1rem, 5vh, 4.5rem);
+    /* Enough gap between subtitle and arc fan; cards have offsetY up to 70px */
+    margin-top: clamp(2.5rem, 5vh, 4.5rem);
     min-height: 0;
+    padding-bottom: 100px;
   }
   .team-arc-card {
     width: clamp(96px, min(11vw, 23vh), 175px);
@@ -1598,6 +1625,7 @@ dialog.modal[open] {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 20%;
   transition: transform var(--dur-slow) var(--ease-out);
 }
 .team-card:hover .team-card__image {
@@ -1695,6 +1723,11 @@ dialog.modal[open] {
 }
 
 @media (max-width: 1024px) {
+  /* Tablet: scale down the fan slightly; keep rotations. */
+  .team-hero {
+    /* Slightly more padding on tablets since font sizes are still large */
+    padding-top: calc(var(--nav-clearance) + 1.5rem);
+  }
   .team-arc-stage {
     gap: 6px;
     transform: scale(0.85);
@@ -1702,27 +1735,46 @@ dialog.modal[open] {
   }
 }
 @media (max-width: 768px) {
+  /* Mobile: remove rotations entirely; horizontal scroll instead of fan. */
+  .team-hero {
+    /* Ensure heading is well below the navbar pill on small screens */
+    padding-top: calc(var(--nav-clearance) + 1rem);
+    min-height: auto;
+    overflow-x: hidden;
+  }
   .team-arc-wrapper {
-    min-height: 280px;
+    min-height: 220px;
+    /* Restore overflow-x scrolling for the scrollable card row */
     overflow-x: auto;
     overflow-y: hidden;
-    padding-block: 20px;
+    /* Remove the extra bottom padding we added for the fan; not needed here */
+    padding-top: 20px;
+    padding-bottom: 20px;
     justify-content: flex-start;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    /* Wider than viewport to allow scroll */
+    width: calc(100% + var(--gutter) * 2);
+    margin-left: calc(-1 * var(--gutter));
   }
   .team-arc-wrapper::-webkit-scrollbar {
     display: none;
   }
   .team-arc-stage {
     transform: none;
-    padding-inline: 20px;
+    padding-inline: var(--gutter);
     gap: 12px;
   }
   .team-arc-card {
-    width: 140px;
+    /* Fixed card width on mobile; no rotation so no clipping */
+    width: 130px;
     transform: none !important;
     flex-shrink: 0;
+  }
+}
+@media (max-width: 480px) {
+  .team-arc-card {
+    width: 110px;
   }
 }
 
@@ -2691,7 +2743,9 @@ dialog.modal[open] {
 /* Full Blog Detail Page */
 .blog-detail-hero {
   position: relative;
-  padding: clamp(2.5rem, 1.5rem + 4vw, 5rem) 0 var(--space-6);
+  padding-top: var(--hero-pt);
+  padding-bottom: var(--space-6);
+  scroll-margin-top: var(--nav-clearance);
   background: var(--hero-bg-gradient, linear-gradient(135deg, #0b1736 0%, #102448 60%, #0d1c3e 100%));
   border-bottom: 1px solid var(--hero-border, rgba(255, 255, 255, 0.08));
   color: #ffffff;
@@ -3870,7 +3924,8 @@ dialog.modal[open] {
   position: relative;
   background: linear-gradient(135deg, #070d1e 0%, #0B1736 50%, #102448 100%);
   color: #ffffff;
-  padding: var(--space-8) 0 var(--space-8);
+  padding-top: var(--hero-pt);
+  padding-bottom: clamp(2.5rem, 3vw, 4rem);
   overflow: hidden;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
