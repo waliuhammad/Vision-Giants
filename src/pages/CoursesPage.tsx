@@ -375,7 +375,7 @@ export default function CoursesPage() {
             >
               All Courses ({publishedCourses.length})
             </button>
-            {categories.filter((c) => c.active !== false).map((cat) => {
+            {categories.filter((c) => c.active !== false).filter((cat) => publishedCourses.some((p) => p.category.toLowerCase() === cat.name.toLowerCase())).map((cat) => {
               const count = publishedCourses.filter(
                 (p) => p.category.toLowerCase() === cat.name.toLowerCase()
               ).length;
@@ -386,7 +386,7 @@ export default function CoursesPage() {
                   className={`course-cat-pill${selectedCategory.toLowerCase() === cat.name.toLowerCase() ? ' is-active' : ''}`}
                   onClick={() => setSelectedCategory(cat.name)}
                 >
-                  {cat.name} {count > 0 ? `(${count})` : ''}
+                  {cat.name} ({count})
                 </button>
               );
             })}
@@ -425,7 +425,7 @@ export default function CoursesPage() {
                   onChange={(e) => setSelectedCategory(e.target.value)}
                 >
                   <option value="all">All Categories</option>
-                  {categories.map((c) => (
+                  {categories.filter((c) => publishedCourses.some((p) => p.category.toLowerCase() === c.name.toLowerCase())).map((c) => (
                     <option key={c.id} value={c.name}>
                       {c.name}
                     </option>

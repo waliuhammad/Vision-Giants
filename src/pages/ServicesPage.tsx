@@ -1,10 +1,8 @@
-import { useState } from 'react';
 import { Link } from 'react-router';
 import {
   ArrowUpRight,
   Award,
   Check,
-  ChevronDown,
   Heart,
   Plus,
   ShieldCheck,
@@ -42,18 +40,12 @@ export default function ServicesPage() {
   const t = usePageText('services');
   const { services } = useContent();
   const servicesPage = useServicesPage();
-  const [showAllServices, setShowAllServices] = useState(false);
+  // Show all 12 services without JS toggle — SSR-friendly
+  const displayedServices = services;
 
   const vis = servicesPage.visibility;
-
-  // By default, display 8 cards (matching the 4x2 grid in the design), with an expand toggle for more
-  const initialDisplayCount = 8;
-  const hasMoreServices = services.length > initialDisplayCount;
-  const displayedServices = showAllServices ? services : services.slice(0, initialDisplayCount);
-
   return (
     <div className="services-page-wrap">
-      {/* 1. TOP HERO BANNER (WITH NOTCHED BREADCRUMB) */}
       {vis.hero && (
         <section className="services-hero-banner" aria-label="Services Header">
           <div
@@ -240,7 +232,7 @@ export default function ServicesPage() {
                 return (
                   <Reveal key={service.id} delay={60 + (index % 4) * 40}>
                     <Link
-                      to={`/services/${service.id}`}
+                      to={`/services/${service.id}/`}
                       className={`service-card-new ${isFeatured ? 'service-card-new--featured' : ''}`}
                     >
                       <div className="service-card-new__top">
@@ -285,26 +277,7 @@ export default function ServicesPage() {
               })}
             </div>
 
-            {/* Show More / Show Fewer toggle if services catalog exceeds 8 */}
-            {hasMoreServices && (
-              <div style={{ textAlign: 'center', marginTop: '3rem' }}>
-                <button
-                  type="button"
-                  onClick={() => setShowAllServices(!showAllServices)}
-                  className="btn btn--outline"
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
-                >
-                  <span>{showAllServices ? 'Show Fewer' : 'Explore All Services'}</span>
-                  <ChevronDown
-                    size={17}
-                    style={{
-                      transform: showAllServices ? 'rotate(180deg)' : 'none',
-                      transition: 'transform 0.2s ease',
-                    }}
-                  />
-                </button>
-              </div>
-            )}
+            {/* All services rendered — no JS toggle needed */}
           </div>
         </section>
       )}

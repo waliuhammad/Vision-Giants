@@ -94,7 +94,7 @@ export function BlogSidebar({
           {recentPosts.slice(0, 4).map((post) => (
             <li key={post.id} className="blog-sidebar__recent-item">
               <Link
-                to={`/blog/${post.slug}`}
+                to={`/blog/${post.slug}/`}
                 onClick={(e) => {
                   if (onSelectPost) {
                     e.preventDefault();

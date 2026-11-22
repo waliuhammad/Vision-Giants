@@ -12,6 +12,9 @@ import CareersPage from '../pages/CareersPage';
 import ApplyPage from '../pages/ApplyPage';
 import CoursesPage from '../pages/CoursesPage';
 import CourseDetailPage from '../pages/CourseDetailPage';
+import PortfolioPage from '../pages/PortfolioPage';
+import PrivacyPage from '../pages/PrivacyPage';
+import TermsPage from '../pages/TermsPage';
 import NotFoundPage from '../pages/NotFoundPage';
 
 /** Keep in sync with `pages` in src/config/seo.ts (used for prerendering and the sitemap). */
@@ -20,10 +23,16 @@ export function AppRoutes() {
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/services" element={<ServicesPage />} />
+      <Route path="/services/" element={<ServicesPage />} />
       <Route path="/services/:slug" element={<ServiceDetailPage />} />
-      {/* Permanent client-side redirect for old /portfolio URLs */}
-      <Route path="/portfolio" element={<Navigate to="/" replace />} />
-      <Route path="/portfolio/*" element={<Navigate to="/" replace />} />
+      {/* Redirect legacy wrong slugs to correct ones */}
+      <Route path="/services/web-development" element={<Navigate to="/services/website-development/" replace />} />
+      <Route path="/services/web-development/" element={<Navigate to="/services/website-development/" replace />} />
+      <Route path="/services/e-commerce" element={<Navigate to="/services/ecommerce/" replace />} />
+      <Route path="/services/e-commerce/" element={<Navigate to="/services/ecommerce/" replace />} />
+      {/* Portfolio page */}
+      <Route path="/portfolio" element={<PortfolioPage />} />
+      <Route path="/portfolio/" element={<PortfolioPage />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/team" element={<TeamPage />} />
       <Route path="/blog" element={<BlogPage />} />
@@ -34,6 +43,10 @@ export function AppRoutes() {
       <Route path="/careers/apply" element={<ApplyPage />} />
       <Route path="/courses" element={<CoursesPage />} />
       <Route path="/courses/:slug" element={<CourseDetailPage />} />
+      <Route path="/privacy" element={<PrivacyPage />} />
+      <Route path="/privacy/" element={<PrivacyPage />} />
+      <Route path="/terms" element={<TermsPage />} />
+      <Route path="/terms/" element={<TermsPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

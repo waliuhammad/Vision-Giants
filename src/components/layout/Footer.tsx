@@ -97,7 +97,10 @@ const GlobeIcon: IconComponent = ({ size = 24, ...rest }) => (
  * Cookie links pointed at routes that were never built and led to the 404 page. Add an entry here
  * (and a route in src/app/routes.tsx) once each policy is written.
  */
-const legalLinks: { to: string; label: string }[] = [];
+const legalLinks: { to: string; label: string }[] = [
+  { to: '/privacy/', label: 'Privacy Policy' },
+  { to: '/terms/', label: 'Terms of Service' },
+];
 
 // Picks an icon based on the social label/URL; falls back to a globe
 function getSocialIcon(label: string, href: string): IconComponent {

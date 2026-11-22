@@ -12,7 +12,7 @@ import { Button } from '../components/ui/Button';
 import { Reveal } from '../components/animations/Reveal';
 import { usePageText } from '../content/ContentContext';
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 8;
 
 export default function BlogPage() {
   const t = usePageText('blog');

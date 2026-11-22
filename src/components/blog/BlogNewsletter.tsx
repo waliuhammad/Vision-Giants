@@ -48,7 +48,7 @@ export function BlogNewsletter() {
               Software Architecture & Tech Insights, Delivered Monthly
             </h2>
             <p className="blog-newsletter__desc">
-              Join 2,400+ engineers, product managers, and technology leaders. Zero spam, just deep-dive engineering
+              Join engineers, product managers, and technology leaders. Zero spam, just deep-dive engineering
               guides and actionable digital strategy.
             </p>
           </div>

@@ -56,62 +56,62 @@ export const defaultServicesPageData: ServicesPageData = {
 
   // 2. What We Do
   whatWeDoBadge: 'What we do',
-  whatWeDoHeading: 'Empowering You to Live Your Best Life & Achieve Lasting Personal Transformation',
+  whatWeDoHeading: 'Building Powerful Digital Solutions for Businesses Ready to Scale',
   whatWeDoDescription1:
-    'At Vision Giants, we believe true transformation starts with clarity and action. Our tailored digital and engineering services are designed to provide personalized support, actionable strategies, and empowering tools to help you unlock your full potential.',
+    'At Vision Giants, we design and develop custom software that solves real business problems. From web applications to enterprise platforms, our engineering team delivers reliable, scalable products that grow with your business.',
   whatWeDoDescription2:
-    'Whether you are looking to scale your business architecture, build high-growth web and mobile platforms, or harness the power of artificial intelligence, we are here to guide you every step of the way.',
+    'Whether you need a customer-facing web application, a cross-platform mobile app, an AI-powered automation, or a data-driven e-commerce store, we apply proven engineering practices to bring your vision to life.',
   whatWeDoFocusHeading: 'Key Areas We Focus On',
   whatWeDoFocusPoints: [
-    'Personal Growth & Mindset Mastery',
-    'Career Development & Success',
-    'Relationship & Team Transformation',
-    'Goal Setting & Rapid Achievement',
-    'Health & Operational Wellness',
-    'Enterprise Cloud & Scalability',
+    'Custom Web & Mobile Application Development',
+    'E-Commerce Platforms & Online Stores',
+    'Artificial Intelligence & Automation',
+    'Robotics & IoT Solutions',
+    'Social Media Marketing & SEO',
+    'Graphic Design & Video Editing',
   ],
 
   // 3. Why Choose Us
   whyChooseUsBadge: 'Why Choose Us?',
-  whyChooseUsHeading: 'Why Choose Us for Your Personal Transformation Journey?',
+  whyChooseUsHeading: 'Why Choose Vision Giants for Your Next Digital Project?',
   whyChooseUsImage: '/images/services/why-choose-us.jpg',
   whyChooseUsImageAlt: 'Vision Giants strategic consulting and transformation team in collaboration',
   whyChooseUsReasons: [
     {
-      id: 'certified-coaching',
-      title: 'Certified Expert Coaching',
+      id: 'expert-team',
+      title: 'Experienced Engineering Team',
       description:
-        'Work with a professionally certified team committed to your personal and business growth success.',
+        'Work with skilled software engineers and designers who bring deep technical expertise to every project.',
       icon: 'award',
     },
     {
-      id: 'proven-stories',
-      title: 'Proven Success Stories',
+      id: 'proven-results',
+      title: 'Proven Delivery Track Record',
       description:
-        'Join hundreds of clients who have unlocked their potential, transformed their workflows, and scaled.',
+        'We have shipped 22+ live projects for clients in the UK, UAE and Pakistan — on time, on scope, and built to last.',
       icon: 'star',
     },
     {
-      id: 'action-plans',
-      title: 'Customized Action Plans',
+      id: 'tailored-solutions',
+      title: 'Tailored Software Solutions',
       description:
-        'Get solutions tailored to your unique goals — with clear, actionable steps to move you forward with confidence.',
+        'Every project starts with understanding your business goals — we design and build solutions specific to your needs, not generic templates.',
       icon: 'target',
     },
     {
-      id: 'judgment-free',
-      title: 'Supportive, Judgment-Free Space',
+      id: 'transparent-process',
+      title: 'Transparent & Collaborative Process',
       description:
-        'Transparent collaboration, dedicated communication, and continuous support through every milestone.',
+        'Clear scope, regular demos and honest communication at every stage so you always know where your project stands.',
       icon: 'shield-check',
     },
   ],
 
   // 4. Services Grid
   servicesGridBadge: 'Our Services',
-  servicesGridHeading: 'Tailored Services to *Grow & Protect* Your Wealth',
+  servicesGridHeading: 'Digital Services Built to *Grow* Your Business',
   servicesGridLead:
-    'Explore our comprehensive suite of tailored digital solutions engineered to scale your operations, build long-term value, and accelerate your vision.',
+    'Explore our comprehensive suite of digital and engineering services — from web and mobile development to AI, robotics, and digital marketing.',
   featuredServiceId: 'robotics',
 
   // 5. Visibility

@@ -90,6 +90,22 @@ export const pages: PageMeta[] = [
     title: `${p.title} | Blog | ${company.name}`,
     description: p.excerpt,
   })),
+  {
+    path: '/portfolio/',
+    title: `Portfolio | Our Work & Projects | ${company.name}`,
+    description:
+      'Browse 22+ projects delivered by Vision Giants — web apps, mobile apps, e-commerce stores, AI tools and more.',
+  },
+  {
+    path: '/privacy/',
+    title: `Privacy Policy | ${company.name}`,
+    description: 'How Vision Giants collects, uses, and protects your personal information.',
+  },
+  {
+    path: '/terms/',
+    title: `Terms of Service | ${company.name}`,
+    description: 'The terms that govern your use of Vision Giants website and services.',
+  },
 ];
 
 /** Client-only admin dashboard shell (not indexed, not in the sitemap). */

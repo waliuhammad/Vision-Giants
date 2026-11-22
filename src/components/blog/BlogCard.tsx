@@ -29,7 +29,7 @@ export function BlogCard({
     <article className={`card card--interactive blog-card ${className}`.trim()}>
       <div className="blog-card__media">
         <Link
-          to={`/blog/${slug}`}
+          to={`/blog/${slug}/`}
           onClick={(e) => {
             if (onSelect) {
               e.preventDefault();
@@ -58,7 +58,7 @@ export function BlogCard({
 
         <H className="blog-card__title">
           <Link
-            to={`/blog/${slug}`}
+            to={`/blog/${slug}/`}
             onClick={(e) => {
               if (onSelect) {
                 e.preventDefault();
@@ -84,7 +84,7 @@ export function BlogCard({
           </div>
 
           <Link
-            to={`/blog/${slug}`}
+            to={`/blog/${slug}/`}
             onClick={(e) => {
               if (onSelect) {
                 e.preventDefault();

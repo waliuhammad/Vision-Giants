@@ -117,8 +117,8 @@ export const defaultCareersPageData: CareersPageData = {
   heroSecondaryCtaLink: '#submit-cv',
   heroImage:
     'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
-  heroSocialProofCount: '50+',
-  heroSocialProofText: 'Talented People Building the future together',
+  heroSocialProofCount: '12+',
+  heroSocialProofText: 'Skilled Engineers & Designers Building the future together',
 
   // Extended hero fields (for CareersPage backward-compat sections)
   heroEyebrow: 'WE ARE HIRING',
@@ -127,7 +127,7 @@ export const defaultCareersPageData: CareersPageData = {
 
   // Stats ribbon
   stats: [
-    { icon: 'users', value: '50+', label: 'Talented People' },
+    { icon: 'users', value: '12+', label: 'Team Members' },
     { icon: 'trophy', value: '95%+', label: 'Retention Rate' },
     { icon: 'briefcase', value: '30+', label: 'Open Roles' },
     { icon: 'globe', value: '10+', label: 'Global Clients' },

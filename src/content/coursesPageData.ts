@@ -85,16 +85,16 @@ export const defaultCoursesPageData: CoursesPageData = {
   heroSecondaryCtaLink: 'https://www.youtube.com',
   heroImage:
     'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=900&q=80',
-  heroExperienceBadgeYears: '20+',
+  heroExperienceBadgeYears: '5+',
   heroExperienceBadgeText: 'YEARS OF EXCELLENCE',
-  heroSocialProofCount: '5000+',
-  heroSocialProofText: 'Join 5000+ Successful Students & Alumni',
+  heroSocialProofCount: '500+',
+  heroSocialProofText: 'Join 500+ Students & Alumni',
 
   stats: [
-    { icon: 'users', value: '5000+', label: 'Students Enrolled' },
-    { icon: 'trophy', value: '95%+', label: 'Success Rate' },
-    { icon: 'book', value: '50+', label: 'Live Practical Modules' },
-    { icon: 'building', value: '20+', label: 'Hiring Partners' },
+    { icon: 'users', value: '500+', label: 'Students Trained' },
+    { icon: 'trophy', value: '7', label: 'Courses Available' },
+    { icon: 'book', value: '100+', label: 'Practical Lessons' },
+    { icon: 'building', value: '5+', label: 'Industry Partners' },
   ],
 
   programsEyebrow: 'OUR PROGRAMS',

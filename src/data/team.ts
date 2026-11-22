@@ -27,70 +27,91 @@ export const teamMembers: TeamMember[] = [
     image: '/team/jalal-khan.jpg',
   },
 
-  // 2. New Member
+  // 2. Member (Title pending owner confirmation)
   {
     id: 'muhammad-ismail',
     name: 'Muhammad Ismail',
+    role: '',
     image: '/team/muhammad-ismail.jpg',
   },
-  // 3. New Member
 
-  // Previous Team Members
+  // 3. Member (Title pending owner confirmation)
   {
     id: 'laiba-khan',
     name: 'Laiba Khan',
+    role: '',
     image: '/team/laiba-khan.jpg',
   },
 
-
-  // 5. New Member
+  // 4. Member (Title pending owner confirmation)
   {
     id: 'muhib-ul-allah',
     name: 'Muhib ul Allah',
+    role: '',
     image: '/team/muhib-ul-allah.jpg',
   },
 
-
+  // 5. Member (Title pending owner confirmation)
   {
     id: 'rao-ali',
     name: 'Rao Ali',
+    role: '',
     image: '/team/rao-ali.jpg',
   },
+
+  // 6. Member (Title pending owner confirmation)
   {
     id: 'm-ali-zafar',
     name: 'M Ali Zafar',
+    role: '',
     image: '/team/m-ali-zafar.jpg',
   },
+
+  // 7. Member (Title pending owner confirmation)
   {
     id: 'maryam',
     name: 'Maryam',
+    role: '',
     image: '/team/maryam.jpg',
   },
+
+  // 8. Member (Title pending owner confirmation)
   {
     id: 'amama-aziz',
     name: 'Amama Aziz',
+    role: '',
     image: '/team/amama-aziz.jpg',
   },
+
+  // 9. Member (Title pending owner confirmation)
   {
     id: 'amash-aziz',
     name: 'Amash Aziz',
+    role: '',
     image: '/team/amash-aziz.jpg',
   },
+
+  // 10. Member (Title pending owner confirmation)
   {
     id: 'mubasil',
     name: 'Mubasil',
+    role: '',
     image: '/team/mubasil.jpg',
   },
 
-  // 4. New Member
+  // 11. Member (Title pending owner confirmation)
   {
     id: 'hamza',
     name: 'Hamza',
+    role: '',
     image: '/team/hamza.jpg',
   },
+
+  // 12. Member (Title pending owner confirmation)
   {
     id: 'wali',
     name: 'Wali',
+    role: '',
     image: '/team/wali.jpg',
   },
 ];

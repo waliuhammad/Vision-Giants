@@ -96,8 +96,8 @@ export function TeamCard({ member, headingLevel: H = 'h3', className = '' }: Tea
 
       <div className="team-card__content">
         <H className="team-card__name">{name}</H>
-        <p className="team-card__role">{role}</p>
-        <p className="team-card__bio">{bio}</p>
+        {role && <p className="team-card__role">{role}</p>}
+        {bio && <p className="team-card__bio">{bio}</p>}
 
         {socials && (
           <div className="team-card__socials" aria-label={`${name}'s social profiles`}>

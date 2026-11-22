@@ -65,8 +65,8 @@ export const blogPosts: BlogPost[] = [
     featured: true,
     imageUrl: '/images/blog/blog-hero.jpg',
     author: {
-      name: 'James Wilson',
-      role: 'Chief Technology Officer',
+      name: 'Jalal Khan',
+      role: 'Founder & CEO',
     },
     tags: ['Architecture', 'React', 'Edge', 'Performance'],
     content: {
@@ -120,8 +120,8 @@ export async function middleware(request: Request) {
     readTime: '5 min read',
     imageUrl: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80',
     author: {
-      name: 'David Miller',
-      role: 'Lead Software Engineer',
+      name: 'Vision Giants Engineering Team',
+      role: 'Software Engineering',
     },
     tags: ['AI', 'APIs', 'Search', 'Cloud'],
     content: {
@@ -150,14 +150,14 @@ export async function middleware(request: Request) {
     slug: 'cross-platform-mobile-react-native-flutter',
     title: 'React Native vs Flutter in 2026: A Pragmatic Production Guide',
     excerpt:
-      'An honest breakdown of performance, native API bridging, developer velocity, and long-term maintenance costs across 40+ shipped applications.',
+      'An honest breakdown of performance, native API bridging, developer velocity, and long-term maintenance costs across multiple shipped applications.',
     category: 'Mobile App Development',
     date: 'Oct 05, 2026',
     readTime: '8 min read',
     imageUrl: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80',
     author: {
-      name: 'Lisa Thompson',
-      role: 'Customer Success & Tech Delivery',
+      name: 'Vision Giants Engineering Team',
+      role: 'Mobile Development',
     },
     tags: ['Mobile', 'React Native', 'Flutter', 'iOS', 'Android'],
     content: {
@@ -192,8 +192,8 @@ export async function middleware(request: Request) {
     readTime: '4 min read',
     imageUrl: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80',
     author: {
-      name: 'Laura Davis',
-      role: 'Chief Operating Officer',
+      name: 'Vision Giants Design Team',
+      role: 'UI/UX Design',
     },
     tags: ['Design Systems', 'UI/UX', 'Figma', 'Tokens'],
     content: {
@@ -228,8 +228,8 @@ export async function middleware(request: Request) {
     readTime: '7 min read',
     imageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80',
     author: {
-      name: 'Tom White',
-      role: 'Head of Product & Architect',
+      name: 'Vision Giants Engineering Team',
+      role: 'Backend Engineering',
     },
     tags: ['TypeScript', 'Node.js', 'Backend', 'Database'],
     content: {
@@ -269,7 +269,7 @@ function dispatchOrder(userId: UserId, orderId: OrderId) {
     readTime: '5 min read',
     imageUrl: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=800&q=80',
     author: {
-      name: 'Jillie Bernard',
+      name: 'Jalal Khan',
       role: 'Founder & CEO',
     },
     tags: ['Strategy', 'Leadership', 'Agile', 'Engineering'],
@@ -299,14 +299,14 @@ function dispatchOrder(userId: UserId, orderId: OrderId) {
     slug: 'core-web-vitals-conversion-rates',
     title: 'The Direct Link Between Core Web Vitals and Conversion Rates',
     excerpt:
-      'Why a 200ms improvement in Largest Contentful Paint (LCP) and Interaction to Next Paint (INP) yielded a 14% revenue lift for our e-commerce clients.',
+      'Why a 200ms improvement in Largest Contentful Paint (LCP) and Interaction to Next Paint (INP) can meaningfully improve conversion rates for e-commerce clients.',
     category: 'Web Development',
     date: 'Sep 07, 2026',
     readTime: '4 min read',
     imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80',
     author: {
-      name: 'Sarah Williams',
-      role: 'Director of Sales & Growth',
+      name: 'Vision Giants Engineering Team',
+      role: 'Web Performance',
     },
     tags: ['Web Vitals', 'Performance', 'SEO', 'Conversion'],
     content: {
@@ -336,8 +336,8 @@ function dispatchOrder(userId: UserId, orderId: OrderId) {
     readTime: '6 min read',
     imageUrl: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=800&q=80',
     author: {
-      name: 'Emily Johnson',
-      role: 'Marketing & UX Specialist',
+      name: 'Vision Giants Design Team',
+      role: 'UI/UX Design',
     },
     tags: ['Micro-Interactions', 'Animation', 'UX', 'Product'],
     content: {

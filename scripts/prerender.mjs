@@ -48,23 +48,109 @@ await fs.writeFile(path.join(clientDir, 'admin/index.html'), fill(renderHeadTags
 console.log('  wrote /admin/ shell');
 
 const today = new Date().toISOString().slice(0, 10);
+
+/** Assign a sensible sitemap priority per path. */
+function sitemapPriority(p) {
+  if (p === '/') return '1.0';
+  if (p.startsWith('/services/') && p.split('/').length === 3) return '0.9';
+  if (p === '/services/' || p === '/portfolio/' || p === '/about/' || p === '/contact/') return '0.9';
+  if (p.startsWith('/blog/') && p.split('/').length === 4) return '0.7';
+  if (p.startsWith('/courses/') && p.split('/').length === 4) return '0.7';
+  return '0.8';
+}
+
+// Exclude careers/apply from sitemap (nofollow/noindex per audit)
+const sitemapPages = pages.filter((p) => !p.path.startsWith('/careers/apply'));
+
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${pages
+${sitemapPages
   .map(
     (p) => `  <url>
     <loc>${SITE_URL}${p.path}</loc>
     <lastmod>${today}</lastmod>
-    <priority>${p.path === '/' ? '1.0' : '0.8'}</priority>
+    <priority>${sitemapPriority(p.path)}</priority>
   </url>`,
   )
   .join('\n')}
 </urlset>
 `;
 await fs.writeFile(path.join(clientDir, 'sitemap.xml'), sitemap);
-await fs.writeFile(path.join(clientDir, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
+await fs.writeFile(path.join(clientDir, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /admin/\nDisallow: /careers/apply\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
 console.log(`  wrote sitemap.xml and robots.txt (site URL: ${SITE_URL})`);
 
 if (SITE_URL.includes('example.com')) {
   console.warn('\n  ⚠ VITE_SITE_URL is not set: canonical URLs and the sitemap use the placeholder https://www.example.com\n');
 }
+
+// ── llms.txt ──────────────────────────────────────────────────────────────────
+const llmsTxt = `# Vision Giants
+> Vision Giants is a software development company based in Multan, Pakistan.
+> We design and build web applications, mobile apps, custom software, robotics, IoT systems, AI tools, e-commerce stores, and digital marketing solutions.
+
+## Company
+- Full name: Vision Giants
+- Location: Multan, Punjab, Pakistan
+- Website: ${SITE_URL}
+- Contact: info@vgiants.com
+
+## Services
+- Website Development
+- Mobile App Development
+- Custom Software Development
+- Robotics
+- Artificial Intelligence
+- Social Media Marketing
+- IoT (Internet of Things)
+- Game Development
+- E-Commerce
+- Video Editing
+- Graphic Design
+- SEO
+
+## Key Pages
+- Homepage: ${SITE_URL}/
+- Services: ${SITE_URL}/services/
+- Portfolio: ${SITE_URL}/portfolio/
+- About: ${SITE_URL}/about/
+- Team: ${SITE_URL}/team/
+- Blog: ${SITE_URL}/blog/
+- Courses: ${SITE_URL}/courses/
+- Contact: ${SITE_URL}/contact/
+- Careers: ${SITE_URL}/careers/
+`;
+await fs.writeFile(path.join(clientDir, 'llms.txt'), llmsTxt);
+console.log('  wrote llms.txt');
+
+// ── RSS feed ──────────────────────────────────────────────────────────────────
+// Use the same content object already loaded (includes Firestore or defaults)
+const blogPosts = content.blogPosts || [];
+const rssItems = [...blogPosts]
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  .map(
+    (p) => `  <item>
+    <title><![CDATA[${p.title}]]></title>
+    <link>${SITE_URL}/blog/${p.slug}/</link>
+    <guid isPermaLink="true">${SITE_URL}/blog/${p.slug}/</guid>
+    <pubDate>${new Date(p.date).toUTCString()}</pubDate>
+    <description><![CDATA[${p.excerpt}]]></description>
+    <author>${p.author?.name ?? 'Vision Giants'}</author>
+  </item>`,
+  )
+  .join('\n');
+
+const rss = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Vision Giants Blog</title>
+    <link>${SITE_URL}/blog/</link>
+    <description>Insights, tutorials and technology from Vision Giants.</description>
+    <language>en-us</language>
+    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
+    <atom:link href="${SITE_URL}/rss.xml" rel="self" type="application/rss+xml"/>
+${rssItems}
+  </channel>
+</rss>
+`;
+await fs.writeFile(path.join(clientDir, 'rss.xml'), rss);
+console.log('  wrote rss.xml');

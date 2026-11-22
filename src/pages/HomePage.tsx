@@ -295,7 +295,7 @@ export default function HomePage() {
               title={t('workTitle')}
               lead={t('workLead')}
               aside={
-                <Button to="/services/website-development/" variant="outline" icon={<ArrowRight size={16} />}>
+                <Button to="/portfolio/" variant="outline" icon={<ArrowRight size={16} />}>
                   View all projects
                 </Button>
               }

@@ -290,6 +290,7 @@ export default function CareersPage() {
                         <Link
                           to={`/careers/apply?position=${job.id}`}
                           className="crp-apply-link"
+                          rel="nofollow"
                           style={{ color }}
                         >
                           Apply Now <ArrowRight size={13} />
@@ -506,6 +507,7 @@ export default function CareersPage() {
               <Link
                 to={`/careers/apply?position=${encodeURIComponent(selectedJob.id)}`}
                 className="btn btn--primary"
+                rel="nofollow"
                 onClick={() => setSelectedJob(null)}
               >
                 Apply for this Position

@@ -19,7 +19,7 @@ export function ServiceCard({ service }: { service: Service }) {
       </span>
       <h3>{service.title}</h3>
       <p>{service.short}</p>
-      <Link to={`/services/${service.id}`} className="text-link">
+      <Link to={`/services/${service.id}/`} className="text-link">
         Learn more<span className="visually-hidden"> about {service.title}</span>
         <ArrowRight size={15} aria-hidden="true" />
       </Link>

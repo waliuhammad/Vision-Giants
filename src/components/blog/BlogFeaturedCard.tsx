@@ -24,7 +24,7 @@ export function BlogFeaturedCard({ post, onSelect }: BlogFeaturedCardProps) {
       <div className="blog-featured__grid">
         <div className="blog-featured__media">
           <Link
-            to={`/blog/${slug}`}
+            to={`/blog/${slug}/`}
             onClick={(e) => {
               if (onSelect) {
                 e.preventDefault();
@@ -59,7 +59,7 @@ export function BlogFeaturedCard({ post, onSelect }: BlogFeaturedCardProps) {
 
           <h2 className="blog-featured__title">
             <Link
-              to={`/blog/${slug}`}
+              to={`/blog/${slug}/`}
               onClick={(e) => {
                 if (onSelect) {
                   e.preventDefault();
@@ -91,7 +91,7 @@ export function BlogFeaturedCard({ post, onSelect }: BlogFeaturedCardProps) {
             </div>
 
             <Button
-              to={`/blog/${slug}`}
+              to={`/blog/${slug}/`}
               onClick={(e) => {
                 if (onSelect) {
                   e.preventDefault();
