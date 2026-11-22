@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 
 const DEFAULT_WEBHOOK_URL =
-  'https://pdftool.app.n8n.cloud/webhook/91199e24-24b0-4213-984f-aa8db29f92d5/chat';
+  'https://xiaoza.app.n8n.cloud/webhook/91199e24-24b0-4213-984f-aa8db29f92d5/chat';
 const CDN_CSS_URL = 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css';
 const CDN_BUNDLE_URL =
   'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
